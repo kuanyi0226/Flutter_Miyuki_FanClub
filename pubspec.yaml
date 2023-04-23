@@ -29,9 +29,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  url_launcher: ^6.1.5
   
   #firebase
   cloud_firestore: 4.4.0
+
+  #play audio
+  audioplayers: ^0.20.1
+
+  #play video
+  video_player: ^2.6.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
