@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../widgets/VideoPlayerWidget.dart';
-import '../widgets/NetworkVideoPlayer.dart';
 import '../class/Concert.dart';
+import './songlist_page.dart';
 
 class ConcertPage extends StatefulWidget {
-  String? category;
-  ConcertPage({this.category});
-
   @override
   State<ConcertPage> createState() => _PageState();
 }
@@ -56,9 +51,10 @@ Stream<List<Concert>> readConcerts() => FirebaseFirestore.instance
     .snapshots()
     .map((snapshot) =>
         snapshot.docs.map((doc) => Concert.fromJson(doc.data())).toList());
-
+//ListTile Widget
 Widget buildConcert(Concert concert, BuildContext context) => ListTile(
-      onTap: () => showAlertDialog(concert, context),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SonglistPage(concert: concert))),
       leading: Image.network(
         'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
         scale: 2.5,
@@ -69,29 +65,3 @@ Widget buildConcert(Concert concert, BuildContext context) => ListTile(
       ),
       subtitle: Text(concert.year),
     );
-
-// Show AlertDialog
-showAlertDialog(Concert concert, BuildContext context) {
-  // Init
-  AlertDialog dialog = AlertDialog(
-    title: Text(
-      "${concert.year}年 ${concert.name}",
-      style: TextStyle(fontSize: 15),
-    ),
-    actions: [
-      NetworkVideoPlayer(),
-      ElevatedButton(
-          child: Text("Cancel"),
-          onPressed: () {
-            Navigator.pop(context);
-          }),
-    ],
-  );
-
-  // Show the dialog
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return dialog;
-      });
-}
