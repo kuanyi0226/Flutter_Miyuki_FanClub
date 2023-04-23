@@ -6,20 +6,20 @@ import '../widgets/VideoPlayerWidget.dart';
 import '../widgets/NetworkVideoPlayer.dart';
 import '../class/Concert.dart';
 
-class ConcertPage extends StatefulWidget {
+class YakaiPage extends StatefulWidget {
   String? category;
-  ConcertPage({this.category});
+  YakaiPage({this.category});
 
   @override
-  State<ConcertPage> createState() => _PageState();
+  State<YakaiPage> createState() => _PageState();
 }
 
-class _PageState extends State<ConcertPage> {
+class _PageState extends State<YakaiPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Text('コンサート Concert'),
+            Text('夜会 Yakai'),
           ]),
         ),
         body: /*NetworkVideoPlayer(),*/ StreamBuilder<List<Concert>>(
@@ -33,9 +33,7 @@ class _PageState extends State<ConcertPage> {
                 children: [
                   Expanded(
                     child: ListView(
-                      children: concerts
-                          .map((concert) => buildConcert(concert, context))
-                          .toList(),
+                      children: concerts.map(buildConcert).toList(),
                     ),
                   ),
                 ],
@@ -57,8 +55,7 @@ Stream<List<Concert>> readConcerts() => FirebaseFirestore.instance
     .map((snapshot) =>
         snapshot.docs.map((doc) => Concert.fromJson(doc.data())).toList());
 
-Widget buildConcert(Concert concert, BuildContext context) => ListTile(
-      onTap: () => showAlertDialog(concert, context),
+Widget buildConcert(Concert concert) => ListTile(
       leading: Image.network(
         'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
         scale: 2.5,
@@ -71,13 +68,10 @@ Widget buildConcert(Concert concert, BuildContext context) => ListTile(
     );
 
 // Show AlertDialog
-showAlertDialog(Concert concert, BuildContext context) {
+showAlertDialog(BuildContext context) {
   // Init
   AlertDialog dialog = AlertDialog(
-    title: Text(
-      "${concert.year}年 ${concert.name}",
-      style: TextStyle(fontSize: 15),
-    ),
+    title: Text("AlertDialog component"),
     actions: [
       NetworkVideoPlayer(),
       ElevatedButton(
