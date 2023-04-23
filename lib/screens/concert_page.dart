@@ -57,7 +57,7 @@ Widget buildConcert(Concert concert, BuildContext context) => ListTile(
           builder: (context) => SonglistPage(concert: concert))),
       leading: Image.network(
         'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
-        scale: 2.5,
+        scale: 2.3,
       ),
       title: Text(
         concert.name,

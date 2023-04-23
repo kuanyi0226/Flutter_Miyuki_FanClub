@@ -2,23 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import '../widgets/VideoPlayerWidget.dart';
+import '../class/Concert.dart';
 
 class NetworkVideoPlayer extends StatefulWidget {
-  String? category;
-  NetworkVideoPlayer({this.category});
+  Concert? concert;
+  int? index;
+  NetworkVideoPlayer({this.concert, this.index});
 
   @override
-  State<NetworkVideoPlayer> createState() => _PageState();
+  State<NetworkVideoPlayer> createState() =>
+      _PageState(concert: concert, index: index);
 }
 
 class _PageState extends State<NetworkVideoPlayer> {
+  Concert? concert;
+  int? index;
   VideoPlayerController? controller;
+  _PageState({this.concert, this.index});
 
   @override
   void initState() {
     super.initState();
     controller = VideoPlayerController.network(
-        'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Video/Concert/1978_1/13_0.mp4')
+        'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Video/Concert/${concert!.year}_${concert!.year_index}/${index}_0.mp4')
       ..addListener(() => setState(() {}))
       ..setLooping(true)
       ..initialize().then((_) => controller!.play());

@@ -22,7 +22,7 @@ class _PageState extends State<SonglistPage> {
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Text("${concert!.year}年 ${concert!.name}"),
+          Text("コンサート Concert"),
         ]),
       ),
       body: /*NetworkVideoPlayer(),*/ Column(
@@ -33,9 +33,19 @@ class _PageState extends State<SonglistPage> {
               elevation: 15.0,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              child: ListTile(
-                leading: Image.network(
-                    'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Concert/${concert!.year}_${concert!.year_index}/poster.png'),
+              child: Row(
+                children: [
+                  Image.network(
+                    'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Concert/${concert!.year}_${concert!.year_index}/poster.png',
+                    scale: 3.0,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("${concert!.year}年 ${concert!.name}"),
+                    ],
+                  )
+                ],
               ),
             ),
           ),
@@ -47,7 +57,9 @@ class _PageState extends State<SonglistPage> {
                     leading: const Icon(Icons.music_note),
                     title: Text(concert!.songs![index]),
                     onTap: () {
-                      showAlertDialog(concert!, context);
+                      String songName = concert!.songs![index];
+                      print(index);
+                      showAlertDialog(concert!, context, songName, index);
                     },
                   );
                 }),
@@ -57,15 +69,25 @@ class _PageState extends State<SonglistPage> {
 }
 
 // Show AlertDialog
-showAlertDialog(Concert concert, BuildContext context) {
+showAlertDialog(
+    Concert concert, BuildContext context, String songName, int songIndex) {
   // Init
+  songIndex += 1;
   AlertDialog dialog = AlertDialog(
-    title: Text(
-      "${concert.year}年 ${concert.name}",
-      style: TextStyle(fontSize: 15),
+    title: Column(
+      children: [
+        Text(
+          "${concert.year}年 ${concert.name}",
+          style: TextStyle(fontSize: 15),
+        ),
+        Text(songName),
+      ],
     ),
     actions: [
-      NetworkVideoPlayer() /*Play the correspond video*/,
+      NetworkVideoPlayer(
+        concert: concert,
+        index: songIndex,
+      ) /*Play the correspond video*/,
       ElevatedButton(
           child: Text("Cancel"),
           onPressed: () {
