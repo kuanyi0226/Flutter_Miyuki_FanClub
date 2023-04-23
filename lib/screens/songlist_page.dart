@@ -6,69 +6,55 @@ import '../widgets/VideoPlayerWidget.dart';
 import '../widgets/NetworkVideoPlayer.dart';
 import '../class/Concert.dart';
 
-class ConcertPage extends StatefulWidget {
-  String? category;
-  ConcertPage({this.category});
+class SonglistPage extends StatefulWidget {
+  Concert? concert;
+  SonglistPage({this.concert});
 
   @override
-  State<ConcertPage> createState() => _PageState();
+  State<SonglistPage> createState() => _PageState(concert: concert);
 }
 
-class _PageState extends State<ConcertPage> {
+class _PageState extends State<SonglistPage> {
+  Concert? concert;
+  _PageState({this.concert});
+
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Text('コンサート Concert'),
-          ]),
-        ),
-        body: /*NetworkVideoPlayer(),*/ StreamBuilder<List<Concert>>(
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Text('Something went wrong!');
-            } else if (snapshot.hasData) {
-              final concerts = snapshot.data!;
-
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      children: concerts
-                          .map((concert) => buildConcert(concert, context))
-                          .toList(),
-                    ),
-                  ),
-                ],
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-          stream: readConcerts(),
-        ),
-      );
+      appBar: AppBar(
+        title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Text("${concert!.year}年 ${concert!.name}"),
+        ]),
+      ),
+      body: /*NetworkVideoPlayer(),*/ Column(
+        children: [
+          SizedBox(
+            height: 150,
+            child: Card(
+              elevation: 15.0,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              child: ListTile(
+                leading: Image.network(
+                    'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Concert/${concert!.year}_${concert!.year_index}/poster.png'),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: concert!.songs!.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    leading: const Icon(Icons.music_note),
+                    title: Text(concert!.songs![index]),
+                    onTap: () {
+                      showAlertDialog(concert!, context);
+                    },
+                  );
+                }),
+          ),
+        ],
+      ));
 }
-
-Stream<List<Concert>> readConcerts() => FirebaseFirestore.instance
-    .collection('concerts')
-    .snapshots()
-    .map((snapshot) =>
-        snapshot.docs.map((doc) => Concert.fromJson(doc.data())).toList());
-
-Widget buildConcert(Concert concert, BuildContext context) => ListTile(
-      onTap: () => showAlertDialog(concert, context),
-      leading: Image.network(
-        'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
-        scale: 2.5,
-      ),
-      title: Text(
-        concert.name,
-        style: TextStyle(fontSize: 21),
-      ),
-      subtitle: Text(concert.year),
-    );
 
 // Show AlertDialog
 showAlertDialog(Concert concert, BuildContext context) {
@@ -79,7 +65,7 @@ showAlertDialog(Concert concert, BuildContext context) {
       style: TextStyle(fontSize: 15),
     ),
     actions: [
-      NetworkVideoPlayer(),
+      NetworkVideoPlayer() /*Play the correspond video*/,
       ElevatedButton(
           child: Text("Cancel"),
           onPressed: () {
