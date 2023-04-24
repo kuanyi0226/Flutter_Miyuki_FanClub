@@ -1,14 +1,14 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:project5_miyuki/class/Concert.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../class/User.dart';
 import '../class/Images.dart';
 import '../materials/text.dart';
 import './concert_page.dart';
+import '../class/Concert.dart';
+import '../materials/colors.dart';
 import '../class/Concert.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           children: [
             UserAccountsDrawerHeader(
-              decoration: BoxDecoration(),
+              decoration: BoxDecoration(color: sub_color),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
                     'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Album/44/album44_cover.jpg'),

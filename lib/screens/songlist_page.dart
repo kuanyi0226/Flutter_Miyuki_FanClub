@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/VideoPlayerWidget.dart';
 import '../widgets/NetworkVideoPlayer.dart';
 import '../class/Concert.dart';
+import '../materials/colors.dart';
 
 class SonglistPage extends StatefulWidget {
   Concert? concert;
@@ -27,9 +28,11 @@ class _PageState extends State<SonglistPage> {
       ),
       body: /*NetworkVideoPlayer(),*/ Column(
         children: [
-          SizedBox(
-            height: 150,
+          Container(
+            height: 125,
+            //Top display Card
             child: Card(
+              color: sub_color,
               elevation: 15.0,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0))),
@@ -38,16 +41,20 @@ class _PageState extends State<SonglistPage> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      //Image
                       Image.network(
                         'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Concert/${concert!.year}_${concert!.year_index}/poster.png',
                         fit: BoxFit.contain,
                       ),
+                      //Text(Introductions)
                       Padding(
-                        padding: const EdgeInsets.all(20.0),
+                        padding:
+                            const EdgeInsets.only(left: 10, top: 5, bottom: 5),
                         child: Center(
                           child: Text(
                             "${concert!.year}年\n${concert!.name}",
-                            style: TextStyle(fontSize: 15),
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
@@ -55,6 +62,7 @@ class _PageState extends State<SonglistPage> {
                   )),
             ),
           ),
+          //Songs Lists
           Expanded(
             child: ListView.builder(
                 itemCount: concert!.songs!.length,
