@@ -3,13 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../class/User.dart';
-import '../class/Images.dart';
-import '../materials/text.dart';
 import './concert_page.dart';
-import '../class/Concert.dart';
+import './settings_page.dart';
+
+import '../class/User.dart';
+import '../materials/text.dart';
 import '../materials/colors.dart';
-import '../class/Concert.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -22,6 +21,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String currentUser = 'user1';
   final controller1 = TextEditingController();
+  String version = "Version: beta 0.0.0";
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Image.network(
                   'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Album/44/album44_17.jpg'),
             ),
+            Text(version),
           ],
         ),
       ),
@@ -103,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           children: [
             UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: sub_color),
+              decoration: BoxDecoration(color: theme_grey),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
                     'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Album/44/album44_cover.jpg'),
@@ -136,7 +137,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings'),
-              onTap: () {},
+              onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SettingsPage())),
             ),
           ],
         ),

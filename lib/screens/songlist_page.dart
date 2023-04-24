@@ -32,7 +32,7 @@ class _PageState extends State<SonglistPage> {
             height: 125,
             //Top display Card
             child: Card(
-              color: sub_color,
+              color: theme_grey,
               elevation: 15.0,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0))),
@@ -98,12 +98,15 @@ showAlertDialog(
       ],
     ),
     actions: [
+      //Video Player
       NetworkVideoPlayer(
         concert: concert,
         index: songIndex,
-      ) /*Play the correspond video*/,
+      ),
+      //Return Button
       ElevatedButton(
-          child: Text("Cancel"),
+          child: Text("キャンセル Cancel"),
+          style: ElevatedButton.styleFrom(primary: theme_dark),
           onPressed: () {
             Navigator.pop(context);
           }),
