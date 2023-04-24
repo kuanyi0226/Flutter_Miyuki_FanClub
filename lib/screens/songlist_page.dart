@@ -33,20 +33,26 @@ class _PageState extends State<SonglistPage> {
               elevation: 15.0,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              child: Row(
-                children: [
-                  Image.network(
-                    'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Concert/${concert!.year}_${concert!.year_index}/poster.png',
-                    scale: 3.0,
-                  ),
-                  Column(
+              child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text("${concert!.year}年 ${concert!.name}"),
+                      Image.network(
+                        'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Concert/${concert!.year}_${concert!.year_index}/poster.png',
+                        fit: BoxFit.contain,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Center(
+                          child: Text(
+                            "${concert!.year}年\n${concert!.name}",
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                      ),
                     ],
-                  )
-                ],
-              ),
+                  )),
             ),
           ),
           Expanded(

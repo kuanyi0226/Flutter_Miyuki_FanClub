@@ -133,6 +133,11 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () => _launchURL('https', 'orikamushi.netlify.app',
                   '/miyuki_zone/miyukiframeset'),
             ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {},
+            ),
           ],
         ),
       ),
