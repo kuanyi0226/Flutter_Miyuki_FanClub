@@ -113,6 +113,11 @@ class _MyHomePageState extends State<MyHomePage> {
               accountEmail: Text('Miyuki Non-official Fan Club'),
             ),
             ListTile(
+              leading: Icon(Icons.disc_full),
+              title: Text('作品 Discography'),
+              onTap: () {},
+            ),
+            ListTile(
               leading: Icon(Icons.music_note_outlined),
               title: Text('コンサート Concert'),
               onTap: () => Navigator.of(context)
@@ -123,16 +128,31 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text('夜会 Yakai'),
               onTap: () {},
             ),
+            //Websites
+            Padding(
+              padding: const EdgeInsets.only(left: 16, top: 20),
+              child: Text('Websites'),
+            ),
             ListTile(
               leading: Icon(Icons.school),
               title: Text('中島みゆき研究所 Miyuki Lab'),
-              onTap: () => _launchURL('http', 'miyuki-lab.jp', ""),
+              onTap: () => _launchURL('http', 'miyuki-lab.jp', ''),
             ),
             ListTile(
               leading: Icon(Icons.lyrics),
               title: Text('織歌蟲 Lyrics'),
               onTap: () => _launchURL('https', 'orikamushi.netlify.app',
                   '/miyuki_zone/miyukiframeset'),
+            ),
+            ListTile(
+              leading: Icon(Icons.lyrics),
+              title: Text('中島みゆき公式 Official'),
+              onTap: () => _launchURL('https', 'www.miyuki.jp', ''),
+            ),
+            //Others
+            Padding(
+              padding: const EdgeInsets.only(left: 16, top: 20),
+              child: Text('Others'),
             ),
             ListTile(
               leading: Icon(Icons.settings),
