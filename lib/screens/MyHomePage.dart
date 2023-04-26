@@ -156,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               leading: Icon(Icons.settings),
-              title: Text('Settings'),
+              title: Text('設定 Settings'),
               onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SettingsPage())),
             ),
