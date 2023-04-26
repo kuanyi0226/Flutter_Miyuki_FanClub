@@ -104,12 +104,15 @@ showAlertDialog(
         index: songIndex,
       ),
       //Return Button
-      ElevatedButton(
-          child: Text("キャンセル Cancel"),
-          style: ElevatedButton.styleFrom(primary: theme_dark),
-          onPressed: () {
-            Navigator.pop(context);
-          }),
+      Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: ElevatedButton(
+            child: Text("キャンセル Cancel"),
+            style: ElevatedButton.styleFrom(primary: theme_dark),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+      ),
     ],
   );
 
