@@ -75,19 +75,16 @@ class _PageState extends State<SonglistPage> {
                     leading: const Icon(Icons.music_note),
                     title: Text(concert!.songs![index]),
                     onTap: () async {
-                      String songName = concert!.songs![index];
-                      songName = songName
-                          .substring(3); //trim the song_index and get pure name
+                      String songName = Decoder.songNameToPure(
+                          concert!.songs!.elementAt(index));
                       Song curr_song =
                           await Song.readSong(songName); //search the song
-                      String curr_songName = Decoder.songNameToPure(
-                          concert!.songs!.elementAt(index));
                       print('$index ${songName}');
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => SongPage(
                                 concert: concert,
                                 song_index: index + 1,
-                                song: (curr_song == null)
+                                song: (curr_song != null)
                                     ? Song(
                                         name: curr_song.name,
                                         author: (curr_song.author != '')
@@ -105,7 +102,7 @@ class _PageState extends State<SonglistPage> {
                                         review_en: curr_song.review_en,
                                       )
                                     : Song(
-                                        name: curr_songName,
+                                        name: songName,
                                         author: '中島みゆき',
                                         composer: '中島みゆき',
                                         live: null,

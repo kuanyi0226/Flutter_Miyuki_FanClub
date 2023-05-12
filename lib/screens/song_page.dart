@@ -37,6 +37,19 @@ class _SongPageState extends State<SongPage> {
     this.song_index,
   });
 
+  //bottom navigation
+  int _curr_index = 0;
+
+  void _onTap(int index) {
+    setState(() {
+      _curr_index = index;
+    });
+    //jump
+    if (_curr_index == 1) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +75,7 @@ class _SongPageState extends State<SongPage> {
           ),
         ),
         // Live list
-        (song == null)
+        (song!.live != null)
             ? Expanded(
                 child: ListView.builder(
                     itemCount: song!.live!.length,
@@ -142,10 +155,12 @@ class _SongPageState extends State<SongPage> {
         ),
       ]),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _curr_index,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.lyrics), label: '歌詞 Lyrics'),
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ホーム Home'),
         ],
+        onTap: (idx) => _onTap(idx),
       ),
     );
   }

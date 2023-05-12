@@ -64,6 +64,7 @@ class Song {
         name: 'error',
         author: 'error',
         composer: 'error',
+        live: null,
       );
     }
   }

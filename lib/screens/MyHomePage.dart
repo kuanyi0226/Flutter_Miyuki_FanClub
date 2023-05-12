@@ -24,9 +24,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final controller1 = TextEditingController();
   String version = "Version: beta 0.0.0";
 
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(APPNAME_JP),
         actions: [
@@ -116,20 +119,26 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               leading: Icon(Icons.disc_full),
               title: Text('作品 Discography'),
-              onTap: () {},
+              onTap: () {
+                _scaffoldKey.currentState!.openEndDrawer(); //close drawler
+              },
             ),
             ListTile(
-              leading: Icon(Icons.music_note_outlined),
-              title: Text('コンサート Concert'),
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => ConcertPage())),
-            ),
+                leading: Icon(Icons.music_note_outlined),
+                title: Text('コンサート Concert'),
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => ConcertPage()));
+                  _scaffoldKey.currentState!.openEndDrawer(); //close drawer
+                }),
             ListTile(
-              leading: Icon(Icons.nightlife),
-              title: Text('夜会 Yakai'),
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => YakaiPage())),
-            ),
+                leading: Icon(Icons.nightlife),
+                title: Text('夜会 Yakai'),
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => YakaiPage()));
+                  _scaffoldKey.currentState!.openEndDrawer(); //close drawer
+                }),
             //Websites
             Padding(
               padding: const EdgeInsets.only(left: 16, top: 20),
