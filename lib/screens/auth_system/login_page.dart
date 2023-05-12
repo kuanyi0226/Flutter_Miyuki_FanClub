@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../materials/colors.dart';
+import '../../services/auth_service.dart';
 
 import '../../widgets/MyTextField.dart';
 import '../../widgets/MyButton.dart';
@@ -132,7 +133,10 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 50.0),
             //sign in with google
-            SquareTile(imagePath: 'assets/images/google_icon.png'),
+            SquareTile(
+              imagePath: 'assets/images/google_icon.png',
+              onTap: () => AuthService().signInWithGoogle(),
+            ),
             SizedBox(height: 30.0),
             //not a member register now
             Row(

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project5_miyuki/services/auth_service.dart';
 
 import '../../materials/colors.dart';
 
@@ -141,7 +142,10 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             SizedBox(height: 30.0),
             //sign in with google
-            SquareTile(imagePath: 'assets/images/google_icon.png'),
+            SquareTile(
+              imagePath: 'assets/images/google_icon.png',
+              onTap: () => AuthService().signInWithGoogle(),
+            ),
             SizedBox(height: 30.0),
             //not a member register now
             Row(
