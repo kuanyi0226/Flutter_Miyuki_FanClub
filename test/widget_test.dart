@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:project5_miyuki/main.dart';
-import 'package:project5_miyuki/materials/MyApp.dart';
+import 'package:project5_miyuki/MyApp.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

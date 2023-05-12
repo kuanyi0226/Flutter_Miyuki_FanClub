@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class User {
+class Message {
   String id;
   final String name;
   final int age;
   final DateTime birthday;
 
-  User({
+  Message({
     this.id = '',
     required this.name,
     required this.age,
@@ -20,7 +20,7 @@ class User {
         'birthday': birthday,
       };
 
-  static User fromJson(Map<String, dynamic> json) => User(
+  static Message fromJson(Map<String, dynamic> json) => Message(
         name: json['name'],
         age: json['age'],
         birthday: (json['birthday'] as Timestamp).toDate(),

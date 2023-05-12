@@ -5,13 +5,14 @@ import '../materials/colors.dart';
 // For Login Page
 class MyButton extends StatelessWidget {
   Function()? onTap;
+  String text;
 
-  MyButton({super.key, required this.onTap});
+  MyButton({super.key, required this.onTap, required this.text});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onTap,
+    return TextButton(
+      onPressed: onTap,
       child: Container(
         padding: const EdgeInsets.all(25.0),
         margin: EdgeInsets.symmetric(horizontal: 25.0),
@@ -19,12 +20,13 @@ class MyButton extends StatelessWidget {
           color: theme_dark_purple,
           borderRadius: BorderRadius.circular(7),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
-            'Sign In',
+            text,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,7 +8,7 @@ import './concert_page.dart';
 import './settings_page.dart';
 import './yakai_page.dart';
 
-import '../class/User.dart';
+import '../class/Message.dart';
 import '../materials/text.dart';
 import '../materials/colors.dart';
 
@@ -20,11 +21,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String currentUser = 'user1';
-  final controller1 = TextEditingController();
-  String version = "Version: beta 0.0.0";
-
+  final version = "Version: beta 0.0.0";
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  String currentMessage = 'user1';
+  final controller1 = TextEditingController();
+
+  final user = FirebaseAuth.instance.currentUser!;
+
+  //sign out
+  void signOut() {
+    FirebaseAuth.instance.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +43,14 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              if (currentUser == 'user1') {
-                currentUser = 'user2';
+              if (currentMessage == 'user1') {
+                currentMessage = 'user2';
               } else {
-                currentUser = 'user1';
+                currentMessage = 'user1';
               }
               setState(() {});
             },
-            icon: (currentUser == 'user1')
+            icon: (currentMessage == 'user1')
                 ? Icon(Icons.looks_one)
                 : Icon(Icons.looks_two),
           ),
@@ -64,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 IconButton(
                   onPressed: () {
                     final name = controller1.text;
-                    createUser(name: name, currUser: currentUser);
+                    createUser(name: name, currUser: currentMessage);
                     controller1.text = '';
                   },
                   icon: Icon(Icons.add),
@@ -72,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Expanded(
-              child: StreamBuilder<List<User>>(
+              child: StreamBuilder<List<Message>>(
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Text('Something went wrong!');
@@ -114,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Album/44/album44_cover.jpg'),
               ),
               accountName: Text('中島みゆき非公式ファンクラブ'),
-              accountEmail: Text('Miyuki Non-official Fan Club'),
+              accountEmail: Text(user.email!),
             ),
             ListTile(
               leading: Icon(Icons.disc_full),
@@ -171,6 +179,11 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SettingsPage())),
             ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('サインアウト Sign Out'),
+              onTap: signOut,
+            ),
           ],
         ),
       ),
@@ -179,13 +192,13 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 //build widgets
-Widget buildUser(User user) => ListTile(
-      leading: CircleAvatar(child: Text('${user.age}')),
+Widget buildUser(Message message) => ListTile(
+      leading: CircleAvatar(child: Text('${message.age}')),
       title: Text(
-        user.name,
+        message.name,
         style: TextStyle(fontSize: 21),
       ),
-      subtitle: Text(user.birthday.toIso8601String()),
+      subtitle: Text(message.birthday.toIso8601String()),
     );
 
 //create data
@@ -194,7 +207,7 @@ Future createUser({required String name, required String currUser}) async {
   final docUser = FirebaseFirestore.instance.collection('users').doc(currUser);
   final now = DateTime.now();
 
-  final user = User(
+  final user = Message(
     id: docUser.id,
     name: name,
     age: (currUser == 'user1') ? 1 : 2,
@@ -213,9 +226,9 @@ Future createUser({required String name, required String currUser}) async {
 }
 
 //read data
-Stream<List<User>> readUsers() =>
+Stream<List<Message>> readUsers() =>
     FirebaseFirestore.instance.collection('users').snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) => User.fromJson(doc.data())).toList());
+        snapshot.docs.map((doc) => Message.fromJson(doc.data())).toList());
 
 //open url
 Future<void> _launchURL(String scheme, String url, String path) async {

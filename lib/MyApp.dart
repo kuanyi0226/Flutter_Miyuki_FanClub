@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project5_miyuki/screens/auth_system/auth_page.dart';
 
-import '../screens/auth_page.dart';
-import '../screens/login_page.dart';
+import './screens/auth_system/auth_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
