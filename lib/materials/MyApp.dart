@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../screens/MyHomePage.dart';
-import '../materials/text.dart';
+import '../screens/auth_page.dart';
+import '../screens/login_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
       ),
       themeMode: ThemeMode.dark,
-      home: const MyHomePage(title: APPNAME_JP),
+      home: const AuthPage(),
     );
   }
 }

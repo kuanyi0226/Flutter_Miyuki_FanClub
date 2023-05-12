@@ -84,35 +84,22 @@ class _PageState extends State<SonglistPage> {
                           builder: (context) => SongPage(
                                 concert: concert,
                                 song_index: index + 1,
-                                song: (curr_song != null)
-                                    ? Song(
-                                        name: curr_song.name,
-                                        author: (curr_song.author != '')
-                                            ? curr_song.author
-                                            : '中島みゆき',
-                                        composer: (curr_song.composer != '')
-                                            ? curr_song.composer
-                                            : '中島みゆき',
-                                        live: curr_song.live,
-                                        lyrics_jp: curr_song.lyrics_jp,
-                                        lyrics_cn: curr_song.lyrics_cn,
-                                        lyrics_en: curr_song.lyrics_en,
-                                        review_jp: curr_song.review_jp,
-                                        review_cn: curr_song.review_cn,
-                                        review_en: curr_song.review_en,
-                                      )
-                                    : Song(
-                                        name: songName,
-                                        author: '中島みゆき',
-                                        composer: '中島みゆき',
-                                        live: null,
-                                        lyrics_jp: '',
-                                        lyrics_cn: '',
-                                        lyrics_en: '',
-                                        review_jp: '',
-                                        review_cn: '',
-                                        review_en: '',
-                                      ),
+                                song: Song(
+                                  name: songName,
+                                  author: (curr_song.author != '')
+                                      ? curr_song.author
+                                      : '中島みゆき',
+                                  composer: (curr_song.composer != '')
+                                      ? curr_song.composer
+                                      : '中島みゆき',
+                                  live: curr_song.live,
+                                  lyrics_jp: curr_song.lyrics_jp,
+                                  lyrics_cn: curr_song.lyrics_cn,
+                                  lyrics_en: curr_song.lyrics_en,
+                                  review_jp: curr_song.review_jp,
+                                  review_cn: curr_song.review_cn,
+                                  review_en: curr_song.review_en,
+                                ),
                               )));
                     },
                   );

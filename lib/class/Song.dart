@@ -65,6 +65,12 @@ class Song {
         author: 'error',
         composer: 'error',
         live: null,
+        lyrics_jp: '',
+        lyrics_cn: '',
+        lyrics_en: '',
+        review_jp: '',
+        review_cn: '',
+        review_en: '',
       );
     }
   }
