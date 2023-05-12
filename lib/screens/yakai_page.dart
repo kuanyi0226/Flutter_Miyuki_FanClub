@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import './songlist_page.dart';
+
 import '../widgets/VideoPlayerWidget.dart';
 import '../widgets/NetworkVideoPlayer.dart';
 import '../class/Concert.dart';
@@ -33,7 +35,9 @@ class _PageState extends State<YakaiPage> {
                 children: [
                   Expanded(
                     child: ListView(
-                      children: concerts.map(buildConcert).toList(),
+                      children: concerts
+                          .map((concert) => buildConcert(concert, context))
+                          .toList(),
                     ),
                   ),
                 ],
@@ -49,15 +53,18 @@ class _PageState extends State<YakaiPage> {
       );
 }
 
-Stream<List<Concert>> readConcerts() => FirebaseFirestore.instance
-    .collection('concerts')
-    .snapshots()
-    .map((snapshot) =>
+Stream<List<Concert>> readConcerts() =>
+    FirebaseFirestore.instance.collection('yakai').snapshots().map((snapshot) =>
         snapshot.docs.map((doc) => Concert.fromJson(doc.data())).toList());
 
-Widget buildConcert(Concert concert) => ListTile(
+Widget buildConcert(Concert concert, BuildContext context) => ListTile(
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SonglistPage(
+                concert: concert,
+                concert_type: "Yakai",
+              ))),
       leading: Image.network(
-        'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
+        'https://github.com/kuanyi0226/Yuki_DataBase/raw/main/Image/Yakai/${concert.year}_0/poster.jpg',
         scale: 2.5,
       ),
       title: Text(

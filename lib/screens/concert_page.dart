@@ -17,7 +17,7 @@ class _PageState extends State<ConcertPage> {
             Text('コンサート Concert'),
           ]),
         ),
-        body: /*NetworkVideoPlayer(),*/ StreamBuilder<List<Concert>>(
+        body: StreamBuilder<List<Concert>>(
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Something went wrong!');
@@ -54,9 +54,12 @@ Stream<List<Concert>> readConcerts() => FirebaseFirestore.instance
 //ListTile Widget
 Widget buildConcert(Concert concert, BuildContext context) => ListTile(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => SonglistPage(concert: concert))),
+          builder: (context) => SonglistPage(
+                concert: concert,
+                concert_type: "Concert",
+              ))),
       leading: Image.network(
-        'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
+        'https://github.com/kuanyi0226/Yuki_DataBase/raw/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
         scale: 2.3,
       ),
       title: Text(

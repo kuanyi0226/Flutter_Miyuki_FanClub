@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import './concert_page.dart';
 import './settings_page.dart';
+import './yakai_page.dart';
 
 import '../class/User.dart';
 import '../materials/text.dart';
@@ -94,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
               child: Image.network(
-                  'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Album/44/album44_17.jpg'),
+                  'https://github.com/kuanyi0226/Yuki_DataBase/raw/main/Image/Album/44/album44_17.jpg'),
             ),
             Text(version),
           ],
@@ -126,7 +127,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               leading: Icon(Icons.nightlife),
               title: Text('夜会 Yakai'),
-              onTap: () {},
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => YakaiPage())),
             ),
             //Websites
             Padding(
