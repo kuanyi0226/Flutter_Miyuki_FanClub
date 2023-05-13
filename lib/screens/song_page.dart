@@ -103,7 +103,7 @@ class _SongPageState extends State<SongPage> {
                               children: [
                                 //Year
                                 Card(
-                                  color: theme_grey,
+                                  color: theme_dark_grey,
                                   child: Text(
                                     Decoder.yearToConcertYear(
                                         song!.live!.elementAt(index)),

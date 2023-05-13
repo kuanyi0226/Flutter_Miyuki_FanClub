@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import './concert_page.dart';
@@ -11,6 +10,8 @@ import './yakai_page.dart';
 import '../class/Message.dart';
 import '../materials/text.dart';
 import '../materials/colors.dart';
+
+import '../services/message_service.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -24,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final version = "Version: beta 0.0.0";
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String currentMessage = 'user1';
+  String currentMessage = 'message1';
   final controller1 = TextEditingController();
 
   final user = FirebaseAuth.instance.currentUser!;
@@ -38,46 +39,65 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(APPNAME_JP),
-        actions: [
-          IconButton(
-            onPressed: () {
-              if (currentMessage == 'user1') {
-                currentMessage = 'user2';
-              } else {
-                currentMessage = 'user1';
-              }
-              setState(() {});
-            },
-            icon: (currentMessage == 'user1')
-                ? Icon(Icons.looks_one)
-                : Icon(Icons.looks_two),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text(APPNAME_JP)),
       body: Container(
         padding: EdgeInsets.all(10),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: controller1,
-                    decoration: InputDecoration.collapsed(
-                        hintText: '伝言板 Message Board'),
+            //Today's song
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Text(
+                    '今日の曲: 時代',
+                    style: TextStyle(fontSize: 20),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    final name = controller1.text;
-                    createUser(name: name, currUser: currentMessage);
-                    controller1.text = '';
-                  },
-                  icon: Icon(Icons.add),
-                ),
-              ],
+                )),
+            //Image
+            Expanded(
+              child: Image.network(
+                  'https://github.com/kuanyi0226/Yuki_DataBase/raw/main/Image/Album/44/album44_17.jpg'),
+            ),
+            //Message Board
+            Container(
+              color: theme_dark_grey,
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (currentMessage == 'message1') {
+                        currentMessage = 'message2';
+                      } else {
+                        currentMessage = 'message1';
+                      }
+                      setState(() {});
+                    },
+                    icon: (currentMessage == 'message1')
+                        ? Icon(Icons.looks_one)
+                        : Icon(Icons.looks_two),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: controller1,
+                      decoration: InputDecoration.collapsed(
+                          hintText: '伝言板 Message Board'),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      final text = controller1.text;
+                      MessageService().createMessage(
+                        text: text,
+                        currMessage: currentMessage,
+                        userName: user.email!,
+                      );
+                      controller1.text = '';
+                    },
+                    icon: Icon(Icons.add),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: StreamBuilder<List<Message>>(
@@ -85,13 +105,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (snapshot.hasError) {
                     return Text('Something went wrong!');
                   } else if (snapshot.hasData) {
-                    final users = snapshot.data!;
+                    final messages = snapshot.data!;
 
                     return Column(
                       children: [
                         Expanded(
                             child: ListView(
-                          children: users.map(buildUser).toList(),
+                          children: messages.map(buildMessage).toList(),
                         )),
                       ],
                     );
@@ -101,12 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   }
                 },
-                stream: readUsers(),
+                stream: MessageService().readMessages(),
               ),
-            ),
-            Expanded(
-              child: Image.network(
-                  'https://github.com/kuanyi0226/Yuki_DataBase/raw/main/Image/Album/44/album44_17.jpg'),
             ),
             Text(version),
           ],
@@ -116,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           children: [
             UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: theme_grey),
+              decoration: BoxDecoration(color: theme_dark_grey),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
                     'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Album/44/album44_cover.jpg'),
@@ -179,6 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SettingsPage())),
             ),
+            SizedBox(height: 50),
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('サインアウト Sign Out'),
@@ -192,44 +209,29 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 //build widgets
-Widget buildUser(Message message) => ListTile(
-      leading: CircleAvatar(child: Text('${message.age}')),
+Widget buildMessage(Message message) => ListTile(
+      tileColor: theme_dark_grey,
+      leading: CircleAvatar(child: Text('${message.id}')),
       title: Text(
-        message.name,
+        message.text,
         style: TextStyle(fontSize: 21),
       ),
-      subtitle: Text(message.birthday.toIso8601String()),
+      subtitle: Align(
+        alignment: Alignment.centerLeft,
+        child: Column(
+          children: [
+            Container(
+              child: Text(message.userName!),
+              alignment: Alignment.centerLeft,
+            ),
+            Container(
+              child: Text(message.sentTime.toIso8601String()),
+              alignment: Alignment.centerLeft,
+            ),
+          ],
+        ),
+      ),
     );
-
-//create data
-Future createUser({required String name, required String currUser}) async {
-  //Reference t document
-  final docUser = FirebaseFirestore.instance.collection('users').doc(currUser);
-  final now = DateTime.now();
-
-  final user = Message(
-    id: docUser.id,
-    name: name,
-    age: (currUser == 'user1') ? 1 : 2,
-    birthday: DateTime(
-      now.year,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute,
-    ),
-  );
-  final json = user.toJson();
-
-  //create document and write data to Firebase
-  await docUser.set(json);
-}
-
-//read data
-Stream<List<Message>> readUsers() =>
-    FirebaseFirestore.instance.collection('users').snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) => Message.fromJson(doc.data())).toList());
-
 //open url
 Future<void> _launchURL(String scheme, String url, String path) async {
   final Uri uri = (path != "")

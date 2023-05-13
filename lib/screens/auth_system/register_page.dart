@@ -34,17 +34,18 @@ class _RegisterPageState extends State<RegisterPage> {
     //try to creating user
     try {
       //check the number of password is longer than 6
-      if (_passwordController.text.length < 6) {
+      if (_passwordController.text.trim().length < 6) {
         //pop the loading circle: failed to sign up
         Navigator.pop(context);
         _showErrorMessage('Passwords has to be at least 6 letters');
         return;
       }
       //check whether the confirm password is correct
-      if (_passwordController.text == _confirmPasswordController.text) {
+      if (_passwordController.text.trim() ==
+          _confirmPasswordController.text.trim()) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
         );
         //pop the loading circle: failed to sign up
         Navigator.pop(context);

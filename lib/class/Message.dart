@@ -1,28 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Message {
-  String id;
-  final String name;
-  final int age;
-  final DateTime birthday;
+  final int id;
+  String text = '';
+  final DateTime sentTime;
+  String? userName = '匿名';
 
   Message({
-    this.id = '',
-    required this.name,
-    required this.age,
-    required this.birthday,
+    required this.id,
+    required this.text,
+    this.userName,
+    required this.sentTime,
   });
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'name': name,
-        'age': age,
-        'birthday': birthday,
+        'userName': userName,
+        'text': text,
+        'sentTime': sentTime,
       };
 
   static Message fromJson(Map<String, dynamic> json) => Message(
-        name: json['name'],
-        age: json['age'],
-        birthday: (json['birthday'] as Timestamp).toDate(),
+        id: json['id'],
+        userName: json['userName'],
+        text: json['text'],
+        sentTime: (json['sentTime'] as Timestamp).toDate(),
       );
 }

@@ -35,7 +35,7 @@ class _PageState extends State<SonglistPage> {
             height: 125,
             //Top display Card
             child: Card(
-              color: theme_grey,
+              color: theme_dark_grey,
               elevation: 15.0,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0))),

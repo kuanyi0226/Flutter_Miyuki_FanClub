@@ -8,6 +8,8 @@ import '../../widgets/MyTextField.dart';
 import '../../widgets/MyButton.dart';
 import '../../widgets/SquareTile.dart';
 
+import './forgot_password_page.dart';
+
 class LoginPage extends StatefulWidget {
   Function()? onTap;
   LoginPage({super.key, required this.onTap});
@@ -33,8 +35,8 @@ class _LoginPageState extends State<LoginPage> {
     //try to sign in
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
       //pop the loading circle: successfully login
       Navigator.pop(context);
@@ -97,9 +99,17 @@ class _LoginPageState extends State<LoginPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    'Forgot password?',
-                    style: TextStyle(color: theme_dark_purple),
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ForGotPasswordPage())),
+                    child: Text(
+                      'Forgot password?',
+                      style: TextStyle(
+                          color: theme_dark_purple,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ],
               ),
