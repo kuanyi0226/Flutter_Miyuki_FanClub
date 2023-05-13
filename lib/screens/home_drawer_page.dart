@@ -42,8 +42,31 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
       required this.user,
       required this.scaffoldKey});
 
+  //check to sign out
+  Future _signOutCheck() {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(
+                'Ready to log out?',
+                style: TextStyle(color: theme_purple, fontSize: 25),
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      _signOut();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'ログアウト Sign Out',
+                      style: TextStyle(color: theme_purple, fontSize: 15),
+                    )),
+              ],
+            ));
+  }
+
   //sign out
-  void signOut() {
+  void _signOut() {
     FirebaseAuth.instance.signOut();
   }
 
@@ -116,16 +139,19 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
             child: Text('Others'),
           ),
           ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('設定 Settings'),
-            onTap: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => SettingsPage())),
-          ),
+              leading: Icon(Icons.settings),
+              title: Text('設定 Settings'),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        SettingsPage(miyukiUser: miyukiUser)));
+                scaffoldKey.currentState!.openEndDrawer(); //close drawer
+              }),
           SizedBox(height: 50),
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('サインアウト Sign Out'),
-            onTap: signOut,
+            onTap: _signOutCheck,
           ),
         ],
       ),

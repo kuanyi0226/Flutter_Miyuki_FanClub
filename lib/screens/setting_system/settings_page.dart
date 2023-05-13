@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/class/official/updateInfo.dart';
 
 import '../../screens/auth_system/forgot_password_page.dart';
 import '../../services/official_service.dart';
 import './update_page.dart';
+import './profile_page.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  MiyukiUser? miyukiUser;
+  SettingsPage({super.key, required this.miyukiUser});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<SettingsPage> createState() =>
+      _SettingsPageState(miyukiUser: miyukiUser!);
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  MiyukiUser? miyukiUser;
   UpdateInfo? updateInfo;
-  _SettingsPageState() {
+  _SettingsPageState({required MiyukiUser miyukiUser}) {
+    this.miyukiUser = miyukiUser;
     _getInfo();
   }
   Future _getInfo() async {
@@ -44,7 +50,10 @@ class _SettingsPageState extends State<SettingsPage> {
             Card(
               child: Column(children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ProfilePage(
+                            miyukiUser: miyukiUser,
+                          ))),
                   child: ListTile(
                     title: Text(
                       'Profile',

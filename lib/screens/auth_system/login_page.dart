@@ -78,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
               'みゆきさん、同じ時代に生まれてくれてありがとう！',
               style: TextStyle(fontSize: 15),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             //email textfield
             MyTextField(
               controller: _emailController,
@@ -141,13 +141,13 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
-            SizedBox(height: 50.0),
+            SizedBox(height: 20.0),
             //sign in with google
             SquareTile(
               imagePath: 'assets/images/google_icon.png',
               onTap: () => AuthService().signInWithGoogle(),
             ),
-            SizedBox(height: 30.0),
+            SizedBox(height: 20.0),
             //not a member register now
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

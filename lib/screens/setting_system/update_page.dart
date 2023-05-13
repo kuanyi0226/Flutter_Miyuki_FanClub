@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/class/official/updateInfo.dart';
 import 'package:project5_miyuki/widgets/MyButton.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../materials/text.dart';
 
@@ -9,7 +10,6 @@ import '../../services/official_service.dart';
 
 class UpdatePage extends StatelessWidget {
   UpdateInfo? info;
-  //String latestVersion = 'No Data';
   UpdatePage({required this.info});
 
   @override
@@ -36,9 +36,24 @@ class UpdatePage extends StatelessWidget {
             style: TextStyle(fontSize: 25),
           ),
           SizedBox(height: 20),
-          MyButton(onTap: () {}, text: 'Download Latest Version'),
+          MyButton(
+              onTap: () async =>
+                  _launchURL('https', 'drive.google.com', info!.link!),
+              text: 'Download Latest Version'),
         ]),
       ),
     );
+  }
+}
+
+Future<void> _launchURL(String scheme, String url, String path) async {
+  final Uri uri = (path != "")
+      ? Uri(scheme: scheme, host: url, path: path)
+      : Uri(scheme: scheme, host: url);
+  if (!await launchUrl(
+    uri,
+    mode: LaunchMode.externalNonBrowserApplication,
+  )) {
+    throw "Can not launch the url";
   }
 }

@@ -190,8 +190,7 @@ Widget buildMessage(Message message) => ListTile(
               child: Text(
                 message.userName!,
                 style: (message.userName![0] == '❆')
-                    ? TextStyle(
-                        fontSize: 18, color: Color.fromARGB(255, 122, 185, 236))
+                    ? TextStyle(fontSize: 18, color: theme_light_blue)
                     : TextStyle(fontSize: 18),
               ),
               alignment: Alignment.centerLeft,

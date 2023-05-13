@@ -42,4 +42,15 @@ class MiyukiUser {
       return MiyukiUser(name: 'No User', email: 'No Data', vip: false);
     }
   }
+
+  //Change name
+  static Future editUserName(String name, MiyukiUser originalUserInfo) async {
+    MiyukiUser newInfo = MiyukiUser(
+        name: name, email: originalUserInfo.email, vip: originalUserInfo.vip);
+    Map<String, dynamic> userData = newInfo.toJson();
+    await FirebaseFirestore.instance
+        .collection('miyukiusers')
+        .doc(originalUserInfo.email)
+        .set(userData);
+  }
 }

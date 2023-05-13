@@ -99,44 +99,44 @@ class _RegisterPageState extends State<RegisterPage> {
               'assets/images/login_icon.jpg',
               height: 150,
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 15),
             //welcome text
             Text(
               '中島みゆきファンになりたい！',
               style: TextStyle(fontSize: 15),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 15),
             //user name textfield
             MyTextField(
               controller: _userNameController,
               hintText: 'User Name',
               obscureText: false,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
             //email textfield
             MyTextField(
               controller: _emailController,
               hintText: 'Email',
               obscureText: false,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
             //password textfield
             MyTextField(
               controller: _passwordController,
               hintText: 'Password',
               obscureText: true,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
             //confirm-password textfield
             MyTextField(
               controller: _confirmPasswordController,
               hintText: 'ConFirm Password',
               obscureText: true,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
             //sign in button
             MyButton(onTap: signUp, text: 'Sign Up'),
-            const SizedBox(height: 30),
+            const SizedBox(height: 15),
             //or continue with
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -160,7 +160,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
             ),
-            SizedBox(height: 30.0),
+            SizedBox(height: 20.0),
             //sign in with google
             SquareTile(
               imagePath: 'assets/images/google_icon.png',
@@ -184,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 }
               },
             ),
-            SizedBox(height: 30.0),
+            SizedBox(height: 20.0),
             //not a member register now
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
