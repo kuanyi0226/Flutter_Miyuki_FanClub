@@ -24,7 +24,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final version = "Version: beta 0.0.0";
+  final version = "Version: ${CURR_VERSION}";
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String currentMessage = 'message1';
@@ -122,7 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         MessageService().createMessage(
                           text: text,
                           currMessage: currentMessage,
-                          userName: miyukiUser.name!,
+                          userName: (miyukiUser.vip == false)
+                              ? miyukiUser.name!
+                              : '❆ ${miyukiUser.name}',
                         );
                         controller1.text = '';
                       },
@@ -172,17 +174,26 @@ class _MyHomePageState extends State<MyHomePage> {
 //build messages
 Widget buildMessage(Message message) => ListTile(
       tileColor: theme_dark_grey,
-      leading: CircleAvatar(child: Text('${message.id}')),
+      leading: CircleAvatar(
+        child: Text('${message.id}'),
+        radius: 25,
+      ),
       title: Text(
         message.text,
-        style: TextStyle(fontSize: 21),
+        style: TextStyle(fontSize: 22),
       ),
       subtitle: Align(
         alignment: Alignment.centerLeft,
         child: Column(
           children: [
             Container(
-              child: Text(message.userName!),
+              child: Text(
+                message.userName!,
+                style: (message.userName![0] == '❆')
+                    ? TextStyle(
+                        fontSize: 18, color: Color.fromARGB(255, 122, 185, 236))
+                    : TextStyle(fontSize: 18),
+              ),
               alignment: Alignment.centerLeft,
             ),
             Container(
