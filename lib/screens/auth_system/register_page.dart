@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project5_miyuki/services/auth_service.dart';
 
 import '../../materials/colors.dart';
+import '../../class/MiyukiUser.dart';
 
 import '../../widgets/MyTextField.dart';
 import '../../widgets/MyButton.dart';
@@ -21,6 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   _RegisterPageState({required onTap});
 
   //controller for text
+  final _userNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -33,6 +35,13 @@ class _RegisterPageState extends State<RegisterPage> {
         builder: (context) => Center(child: CircularProgressIndicator()));
     //try to creating user
     try {
+      //check whether the name is empty
+      if (_passwordController.text.trim() == '') {
+        //pop the loading circle: failed to sign up
+        Navigator.pop(context);
+        _showErrorMessage('Please type your user name');
+        return;
+      }
       //check the number of password is longer than 6
       if (_passwordController.text.trim().length < 6) {
         //pop the loading circle: failed to sign up
@@ -49,6 +58,9 @@ class _RegisterPageState extends State<RegisterPage> {
         );
         //pop the loading circle: failed to sign up
         Navigator.pop(context);
+        //create miyuki user info
+        MiyukiUser.createUser(
+            _userNameController.text.trim(), _emailController.text.trim());
       } else {
         //pop the loading circle: successfully sign up
         Navigator.pop(context);
@@ -94,6 +106,13 @@ class _RegisterPageState extends State<RegisterPage> {
               style: TextStyle(fontSize: 15),
             ),
             const SizedBox(height: 30),
+            //user name textfield
+            MyTextField(
+              controller: _userNameController,
+              hintText: 'User Name',
+              obscureText: false,
+            ),
+            const SizedBox(height: 10),
             //email textfield
             MyTextField(
               controller: _emailController,
@@ -145,7 +164,17 @@ class _RegisterPageState extends State<RegisterPage> {
             //sign in with google
             SquareTile(
               imagePath: 'assets/images/google_icon.png',
-              onTap: () => AuthService().signInWithGoogle(),
+              onTap: () async {
+                AuthService().signInWithGoogle();
+                try {
+                  final user = await FirebaseAuth.instance.currentUser!;
+                  MiyukiUser.createUser('No Name', user.email!);
+                } catch (err) {
+                  await Future.delayed(Duration(seconds: 3));
+                  final user = await FirebaseAuth.instance.currentUser!;
+                  MiyukiUser.createUser('No Name', user.email!);
+                }
+              },
             ),
             SizedBox(height: 30.0),
             //not a member register now

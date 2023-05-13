@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import './concert_page.dart';
-import './settings_page.dart';
+import './setting_system/settings_page.dart';
 import './yakai_page.dart';
 
 import '../class/Message.dart';
@@ -29,6 +30,20 @@ class _MyHomePageState extends State<MyHomePage> {
   final controller1 = TextEditingController();
 
   final user = FirebaseAuth.instance.currentUser!;
+  String? userEmail;
+  MiyukiUser? miyukiUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _readMiyukiUser();
+  }
+
+  Future<MiyukiUser> _readMiyukiUser() async {
+    userEmail = user.email;
+    miyukiUser = await MiyukiUser.readUser(userEmail!);
+    return miyukiUser!;
+  }
 
   //sign out
   void signOut() {
@@ -39,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      //App Bar
       appBar: AppBar(title: Text(APPNAME_JP)),
       body: Container(
         padding: EdgeInsets.all(10),
@@ -128,6 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+      //Drawer
       drawer: Drawer(
         child: ListView(
           children: [
@@ -137,8 +154,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 backgroundImage: NetworkImage(
                     'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Album/44/album44_cover.jpg'),
               ),
-              accountName: Text('中島みゆき非公式ファンクラブ'),
-              accountEmail: Text(user.email!),
+              accountName:
+                  Text(miyukiUser!.name!, style: TextStyle(fontSize: 18)),
+              accountEmail: Text(user.email!, style: TextStyle(fontSize: 18)),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16, top: 5),
+              child: Text('中島みゆき非公式ファンクラブ'),
             ),
             ListTile(
               leading: Icon(Icons.disc_full),
