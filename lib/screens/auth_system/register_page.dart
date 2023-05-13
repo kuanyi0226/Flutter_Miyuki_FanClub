@@ -168,11 +168,19 @@ class _RegisterPageState extends State<RegisterPage> {
                 AuthService().signInWithGoogle();
                 try {
                   final user = await FirebaseAuth.instance.currentUser!;
-                  MiyukiUser.createUser('No Name', user.email!);
+                  final list = await FirebaseAuth.instance
+                      .fetchSignInMethodsForEmail(user.email!);
+                  if (list.isEmpty) {
+                    MiyukiUser.createUser('No Name', user.email!);
+                  }
                 } catch (err) {
                   await Future.delayed(Duration(seconds: 3));
                   final user = await FirebaseAuth.instance.currentUser!;
-                  MiyukiUser.createUser('No Name', user.email!);
+                  final list = await FirebaseAuth.instance
+                      .fetchSignInMethodsForEmail(user.email!);
+                  if (list.isEmpty) {
+                    MiyukiUser.createUser('No Name', user.email!);
+                  }
                 }
               },
             ),
