@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../class/MiyukiUser.dart';
 import '../../materials/colors.dart';
 import '../../services/auth_service.dart';
 
@@ -145,7 +147,31 @@ class _LoginPageState extends State<LoginPage> {
             //sign in with google
             SquareTile(
               imagePath: 'assets/images/google_icon.png',
-              onTap: () => AuthService().signInWithGoogle(),
+              onTap: () async {
+                AuthService().signInWithGoogle();
+                try {
+                  await Future.delayed(Duration(seconds: 3));
+                  final user = await FirebaseAuth.instance.currentUser!;
+                  var userInfo = await FirebaseFirestore.instance
+                      .collection('miyukiusers')
+                      .doc(user.email)
+                      .get();
+                  if (userInfo.exists == false) {
+                    MiyukiUser.createUser(name: 'No Name', email: user.email!);
+                  }
+                } catch (err) {
+                  //do again
+                  await Future.delayed(Duration(seconds: 3));
+                  final user = await FirebaseAuth.instance.currentUser!;
+                  var userInfo = await FirebaseFirestore.instance
+                      .collection('miyukiusers')
+                      .doc(user.email)
+                      .get();
+                  if (userInfo.exists == false) {
+                    MiyukiUser.createUser(name: 'No Name', email: user.email!);
+                  }
+                }
+              },
             ),
             SizedBox(height: 20.0),
             //not a member register now

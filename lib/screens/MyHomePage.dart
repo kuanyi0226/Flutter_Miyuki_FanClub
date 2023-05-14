@@ -196,7 +196,8 @@ Widget buildMessage(Message message) => ListTile(
               alignment: Alignment.centerLeft,
             ),
             Container(
-              child: Text(message.sentTime.toIso8601String()),
+              child: Text(
+                  '${message.sentTime.timeZoneName}: ${message.sentTime.year}/${message.sentTime.month}/${message.sentTime.day} ${message.sentTime.hour}:${message.sentTime.minute}'),
               alignment: Alignment.centerLeft,
             ),
           ],

@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MiyukiUser {
   String? name;
   String? email;
   bool? vip = false; //set by admin
 
-  MiyukiUser({this.name, this.email, this.vip});
+  MiyukiUser({required this.name, required this.email, this.vip});
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -19,7 +20,8 @@ class MiyukiUser {
         vip: json['vip'],
       );
   //create user(only create once)
-  static Future createUser(String name, String email) async {
+  static Future createUser(
+      {required String name, required String email}) async {
     MiyukiUser user = MiyukiUser(name: name, email: email, vip: false);
     Map<String, dynamic> userData = user.toJson();
     await FirebaseFirestore.instance
@@ -44,13 +46,11 @@ class MiyukiUser {
   }
 
   //Change name
-  static Future editUserName(String name, MiyukiUser originalUserInfo) async {
-    MiyukiUser newInfo = MiyukiUser(
-        name: name, email: originalUserInfo.email, vip: originalUserInfo.vip);
-    Map<String, dynamic> userData = newInfo.toJson();
+  static Future editUserName(String name) async {
+    final user = FirebaseAuth.instance.currentUser;
     await FirebaseFirestore.instance
         .collection('miyukiusers')
-        .doc(originalUserInfo.email)
-        .set(userData);
+        .doc(user!.email)
+        .update({'name': name});
   }
 }

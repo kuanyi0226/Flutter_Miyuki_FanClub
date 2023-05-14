@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/class/official/updateInfo.dart';
 import 'package:project5_miyuki/widgets/MyButton.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../materials/text.dart';
-
-import '../../services/official_service.dart';
 
 class UpdatePage extends StatelessWidget {
   UpdateInfo? info;

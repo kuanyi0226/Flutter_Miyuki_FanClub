@@ -33,8 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        MiyukiUser.editUserName(
-                            nameController.text, miyukiUser!);
+                        MiyukiUser.editUserName(nameController.text);
                         miyukiUser!.name = nameController.text;
                         Navigator.of(context).pop();
                       });
@@ -55,65 +54,67 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: Padding(
         padding: EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            //User Name
-            ListTile(
-              title: Text(
-                'User Name',
-                style: TextStyle(fontSize: 23),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              //User Name
+              ListTile(
+                title: Text(
+                  'User Name',
+                  style: TextStyle(fontSize: 23),
+                ),
               ),
-            ),
-            Card(
-              child: Column(children: [
-                GestureDetector(
-                  onTap: () => _editUserName(miyukiUser!.name!),
-                  child: ListTile(
-                    title: Text(
-                      miyukiUser!.name!,
-                      style: TextStyle(fontSize: 20),
+              Card(
+                child: Column(children: [
+                  GestureDetector(
+                    onTap: () => _editUserName(miyukiUser!.name!),
+                    child: ListTile(
+                      title: Text(
+                        miyukiUser!.name!,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      trailing: Icon(Icons.edit),
                     ),
-                    trailing: Icon(Icons.edit),
+                  ),
+                ]),
+              ),
+              //Email
+              ListTile(
+                title: Text(
+                  'Email',
+                  style: TextStyle(fontSize: 23),
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  title: Text(
+                    miyukiUser!.email!,
+                    style: TextStyle(fontSize: 20),
                   ),
                 ),
-              ]),
-            ),
-            //Email
-            ListTile(
-              title: Text(
-                'Email',
-                style: TextStyle(fontSize: 23),
               ),
-            ),
-            Card(
-              child: ListTile(
+              //Vip Type
+              ListTile(
                 title: Text(
-                  miyukiUser!.email!,
-                  style: TextStyle(fontSize: 20),
+                  'Vip Type',
+                  style: TextStyle(fontSize: 23),
                 ),
               ),
-            ),
-            //Vip Type
-            ListTile(
-              title: Text(
-                'Vip Type',
-                style: TextStyle(fontSize: 23),
-              ),
-            ),
-            Card(
-              child: ListTile(
-                title: Text(
-                  (miyukiUser!.vip == true)
-                      ? '❆❆❆ VIP User ❆❆❆'
-                      : 'Normal User',
-                  style: (miyukiUser!.vip == true)
-                      ? TextStyle(fontSize: 20, color: theme_light_blue)
-                      : TextStyle(fontSize: 20),
+              Card(
+                child: ListTile(
+                  title: Text(
+                    (miyukiUser!.vip == true)
+                        ? '❆❆❆ VIP User ❆❆❆'
+                        : 'Normal User',
+                    style: (miyukiUser!.vip == true)
+                        ? TextStyle(fontSize: 20, color: theme_light_blue)
+                        : TextStyle(fontSize: 20),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

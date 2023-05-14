@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import './concert_page.dart';
 import './setting_system/settings_page.dart';
@@ -68,6 +69,7 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
   //sign out
   void _signOut() {
     FirebaseAuth.instance.signOut();
+    GoogleSignIn().signOut();
   }
 
   @override
