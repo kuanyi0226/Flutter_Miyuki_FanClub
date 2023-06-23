@@ -30,6 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
   url_launcher: ^6.1.5
+  get: ^4.6.5
   
   #firebase
   cloud_firestore: 4.4.0

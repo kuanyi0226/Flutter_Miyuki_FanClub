@@ -172,35 +172,48 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 //build messages
-Widget buildMessage(Message message) => ListTile(
-      tileColor: theme_dark_grey,
-      leading: CircleAvatar(
-        child: Text('${message.id}'),
-        radius: 25,
-      ),
-      title: Text(
-        message.text,
-        style: TextStyle(fontSize: 22),
-      ),
-      subtitle: Align(
-        alignment: Alignment.centerLeft,
-        child: Column(
-          children: [
-            Container(
-              child: Text(
-                message.userName!,
-                style: (message.userName![0] == '❆')
-                    ? TextStyle(fontSize: 18, color: theme_light_blue)
-                    : TextStyle(fontSize: 18),
-              ),
-              alignment: Alignment.centerLeft,
-            ),
-            Container(
-              child: Text(
-                  '${message.sentTime.timeZoneName}: ${message.sentTime.year}/${message.sentTime.month}/${message.sentTime.day} ${message.sentTime.hour}:${message.sentTime.minute}'),
-              alignment: Alignment.centerLeft,
-            ),
-          ],
+Widget buildMessage(Message message) {
+  String messageName;
+  if (message.userName!.length > 13) {
+    messageName = message.userName!.substring(0, 13) + '...';
+  } else {
+    messageName = message.userName!;
+  }
+
+  return ListTile(
+    tileColor: theme_dark_grey,
+    leading: CircleAvatar(
+      child: Text('${message.id}'),
+      radius: 20,
+    ),
+    title: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        //User Name
+        Container(
+          child: Text(
+            messageName,
+            style: (message.userName![0] == '❆')
+                ? TextStyle(fontSize: 20, color: theme_light_blue)
+                : TextStyle(fontSize: 20),
+          ),
         ),
-      ),
-    );
+        SizedBox(width: 5),
+        //Sent Time
+        Container(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(
+                '${message.sentTime.timeZoneName}: ${message.sentTime.year}/${message.sentTime.month}/${message.sentTime.day} ${message.sentTime.hour}:${message.sentTime.minute}',
+                style: TextStyle(fontSize: 10)),
+          ),
+        ),
+      ],
+    ),
+    //Message Text
+    subtitle: Text(
+      message.text,
+      style: TextStyle(fontSize: 18, color: Colors.white),
+    ),
+  );
+}

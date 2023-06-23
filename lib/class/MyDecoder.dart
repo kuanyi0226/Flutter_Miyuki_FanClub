@@ -1,4 +1,4 @@
-class Decoder {
+class MyDecoder {
   // Year_Index to Concert Year
   static String yearToConcertYear(String year_index) {
     if (year_index.startsWith('y')) {

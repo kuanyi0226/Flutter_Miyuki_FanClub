@@ -5,7 +5,7 @@ import '../class/Concert.dart';
 import '../materials/colors.dart';
 
 import './song_page.dart';
-import '../class/Decoder.dart';
+import '../class/MyDecoder.dart';
 
 class SonglistPage extends StatefulWidget {
   Concert? concert;
@@ -75,7 +75,7 @@ class _PageState extends State<SonglistPage> {
                     leading: const Icon(Icons.music_note),
                     title: Text(concert!.songs![index]),
                     onTap: () async {
-                      String songName = Decoder.songNameToPure(
+                      String songName = MyDecoder.songNameToPure(
                           concert!.songs!.elementAt(index));
                       Song curr_song =
                           await Song.readSong(songName); //search the song

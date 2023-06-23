@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/screens/MyHomePage.dart';
 
@@ -9,7 +10,7 @@ import './songlist_page.dart';
 import '../class/Song.dart';
 import '../widgets/NetworkVideoPlayer.dart';
 
-import '../class/Decoder.dart';
+import '../class/MyDecoder.dart';
 import '../materials/colors.dart';
 
 class SongPage extends StatefulWidget {
@@ -80,8 +81,8 @@ class _SongPageState extends State<SongPage> {
     User? user = FirebaseAuth.instance.currentUser;
     MiyukiUser miyukiUser = await MiyukiUser.readUser(user!.email!);
 
-    final nameController = TextEditingController();
-    nameController.text = '';
+    final commentController = TextEditingController();
+    commentController.text = '';
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -90,21 +91,37 @@ class _SongPageState extends State<SongPage> {
                 style: TextStyle(color: theme_purple, fontSize: 20),
               ),
               content: TextField(
-                controller: nameController,
+                controller: commentController,
                 decoration: InputDecoration(hintText: 'Comment'),
               ),
               actions: [
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        String newComment = user.uid +
-                            '%%' +
-                            miyukiUser.name! +
-                            '%%' +
-                            nameController.text;
-                        Song.addComment(song!.name, newComment);
-                        song!.comment!.add(newComment);
-                        Navigator.of(context).pop();
+                        if (commentController.text.length >= 15) {
+                          final now = DateTime.now();
+                          //newComment: uid + userName + sentTime + comment
+                          String userName = (miyukiUser.vip == true)
+                              ? ('❆' + miyukiUser.name!)
+                              : miyukiUser.name!;
+                          String newComment = user.uid +
+                              '%%' +
+                              userName +
+                              '%%' +
+                              '${now.timeZoneName}: ${now.year}/${now.month}/${now.day} ${now.hour}:${now.minute}' +
+                              '%%' +
+                              commentController.text;
+                          Song.addComment(song!.name, newComment);
+                          song!.comment!.add(newComment);
+                          Navigator.of(context).pop();
+                          const snackBar = SnackBar(
+                              content: Text('Thanks for your comment~'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else {
+                          const snackBar = SnackBar(
+                              content: Text('Please Type More Than 15 words'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
                       });
                     },
                     child: Text(
@@ -159,7 +176,7 @@ class _SongPageState extends State<SongPage> {
                                     Card(
                                       color: theme_dark_grey,
                                       child: Text(
-                                        Decoder.yearToConcertYear(
+                                        MyDecoder.yearToConcertYear(
                                             song!.live!.elementAt(index)),
                                         style: TextStyle(fontSize: 20),
                                       ),
@@ -168,7 +185,7 @@ class _SongPageState extends State<SongPage> {
                                     Align(
                                       alignment: Alignment.centerRight,
                                       child: Text(
-                                        Decoder.yearToConcertName(
+                                        MyDecoder.yearToConcertName(
                                             song!.live!.elementAt(index)),
                                         style: TextStyle(fontSize: 20),
                                       ),
@@ -194,39 +211,59 @@ class _SongPageState extends State<SongPage> {
                         child: ListView.builder(
                             itemCount: song!.comment!.length,
                             itemBuilder: ((context, index) {
-                              return Container(
-                                height: 60,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    //TODO: report system
-                                  },
-                                  child: Card(
-                                    elevation: 10,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        //Comment
-                                        Card(
-                                          color: theme_dark_grey,
-                                          child: Text(
-                                            song!.comment!.elementAt(index),
-                                            style: TextStyle(fontSize: 20),
+                              List<String> commentSplit =
+                                  song!.comment!.elementAt(index).split('%%');
+                              //shorten the name, avoid exceeding boundary
+                              if (commentSplit[1].length > 13) {
+                                commentSplit[1] =
+                                    commentSplit[1].substring(0, 13) + '...';
+                              }
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(1.0),
+                                    child: ListTile(
+                                      title: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          //User Name
+                                          Container(
+                                            child: Text(
+                                              commentSplit.elementAt(1),
+                                              style: (commentSplit
+                                                          .elementAt(1)[0] ==
+                                                      '❆')
+                                                  ? TextStyle(
+                                                      fontSize: 20,
+                                                      color: theme_light_blue)
+                                                  : TextStyle(fontSize: 20),
+                                            ),
                                           ),
-                                        ),
-                                        //User Name
-                                        Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            song!.comment!.elementAt(index),
-                                            style: TextStyle(fontSize: 20),
+                                          SizedBox(width: 5),
+                                          //Sent Time
+                                          Container(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 5),
+                                              child: Text(
+                                                  commentSplit.elementAt(2),
+                                                  style:
+                                                      TextStyle(fontSize: 10)),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
+                                      //Message Text
+                                      subtitle: Text(
+                                        commentSplit.elementAt(3),
+                                        style: TextStyle(
+                                            fontSize: 18, color: Colors.white),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  Divider(),
+                                ],
                               );
                             })),
                       )
