@@ -13,6 +13,7 @@ class SongPage extends StatefulWidget {
   Song? song;
   Concert? concert;
   int? song_index;
+
   SongPage({
     this.song,
     this.concert,
@@ -31,11 +32,31 @@ class _SongPageState extends State<SongPage> {
   Song? song;
   Concert? concert;
   int? song_index;
+  List<String> lyricsList = [' '];
+  List<Widget> lyricsTexts = [];
+
   _SongPageState({
     this.song,
     this.concert,
     this.song_index,
   });
+
+  @override
+  void initState() {
+    super.initState();
+    lyricsList = song!.lyrics_jp!.split('%');
+    for (int i = 0; i < lyricsList.length; i++) {
+      lyricsTexts.add(Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          child: Text(
+            lyricsList.elementAt(i),
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+      ));
+    }
+  }
 
   //bottom navigation
   int _curr_index = 0;
@@ -44,8 +65,8 @@ class _SongPageState extends State<SongPage> {
     setState(() {
       _curr_index = index;
     });
-    //jump
-    if (_curr_index == 1) {
+    //back to home
+    if (_curr_index == 3) {
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
@@ -61,104 +82,80 @@ class _SongPageState extends State<SongPage> {
           concert: concert,
           index: song_index,
         ),
-        // Text: Live
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              child: Text(
-                'Live: ',
-                style: TextStyle(fontSize: 25),
-              ),
-            ),
-          ),
-        ),
-        // Live list
-        (song!.live != null)
-            ? Expanded(
-                child: ListView.builder(
-                    itemCount: song!.live!.length,
-                    itemBuilder: ((context, index) {
-                      return Container(
-                        height: 60,
-                        child: GestureDetector(
-                          onTap: () async {
-                            //Read the concert tapped
-                            Concert tap_concert = await Concert.readConcert(
-                                song!.live!.elementAt(index));
-                            //Jump to the correspond concert songlist page
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => SonglistPage(
-                                      concert: tap_concert,
-                                      concert_type: 'Concert',
-                                    )));
-                          },
-                          child: Card(
-                            elevation: 10,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Row(
-                              children: [
-                                //Year
-                                Card(
-                                  color: theme_dark_grey,
-                                  child: Text(
-                                    Decoder.yearToConcertYear(
-                                        song!.live!.elementAt(index)),
-                                    style: TextStyle(fontSize: 20),
-                                  ),
+        SizedBox(height: 20),
+        (_curr_index == 0)
+            ? //Live List
+            (song!.live != null)
+                ? Expanded(
+                    child: ListView.builder(
+                        itemCount: song!.live!.length,
+                        itemBuilder: ((context, index) {
+                          return Container(
+                            height: 60,
+                            child: GestureDetector(
+                              onTap: () async {
+                                //Read the concert tapped
+                                Concert tap_concert = await Concert.readConcert(
+                                    song!.live!.elementAt(index));
+                                //Jump to the correspond concert songlist page
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => SonglistPage(
+                                          concert: tap_concert,
+                                          concert_type: 'Concert',
+                                        )));
+                              },
+                              child: Card(
+                                elevation: 10,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                //Concert Name
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    Decoder.yearToConcertName(
-                                        song!.live!.elementAt(index)),
-                                    style: TextStyle(fontSize: 20),
-                                  ),
+                                child: Row(
+                                  children: [
+                                    //Year
+                                    Card(
+                                      color: theme_dark_grey,
+                                      child: Text(
+                                        Decoder.yearToConcertYear(
+                                            song!.live!.elementAt(index)),
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    //Concert Name
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Text(
+                                        Decoder.yearToConcertName(
+                                            song!.live!.elementAt(index)),
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    })),
-              )
-            : CircularProgressIndicator(),
-        // Lyrics
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              child: Text(
-                'Lyrics: ',
-                style: TextStyle(fontSize: 25),
-              ),
-            ),
-          ),
-        ),
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                child: Text(
-                  song!.lyrics_jp!,
-                  style: TextStyle(fontSize: 25),
-                ),
-              ),
-            ),
-          ],
-        ),
+                          );
+                        })),
+                  )
+                : CircularProgressIndicator()
+            : (_curr_index == 1)
+                ? //Lyrics
+                Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(children: lyricsTexts),
+                    ),
+                  )
+                : // Comment
+                Container(),
       ]),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _curr_index,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.lyrics), label: '歌詞 Lyrics'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ホーム Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_month), label: 'Lives'),
+          BottomNavigationBarItem(icon: Icon(Icons.lyrics), label: 'Lyrics'),
+          BottomNavigationBarItem(icon: Icon(Icons.comment), label: 'Comment'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         ],
         onTap: (idx) => _onTap(idx),
       ),
