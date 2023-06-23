@@ -96,7 +96,7 @@ class _PageState extends State<SonglistPage> {
                                   lyrics_jp: curr_song.lyrics_jp,
                                   lyrics_cn: curr_song.lyrics_cn,
                                   lyrics_en: curr_song.lyrics_en,
-                                  review_jp: curr_song.review_jp,
+                                  comment: curr_song.comment,
                                   review_cn: curr_song.review_cn,
                                   review_en: curr_song.review_en,
                                 ),

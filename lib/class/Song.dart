@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Song {
   String name;
@@ -6,13 +7,13 @@ class Song {
   String? composer = '中島みゆき'; //作曲
   List? live;
 
-  String? review_jp;
-  String? review_cn;
-  String? review_en;
-
   String? lyrics_jp;
   String? lyrics_cn;
   String? lyrics_en;
+
+  List? comment;
+  String? review_cn;
+  String? review_en;
 
   Song({
     required this.name,
@@ -22,7 +23,7 @@ class Song {
     this.lyrics_jp,
     this.lyrics_en,
     this.lyrics_cn,
-    this.review_jp,
+    this.comment,
     this.review_cn,
     this.review_en,
   });
@@ -32,7 +33,7 @@ class Song {
         '2': author,
         '3': composer,
         '4': live,
-        '5': review_jp,
+        '5': comment,
         '6': review_cn,
         '7': review_en,
         '8': lyrics_jp,
@@ -45,7 +46,7 @@ class Song {
         author: json['2'],
         composer: json['3'],
         live: json['4'],
-        review_jp: json['5'],
+        comment: json['5'],
         review_cn: json['6'],
         review_en: json['7'],
         lyrics_jp: json['8'],
@@ -68,10 +69,22 @@ class Song {
         lyrics_jp: '',
         lyrics_cn: '',
         lyrics_en: '',
-        review_jp: '',
+        comment: null,
         review_cn: '',
         review_en: '',
       );
     }
+  }
+
+  //add comment
+  static Future addComment(String songName, String newComment) async {
+    Song currSong = await Song.readSong(songName);
+    List<dynamic>? currComments = currSong.comment;
+    currComments!.add(newComment);
+    final user = FirebaseAuth.instance.currentUser;
+    await FirebaseFirestore.instance
+        .collection('songs')
+        .doc(songName)
+        .update({'5': currComments});
   }
 }

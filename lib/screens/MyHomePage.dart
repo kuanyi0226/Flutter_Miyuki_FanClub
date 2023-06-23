@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() async {
       userEmail = user!.email;
       miyukiUser = await MiyukiUser.readUser(userEmail!);
-      print('welcome ${miyukiUser.name}');
+      print('welcome ${miyukiUser.name} ${user!.uid}');
     });
 
     return miyukiUser;

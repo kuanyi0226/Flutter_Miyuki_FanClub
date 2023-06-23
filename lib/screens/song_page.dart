@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project5_miyuki/class/MiyukiUser.dart';
+import 'package:project5_miyuki/screens/MyHomePage.dart';
 
 import '../class/Concert.dart';
 import './songlist_page.dart';
@@ -69,6 +72,47 @@ class _SongPageState extends State<SongPage> {
     if (_curr_index == 3) {
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
+  }
+
+  //add comment
+  Future _createComment() async {
+    //user info
+    User? user = FirebaseAuth.instance.currentUser;
+    MiyukiUser miyukiUser = await MiyukiUser.readUser(user!.email!);
+
+    final nameController = TextEditingController();
+    nameController.text = '';
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(
+                'Comment',
+                style: TextStyle(color: theme_purple, fontSize: 20),
+              ),
+              content: TextField(
+                controller: nameController,
+                decoration: InputDecoration(hintText: 'Comment'),
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        String newComment = user.uid +
+                            '%%' +
+                            miyukiUser.name! +
+                            '%%' +
+                            nameController.text;
+                        Song.addComment(song!.name, newComment);
+                        song!.comment!.add(newComment);
+                        Navigator.of(context).pop();
+                      });
+                    },
+                    child: Text(
+                      'Add',
+                      style: TextStyle(color: theme_purple, fontSize: 20),
+                    )),
+              ],
+            ));
   }
 
   @override
@@ -145,8 +189,58 @@ class _SongPageState extends State<SongPage> {
                     ),
                   )
                 : // Comment
-                Container(),
+                (song!.comment != null)
+                    ? Expanded(
+                        child: ListView.builder(
+                            itemCount: song!.comment!.length,
+                            itemBuilder: ((context, index) {
+                              return Container(
+                                height: 60,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    //TODO: report system
+                                  },
+                                  child: Card(
+                                    elevation: 10,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        //Comment
+                                        Card(
+                                          color: theme_dark_grey,
+                                          child: Text(
+                                            song!.comment!.elementAt(index),
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                        ),
+                                        //User Name
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            song!.comment!.elementAt(index),
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            })),
+                      )
+                    : Text('No Comment')
       ]),
+      //Add Comment Button
+      floatingActionButton: Visibility(
+        visible: _curr_index == 2,
+        child: FloatingActionButton(
+          onPressed: _createComment,
+          child: Icon(Icons.add),
+        ),
+      ),
+      //Bottom Bar
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _curr_index,
