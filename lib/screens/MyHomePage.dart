@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
+import 'package:project5_miyuki/services/custom_search_delegate.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import './concert_page.dart';
@@ -39,6 +40,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _readMiyukiUser();
+
+    //read all song names for searching
+    var db = FirebaseFirestore.instance;
+    db.collection('songs').get().then((querySnapshot) {
+      for (var docSnapshot in querySnapshot.docs) {
+        CustomSearchDelegate.searchSongs.add(docSnapshot.id);
+      }
+    });
   }
 
   Future<MiyukiUser> _readMiyukiUser() async {
@@ -71,6 +80,14 @@ class _MyHomePageState extends State<MyHomePage> {
               }
             },
           ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  showSearch(
+                      context: context, delegate: CustomSearchDelegate());
+                },
+                icon: const Icon(Icons.search))
+          ],
         ),
         body: Container(
           padding: EdgeInsets.all(10),

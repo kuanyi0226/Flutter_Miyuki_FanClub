@@ -49,16 +49,23 @@ class _SongPageState extends State<SongPage> {
   void initState() {
     super.initState();
     lyricsList = song!.lyrics_jp!.split('%');
-    for (int i = 0; i < lyricsList.length; i++) {
-      lyricsTexts.add(Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          child: Text(
-            lyricsList.elementAt(i),
-            style: TextStyle(fontSize: 18),
-          ),
-        ),
+    if (lyricsList.elementAt(0) == '') {
+      lyricsTexts.add(Text(
+        'No Lyrics',
+        style: TextStyle(fontSize: 18),
       ));
+    } else {
+      for (int i = 0; i < lyricsList.length; i++) {
+        lyricsTexts.add(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            child: Text(
+              lyricsList.elementAt(i),
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+        ));
+      }
     }
   }
 
@@ -139,10 +146,17 @@ class _SongPageState extends State<SongPage> {
         title: Text(song!.name),
       ),
       body: Column(children: [
-        NetworkVideoPlayer(
-          concert: concert,
-          index: song_index,
-        ),
+        (concert == null)
+            ? Container(
+                height: 200,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            : NetworkVideoPlayer(
+                concert: concert,
+                index: song_index,
+              ),
         SizedBox(height: 20),
         (_curr_index == 0)
             ? //Live List
@@ -206,7 +220,7 @@ class _SongPageState extends State<SongPage> {
                     ),
                   )
                 : // Comment
-                (song!.comment != null)
+                (song!.comment != null && song!.comment!.elementAt(0) != '')
                     ? Expanded(
                         child: ListView.builder(
                             itemCount: song!.comment!.length,
@@ -267,7 +281,10 @@ class _SongPageState extends State<SongPage> {
                               );
                             })),
                       )
-                    : Text('No Comment')
+                    : Text(
+                        'No Comment',
+                        style: TextStyle(fontSize: 18),
+                      )
       ]),
       //Add Comment Button
       floatingActionButton: Visibility(
