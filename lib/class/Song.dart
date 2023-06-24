@@ -80,8 +80,31 @@ class Song {
   static Future addComment(String songName, String newComment) async {
     Song currSong = await Song.readSong(songName);
     List<dynamic>? currComments = currSong.comment;
-    currComments!.add(newComment);
-    final user = FirebaseAuth.instance.currentUser;
+    if (currComments!.elementAt(0) == '') {
+      //every song's comment was init as ''
+      currComments.clear();
+    }
+    currComments.add(newComment);
+    await FirebaseFirestore.instance
+        .collection('songs')
+        .doc(songName)
+        .update({'5': currComments});
+  }
+
+  //delete comment
+  static Future deleteComment(String songName, String deleteComment) async {
+    Song currSong = await Song.readSong(songName);
+    List<dynamic>? currComments = currSong.comment;
+    //find target comment in the list
+    for (int i = 0; i < currComments!.length; i++) {
+      if (currComments.elementAt(i) == deleteComment) {
+        currComments.removeAt(i); //delete comment
+      }
+    }
+    //avoid error: don't let the list be empty
+    if (currComments.isEmpty) {
+      currComments.add('');
+    }
     await FirebaseFirestore.instance
         .collection('songs')
         .doc(songName)

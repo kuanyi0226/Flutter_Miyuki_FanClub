@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/screens/MyHomePage.dart';
+import 'package:project5_miyuki/services/report_service.dart';
 
 import '../class/Concert.dart';
 import './songlist_page.dart';
@@ -61,7 +62,7 @@ class _SongPageState extends State<SongPage> {
           child: Container(
             child: Text(
               lyricsList.elementAt(i),
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 16),
             ),
           ),
         ));
@@ -119,6 +120,11 @@ class _SongPageState extends State<SongPage> {
                               '%%' +
                               commentController.text;
                           Song.addComment(song!.name, newComment);
+
+                          if (song!.comment!.elementAt(0) == '') {
+                            //every song's comment was init as ''
+                            song!.comment!.clear();
+                          }
                           song!.comment!.add(newComment);
                           Navigator.of(context).pop();
                           const snackBar = SnackBar(
@@ -134,6 +140,102 @@ class _SongPageState extends State<SongPage> {
                     child: Text(
                       'Add',
                       style: TextStyle(color: theme_purple, fontSize: 20),
+                    )),
+              ],
+            ));
+  }
+
+  //delete comment
+  Future _deleteComment(String deleteComment) async {
+    final commentController = TextEditingController();
+    commentController.text = '';
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(
+                'Delete Comment',
+                style: TextStyle(color: theme_purple, fontSize: 20),
+              ),
+              content: Text('Sure to delete this comment?'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        //delete from firebase
+                        Song.deleteComment(song!.name, deleteComment);
+                        //delete from current display
+                        for (int i = 0; i < song!.comment!.length; i++) {
+                          if (song!.comment!.elementAt(i) == deleteComment) {
+                            song!.comment!.removeAt(i); //delete comment
+                          }
+                        }
+                        //avoid error: don't let the list be empty
+                        if (song!.comment!.isEmpty) {
+                          song!.comment!.add('');
+                        }
+                        //finish
+                        Navigator.of(context).pop();
+                        const snackBar =
+                            SnackBar(content: Text('Deleted a comment'));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      });
+                    },
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.red, fontSize: 20),
+                    )),
+              ],
+            ));
+  }
+
+  //report comment
+  Future _reportComment(String reportComment) async {
+    //user info
+    User? user = FirebaseAuth.instance.currentUser;
+
+    final reportController = TextEditingController();
+    reportController.text = '';
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(
+                'Report This Comment',
+                style: TextStyle(color: theme_purple, fontSize: 20),
+              ),
+              content: TextField(
+                controller: reportController,
+                decoration:
+                    InputDecoration(hintText: 'Describe this comment...'),
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        if (reportController.text.length >= 15) {
+                          String reportString = 'Song Name: ' +
+                              song!.name +
+                              ';Comment context: ' +
+                              reportComment +
+                              ';Report Context: ' +
+                              reportController.text;
+                          ReportService.createReport(
+                              sender: user!.uid,
+                              type: 'Comment',
+                              text: reportString);
+                          Navigator.of(context).pop();
+                          const snackBar = SnackBar(
+                              content: Text('We have Received your report'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else {
+                          const snackBar = SnackBar(
+                              content: Text('Please Type More Than 15 words'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
+                      });
+                    },
+                    child: Text(
+                      'Report',
+                      style: TextStyle(color: Colors.red, fontSize: 20),
                     )),
               ],
             ));
@@ -225,6 +327,9 @@ class _SongPageState extends State<SongPage> {
                         child: ListView.builder(
                             itemCount: song!.comment!.length,
                             itemBuilder: ((context, index) {
+                              User? curr_user =
+                                  FirebaseAuth.instance.currentUser;
+                              //0:uid,1:userName,2:date,3:comment
                               List<String> commentSplit =
                                   song!.comment!.elementAt(index).split('%%');
                               //shorten the name, avoid exceeding boundary
@@ -274,6 +379,18 @@ class _SongPageState extends State<SongPage> {
                                         style: TextStyle(
                                             fontSize: 18, color: Colors.white),
                                       ),
+                                      trailing: (curr_user!.uid ==
+                                              commentSplit[0])
+                                          ? IconButton(
+                                              onPressed: () async =>
+                                                  _deleteComment(song!.comment!
+                                                      .elementAt(index)),
+                                              icon: Icon(Icons.delete))
+                                          : IconButton(
+                                              onPressed: () async =>
+                                                  _reportComment(song!.comment!
+                                                      .elementAt(index)),
+                                              icon: Icon(Icons.report)),
                                     ),
                                   ),
                                   Divider(),
