@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
+import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -16,32 +17,22 @@ import '../materials/colors.dart';
 import '../services/message_service.dart';
 
 class HomeDrawerPage extends StatefulWidget {
-  MiyukiUser? miyukiUser;
   User? user;
   GlobalKey<ScaffoldState> scaffoldKey;
-  HomeDrawerPage(
-      {super.key,
-      required this.miyukiUser,
-      required this.scaffoldKey,
-      required this.user});
+  HomeDrawerPage({super.key, required this.scaffoldKey, required this.user});
 
   @override
   State<HomeDrawerPage> createState() => _HomeDrawerPageState(
         scaffoldKey: scaffoldKey,
-        miyukiUser: miyukiUser,
         user: user,
       );
 }
 
 class _HomeDrawerPageState extends State<HomeDrawerPage> {
-  MiyukiUser? miyukiUser;
   User? user;
   GlobalKey<ScaffoldState> scaffoldKey;
 
-  _HomeDrawerPageState(
-      {required this.miyukiUser,
-      required this.user,
-      required this.scaffoldKey});
+  _HomeDrawerPageState({required this.user, required this.scaffoldKey});
 
   //check to sign out
   Future _signOutCheck() {
@@ -84,7 +75,7 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
                   'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Album/44/album44_cover.jpg'),
             ),
             accountName:
-                Text(miyukiUser!.name!, style: TextStyle(fontSize: 18)),
+                Text(InitData.miyukiUser.name!, style: TextStyle(fontSize: 18)),
             accountEmail: Text(user!.email!, style: TextStyle(fontSize: 18)),
           ),
           Padding(
@@ -144,9 +135,8 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
               leading: Icon(Icons.settings),
               title: Text('設定 Settings'),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        SettingsPage(miyukiUser: miyukiUser)));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SettingsPage()));
                 scaffoldKey.currentState!.openEndDrawer(); //close drawer
               }),
           SizedBox(height: 50),

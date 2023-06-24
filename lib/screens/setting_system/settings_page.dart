@@ -8,19 +8,15 @@ import './update_page.dart';
 import './profile_page.dart';
 
 class SettingsPage extends StatefulWidget {
-  MiyukiUser? miyukiUser;
-  SettingsPage({super.key, required this.miyukiUser});
+  SettingsPage({super.key});
 
   @override
-  State<SettingsPage> createState() =>
-      _SettingsPageState(miyukiUser: miyukiUser!);
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  MiyukiUser? miyukiUser;
   UpdateInfo? updateInfo;
-  _SettingsPageState({required MiyukiUser miyukiUser}) {
-    this.miyukiUser = miyukiUser;
+  _SettingsPageState() {
     _getInfo();
   }
   Future _getInfo() async {
@@ -50,10 +46,8 @@ class _SettingsPageState extends State<SettingsPage> {
             Card(
               child: Column(children: [
                 GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ProfilePage(
-                            miyukiUser: miyukiUser,
-                          ))),
+                  onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => ProfilePage())),
                   child: ListTile(
                     title: Text(
                       'Profile',

@@ -2,11 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/class/Concert.dart';
 import 'package:project5_miyuki/class/Song.dart';
+import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/screens/song_page.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
-  static List<String> searchSongs = [];
-
   @override
   List<Widget>? buildActions(BuildContext context) {
     // clear the query
@@ -33,7 +32,7 @@ class CustomSearchDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     // show the match
     List<String> matchQuery = [];
-    for (var song in searchSongs) {
+    for (var song in InitData.allSongs) {
       if (song.toLowerCase().contains(query.toLowerCase())) {
         matchQuery.add(song);
       }
@@ -61,7 +60,7 @@ class CustomSearchDelegate extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     // show the match
     List<String> matchQuery = [];
-    for (var song in searchSongs) {
+    for (var song in InitData.allSongs) {
       if (song.toLowerCase().contains(query.toLowerCase())) {
         matchQuery.add(song);
       }

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
+import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/services/custom_search_delegate.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -33,9 +34,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   User? user = FirebaseAuth.instance.currentUser;
   String? userEmail;
-  MiyukiUser miyukiUser =
-      MiyukiUser(name: 'No Name', email: 'No data', vip: false);
 
+  //init all data needed
   @override
   void initState() {
     super.initState();
@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var db = FirebaseFirestore.instance;
     db.collection('songs').get().then((querySnapshot) {
       for (var docSnapshot in querySnapshot.docs) {
-        CustomSearchDelegate.searchSongs.add(docSnapshot.id);
+        InitData.allSongs.add(docSnapshot.id);
       }
     });
   }
@@ -53,11 +53,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<MiyukiUser> _readMiyukiUser() async {
     setState(() async {
       userEmail = user!.email;
-      miyukiUser = await MiyukiUser.readUser(userEmail!);
-      print('welcome ${miyukiUser.name} ${user!.uid}');
+      InitData.miyukiUser = await MiyukiUser.readUser(userEmail!);
+      print('welcome ${InitData.miyukiUser.name} ${user!.uid}');
     });
 
-    return miyukiUser;
+    return InitData.miyukiUser;
   }
 
   @override
@@ -80,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
               }
             },
           ),
+          //Search Button
           actions: [
             IconButton(
                 onPressed: () {
@@ -139,9 +140,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         MessageService().createMessage(
                           text: text,
                           currMessage: currentMessage,
-                          userName: (miyukiUser.vip == false)
-                              ? miyukiUser.name!
-                              : '❆ ${miyukiUser.name}',
+                          userName: (InitData.miyukiUser.vip == false)
+                              ? InitData.miyukiUser.name!
+                              : '❆ ${InitData.miyukiUser.name}',
                         );
                         controller1.text = '';
                       },
@@ -181,7 +182,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         //Drawer
         drawer: HomeDrawerPage(
-          miyukiUser: miyukiUser,
           user: user,
           scaffoldKey: _scaffoldKey,
         ));

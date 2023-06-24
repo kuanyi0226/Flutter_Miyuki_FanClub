@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
+import 'package:project5_miyuki/materials/InitData.dart';
 
 import '../../materials/colors.dart';
 
 class ProfilePage extends StatefulWidget {
-  MiyukiUser? miyukiUser;
-  ProfilePage({required this.miyukiUser});
+  ProfilePage();
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState(miyukiUser: miyukiUser);
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  MiyukiUser? miyukiUser;
-  _ProfilePageState({required this.miyukiUser});
+  _ProfilePageState();
 
   Future _editUserName(String originalName) {
     final nameController = TextEditingController();
@@ -34,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () {
                       setState(() {
                         MiyukiUser.editUserName(nameController.text);
-                        miyukiUser!.name = nameController.text;
+                        InitData.miyukiUser.name = nameController.text;
                         Navigator.of(context).pop();
                       });
                     },
@@ -68,10 +67,10 @@ class _ProfilePageState extends State<ProfilePage> {
               Card(
                 child: Column(children: [
                   GestureDetector(
-                    onTap: () => _editUserName(miyukiUser!.name!),
+                    onTap: () => _editUserName(InitData.miyukiUser.name!),
                     child: ListTile(
                       title: Text(
-                        miyukiUser!.name!,
+                        InitData.miyukiUser.name!,
                         style: TextStyle(fontSize: 20),
                       ),
                       trailing: Icon(Icons.edit),
@@ -89,7 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Card(
                 child: ListTile(
                   title: Text(
-                    miyukiUser!.email!,
+                    InitData.miyukiUser.email!,
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
@@ -104,10 +103,10 @@ class _ProfilePageState extends State<ProfilePage> {
               Card(
                 child: ListTile(
                   title: Text(
-                    (miyukiUser!.vip == true)
+                    (InitData.miyukiUser.vip == true)
                         ? '❆❆❆ VIP User ❆❆❆'
                         : 'Normal User',
-                    style: (miyukiUser!.vip == true)
+                    style: (InitData.miyukiUser.vip == true)
                         ? TextStyle(fontSize: 20, color: theme_light_blue)
                         : TextStyle(fontSize: 20),
                   ),
