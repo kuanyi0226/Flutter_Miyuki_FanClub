@@ -167,6 +167,7 @@ class _SongPageState extends State<SongPage> {
                         for (int i = 0; i < song!.comment!.length; i++) {
                           if (song!.comment!.elementAt(i) == deleteComment) {
                             song!.comment!.removeAt(i); //delete comment
+                            break;
                           }
                         }
                         //avoid error: don't let the list be empty
@@ -241,6 +242,32 @@ class _SongPageState extends State<SongPage> {
             ));
   }
 
+  //switch the video
+  Future _switchVideo(String concertYear) async {
+    Concert? newConcert = await Concert.readConcert(concertYear);
+    int newSongIndex = 0;
+    if (newConcert != null) {
+      for (int i = 0; i < newConcert.songs!.length; i++) {
+        if (newConcert.songs!.elementAt(i).contains(song!.name)) {
+          newSongIndex = i + 1;
+          break;
+        }
+      }
+    }
+    print('Current Concert:' + newConcert.name);
+    print('Current song index:' + newSongIndex.toString());
+
+    //switch video
+    Navigator.pop(context);
+    //push without animation
+    Navigator.push(
+        context,
+        PageRouteBuilder(
+            transitionDuration: const Duration(seconds: 0),
+            pageBuilder: (_, __, ___) => SongPage(
+                concert: newConcert, song_index: newSongIndex, song: song)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -287,6 +314,8 @@ class _SongPageState extends State<SongPage> {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     //Year
                                     Card(
@@ -306,6 +335,12 @@ class _SongPageState extends State<SongPage> {
                                         style: TextStyle(fontSize: 20),
                                       ),
                                     ),
+                                    IconButton(
+                                        onPressed: () async {
+                                          _switchVideo(
+                                              song!.live!.elementAt(index));
+                                        },
+                                        icon: Icon(Icons.music_video))
                                   ],
                                 ),
                               ),

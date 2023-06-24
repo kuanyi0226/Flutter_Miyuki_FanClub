@@ -99,6 +99,7 @@ class Song {
     for (int i = 0; i < currComments!.length; i++) {
       if (currComments.elementAt(i) == deleteComment) {
         currComments.removeAt(i); //delete comment
+        break;
       }
     }
     //avoid error: don't let the list be empty

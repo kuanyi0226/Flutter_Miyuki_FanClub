@@ -18,7 +18,7 @@ class VideoPlayerWidget extends StatelessWidget {
               child: buildVideo(),
             )
           : Container(
-              height: 200,
+              height: 245,
               child: Center(
                 child: CircularProgressIndicator(),
               ),
