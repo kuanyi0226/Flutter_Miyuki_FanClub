@@ -69,16 +69,40 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ]),
             ),
-            //About
+            //More info
             ListTile(
               leading: const Icon(Icons.info),
               title: Text(
-                'About Us',
+                'More Info And Support',
                 style: TextStyle(fontSize: 25),
               ),
             ),
             Card(
               child: Column(children: [
+                //About App
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => UpdatePage(info: updateInfo))),
+                  child: ListTile(
+                    title: Text(
+                      'About App',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                ),
+                //Help and QAs
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => UpdatePage(info: updateInfo))),
+                  child: ListTile(
+                    title: Text(
+                      'Help and QAs',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                ),
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => UpdatePage(info: updateInfo))),

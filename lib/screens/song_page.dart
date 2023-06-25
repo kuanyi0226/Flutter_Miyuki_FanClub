@@ -4,7 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
+import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/screens/MyHomePage.dart';
+import 'package:project5_miyuki/screens/yakai/yakai_songlist_page.dart';
 import 'package:project5_miyuki/services/report_service.dart';
 import 'package:provider/provider.dart';
 
@@ -268,16 +270,42 @@ class _SongPageState extends State<SongPage> {
 
   //switch the video
   Future _switchVideo(String concertYear) async {
-    Concert? newConcert = await Concert.readConcert(concertYear);
     int newSongIndex = 0;
-    if (newConcert != null) {
-      for (int i = 0; i < newConcert.songs!.length; i++) {
-        if (newConcert.songs!.elementAt(i).contains(song!.name)) {
+    Concert? newConcert;
+    //get new concert and new song index
+    //Concert
+    if (concertYear[0] != 'y') {
+      newConcert = await Concert.readConcert(concertYear);
+
+      if (newConcert != null) {
+        for (int i = 0; i < newConcert.songs!.length; i++) {
+          if (newConcert.songs!.elementAt(i).contains(song!.name)) {
+            newSongIndex = i + 1; //find song index in new concert
+            break;
+          }
+        }
+      }
+    }
+    //Yakai
+    else {
+      List<String> newYakaiSongList =
+          MyDecoder.getYakaiSongList(yakai: concertYear);
+      newConcert = Concert(
+        name: MyDecoder.yearToConcertName(concertYear),
+        year: concertYear,
+        year_index: '0',
+        songs: newYakaiSongList,
+      );
+
+      for (int i = 0; i < newYakaiSongList.length; i++) {
+        if (MyDecoder.songNameToPure(newYakaiSongList.elementAt(i)) ==
+            song!.name.trim()) {
           newSongIndex = i + 1;
           break;
         }
       }
     }
+
     print('Current Concert:' + newConcert.name);
     print('Current song index:' + newSongIndex.toString());
 
@@ -299,7 +327,7 @@ class _SongPageState extends State<SongPage> {
         title: Text(song!.name),
       ),
       body: Column(children: [
-        (concert == null)
+        (concert == null || InitData.miyukiUser.vip == false)
             ? Container(
                 height: 200,
                 child: Center(
@@ -328,15 +356,26 @@ class _SongPageState extends State<SongPage> {
                             height: 60,
                             child: GestureDetector(
                               onTap: () async {
-                                //Read the concert tapped
-                                Concert tap_concert = await Concert.readConcert(
-                                    song!.live!.elementAt(index));
-                                //Jump to the correspond concert songlist page
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => SonglistPage(
-                                          concert: tap_concert,
-                                          concert_type: 'Concert',
-                                        )));
+                                String concertYear =
+                                    song!.live!.elementAt(index);
+                                //Yakai
+                                if (concertYear[0] == 'y') {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => YakaiSonglistPage(
+                                          yakai_year: concertYear)));
+                                } else {
+                                  //Concert
+                                  //Read the concert tapped
+                                  Concert tap_concert =
+                                      await Concert.readConcert(
+                                          song!.live!.elementAt(index));
+                                  //Jump to the correspond concert songlist page
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => SonglistPage(
+                                            concert: tap_concert,
+                                            concert_type: 'Concert',
+                                          )));
+                                }
                               },
                               child: Card(
                                 elevation: 10,

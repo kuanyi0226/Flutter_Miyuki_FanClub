@@ -85,12 +85,18 @@ class CustomSearchDelegate extends SearchDelegate {
   }
 
   //read all song names
-  static void getAllSongs() {
-    var db = FirebaseFirestore.instance;
-    db.collection('songs').get().then((querySnapshot) {
-      for (var docSnapshot in querySnapshot.docs) {
-        InitData.allSongs.add(docSnapshot.id);
-      }
+  static void getAllSongs() async {
+    // var db = FirebaseFirestore.instance;
+    // db.collection('songs').get().then((querySnapshot) {
+    //   for (var docSnapshot in querySnapshot.docs) {
+    //     InitData.allSongs.add(docSnapshot.id);
+    //   }
+    // });
+
+    final _collectionRef = FirebaseFirestore.instance.collection('songs');
+    final querySnapshot = await _collectionRef.get();
+    querySnapshot.docs.forEach((doc) {
+      InitData.allSongs.add(doc.id);
     });
   }
 }

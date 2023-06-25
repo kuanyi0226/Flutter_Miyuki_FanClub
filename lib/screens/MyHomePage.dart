@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import './concert_page.dart';
 import './setting_system/settings_page.dart';
-import './yakai_page.dart';
+import 'yakai/yakai_page.dart';
 import './home_drawer_page.dart';
 
 import '../class/Message.dart';
@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
         key: _scaffoldKey,
         //App Bar
         appBar: AppBar(
-          title: Text(APPNAME_JP),
+          title: Text(APPNAME_EN),
           leading: IconButton(
             icon: Icon(Icons.menu),
             onPressed: () {

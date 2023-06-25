@@ -8,7 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import './concert_page.dart';
 import './setting_system/settings_page.dart';
-import './yakai_page.dart';
+import 'yakai/yakai_page.dart';
 
 import '../class/Message.dart';
 import '../materials/text.dart';
@@ -122,7 +122,7 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
                 '/miyuki_zone/miyukiframeset'),
           ),
           ListTile(
-            leading: Icon(Icons.lyrics),
+            leading: Icon(Icons.assignment),
             title: Text('中島みゆき公式 Official'),
             onTap: () => _launchURL('https', 'www.miyuki.jp', ''),
           ),
@@ -130,6 +130,11 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 20),
             child: Text('Others'),
+          ),
+          ListTile(
+            leading: Icon(Icons.coffee_rounded),
+            title: Text('寄付する Donate Me'),
+            onTap: () => _launchURL('https', 'bmc.link', 'kevinhe'),
           ),
           ListTile(
               leading: Icon(Icons.settings),
