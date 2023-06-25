@@ -89,12 +89,29 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
                       print('$index ${songName}');
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => SongPage(
-                                song: curr_song,
+                                song: Song(
+                                  name: songName,
+                                  author: (curr_song.author != '')
+                                      ? curr_song.author
+                                      : '中島みゆき',
+                                  composer: (curr_song.composer != '')
+                                      ? curr_song.composer
+                                      : '中島みゆき',
+                                  live: curr_song.live,
+                                  lyrics_jp: curr_song.lyrics_jp,
+                                  lyrics_cn: curr_song.lyrics_cn,
+                                  lyrics_en: curr_song.lyrics_en,
+                                  comment: curr_song.comment,
+                                  review_cn: curr_song.review_cn,
+                                  review_en: curr_song.review_en,
+                                ),
                                 song_index: index + 1,
                                 concert: Concert(
                                   name: yakaiName,
                                   year: yakai_year,
                                   year_index: '0',
+                                  songs: MyDecoder.getYakaiSongList(
+                                      yakai: yakai_year),
                                 ),
                               )));
                     },
