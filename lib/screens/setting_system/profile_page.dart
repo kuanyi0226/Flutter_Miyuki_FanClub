@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
+import 'package:provider/provider.dart';
 
 import '../../materials/colors.dart';
 
@@ -31,11 +33,19 @@ class _ProfilePageState extends State<ProfilePage> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      setState(() {
-                        MiyukiUser.editUserName(nameController.text);
-                        InitData.miyukiUser.name = nameController.text;
-                        Navigator.of(context).pop();
-                      });
+                      if (Provider.of<InternetConnectionStatus>(context,
+                              listen: false) ==
+                          InternetConnectionStatus.connected) {
+                        setState(() {
+                          MiyukiUser.editUserName(nameController.text);
+                          InitData.miyukiUser.name = nameController.text;
+                        });
+                      } else {
+                        const snackBar =
+                            SnackBar(content: Text('No Wifi Connection'));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                      Navigator.of(context).pop();
                     },
                     child: Text(
                       'Edit',
@@ -89,6 +99,21 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: ListTile(
                   title: Text(
                     InitData.miyukiUser.email!,
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ),
+              //Yuki Coin
+              ListTile(
+                title: Text(
+                  'Yuki Coin',
+                  style: TextStyle(fontSize: 23),
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  title: Text(
+                    '\$ ${InitData.miyukiUser.coin}',
                     style: TextStyle(fontSize: 20),
                   ),
                 ),

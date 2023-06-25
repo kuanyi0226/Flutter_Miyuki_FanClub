@@ -83,4 +83,14 @@ class CustomSearchDelegate extends SearchDelegate {
       },
     );
   }
+
+  //read all song names
+  static void getAllSongs() {
+    var db = FirebaseFirestore.instance;
+    db.collection('songs').get().then((querySnapshot) {
+      for (var docSnapshot in querySnapshot.docs) {
+        InitData.allSongs.add(docSnapshot.id);
+      }
+    });
+  }
 }

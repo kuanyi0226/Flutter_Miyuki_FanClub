@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/screens/MyHomePage.dart';
 import 'package:project5_miyuki/services/report_service.dart';
+import 'package:provider/provider.dart';
 
 import '../class/Concert.dart';
 import './songlist_page.dart';
@@ -91,6 +93,7 @@ class _SongPageState extends State<SongPage> {
 
     final commentController = TextEditingController();
     commentController.text = '';
+    String snackBarString = 'Thanks for your comment~';
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -107,35 +110,42 @@ class _SongPageState extends State<SongPage> {
                     onPressed: () {
                       setState(() {
                         if (commentController.text.length >= 15) {
-                          final now = DateTime.now();
-                          //newComment: uid + userName + sentTime + comment
-                          String userName = (miyukiUser.vip == true)
-                              ? ('❆' + miyukiUser.name!)
-                              : miyukiUser.name!;
-                          String newComment = user.uid +
-                              '%%' +
-                              userName +
-                              '%%' +
-                              '${now.timeZoneName}: ${now.year}/${now.month}/${now.day} ${now.hour}:${now.minute}' +
-                              '%%' +
-                              commentController.text;
-                          Song.addComment(song!.name, newComment);
+                          if (Provider.of<InternetConnectionStatus>(context,
+                                  listen: false) ==
+                              InternetConnectionStatus.connected) {
+                            final now = DateTime.now();
+                            //newComment: uid + userName + sentTime + comment
+                            String userName = (miyukiUser.vip == true)
+                                ? ('❆' + miyukiUser.name!)
+                                : miyukiUser.name!;
+                            String newComment = user.uid +
+                                '%%' +
+                                userName +
+                                '%%' +
+                                '${now.timeZoneName}: ${now.year}/${now.month}/${now.day} ${now.hour}:${now.minute}' +
+                                '%%' +
+                                commentController.text;
+                            Song.addComment(song!.name, newComment);
 
-                          if (song!.comment!.elementAt(0) == '') {
-                            //every song's comment was init as ''
-                            song!.comment!.clear();
+                            if (song!.comment!.elementAt(0) == '') {
+                              //every song's comment was init as ''
+                              song!.comment!.clear();
+                            }
+                            song!.comment!.add(newComment);
+
+                            Navigator.of(context).pop();
+                            snackBarString = 'Thanks for your comment~';
+                          } else {
+                            snackBarString = 'No Wifi Connection';
+                            Navigator.of(context).pop();
                           }
-                          song!.comment!.add(newComment);
-                          Navigator.of(context).pop();
-                          const snackBar = SnackBar(
-                              content: Text('Thanks for your comment~'));
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         } else {
-                          const snackBar = SnackBar(
-                              content: Text('Please Type More Than 15 words'));
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          snackBarString = 'Please Type More Than 15 letters';
                         }
                       });
+
+                      var snackBar = SnackBar(content: Text(snackBarString));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
                     child: Text(
                       'Add',
@@ -149,6 +159,7 @@ class _SongPageState extends State<SongPage> {
   Future _deleteComment(String deleteComment) async {
     final commentController = TextEditingController();
     commentController.text = '';
+    String snackBarString = 'Deleted a comment';
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -161,23 +172,29 @@ class _SongPageState extends State<SongPage> {
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        //delete from firebase
-                        Song.deleteComment(song!.name, deleteComment);
-                        //delete from current display
-                        for (int i = 0; i < song!.comment!.length; i++) {
-                          if (song!.comment!.elementAt(i) == deleteComment) {
-                            song!.comment!.removeAt(i); //delete comment
-                            break;
+                        if (Provider.of<InternetConnectionStatus>(context,
+                                listen: false) ==
+                            InternetConnectionStatus.connected) {
+                          //delete from firebase
+                          Song.deleteComment(song!.name, deleteComment);
+                          //delete from current display
+                          for (int i = 0; i < song!.comment!.length; i++) {
+                            if (song!.comment!.elementAt(i) == deleteComment) {
+                              song!.comment!.removeAt(i); //delete comment
+                              break;
+                            }
                           }
+                          //avoid error: don't let the list be empty
+                          if (song!.comment!.isEmpty) {
+                            song!.comment!.add('');
+                          }
+                        } else {
+                          snackBarString = 'No Wifi Connection';
                         }
-                        //avoid error: don't let the list be empty
-                        if (song!.comment!.isEmpty) {
-                          song!.comment!.add('');
-                        }
+
                         //finish
                         Navigator.of(context).pop();
-                        const snackBar =
-                            SnackBar(content: Text('Deleted a comment'));
+                        var snackBar = SnackBar(content: Text(snackBarString));
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       });
                     },
@@ -196,6 +213,7 @@ class _SongPageState extends State<SongPage> {
 
     final reportController = TextEditingController();
     reportController.text = '';
+    String snackBarString = '';
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -212,26 +230,32 @@ class _SongPageState extends State<SongPage> {
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        if (reportController.text.length >= 15) {
-                          String reportString = 'Song Name: ' +
-                              song!.name +
-                              ';Comment context: ' +
-                              reportComment +
-                              ';Report Context: ' +
-                              reportController.text;
-                          ReportService.createReport(
-                              sender: user!.uid,
-                              type: 'Comment',
-                              text: reportString);
-                          Navigator.of(context).pop();
-                          const snackBar = SnackBar(
-                              content: Text('We have Received your report'));
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        if (Provider.of<InternetConnectionStatus>(context,
+                                listen: false) ==
+                            InternetConnectionStatus.connected) {
+                          if (reportController.text.length >= 15) {
+                            String reportString = 'Song Name: ' +
+                                song!.name +
+                                ';Comment context: ' +
+                                reportComment +
+                                ';Report Context: ' +
+                                reportController.text;
+                            ReportService.createReport(
+                                sender: user!.uid,
+                                type: 'Comment',
+                                text: reportString);
+                            Navigator.of(context).pop();
+                            snackBarString = 'We have Received your report!';
+                          } else {
+                            snackBarString = 'Please Type More Than 15 words';
+                          }
                         } else {
-                          const snackBar = SnackBar(
-                              content: Text('Please Type More Than 15 words'));
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          snackBarString = 'No Wifi Connection';
+                          Navigator.of(context).pop();
                         }
+
+                        var snackBar = SnackBar(content: Text(snackBarString));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       });
                     },
                     child: Text(
@@ -294,6 +318,12 @@ class _SongPageState extends State<SongPage> {
                     child: ListView.builder(
                         itemCount: song!.live!.length,
                         itemBuilder: ((context, index) {
+                          //shorten concert name
+                          String concertName = MyDecoder.yearToConcertName(
+                              song!.live!.elementAt(index));
+                          if (concertName.length > 15) {
+                            concertName = concertName.substring(0, 15) + '...';
+                          }
                           return Container(
                             height: 60,
                             child: GestureDetector(
@@ -323,16 +353,15 @@ class _SongPageState extends State<SongPage> {
                                       child: Text(
                                         MyDecoder.yearToConcertYear(
                                             song!.live!.elementAt(index)),
-                                        style: TextStyle(fontSize: 20),
+                                        style: TextStyle(fontSize: 18),
                                       ),
                                     ),
                                     //Concert Name
                                     Align(
                                       alignment: Alignment.centerRight,
                                       child: Text(
-                                        MyDecoder.yearToConcertName(
-                                            song!.live!.elementAt(index)),
-                                        style: TextStyle(fontSize: 20),
+                                        concertName,
+                                        style: TextStyle(fontSize: 18),
                                       ),
                                     ),
                                     IconButton(

@@ -124,7 +124,7 @@ class MyDecoder {
         case "1997_0":
           return 'パラダイス・カフェ';
         case "1998_0":
-          return 'CONCERT TOUR \'98 試行錯誤';
+          return 'TOUR \'98 試行錯誤';
         case "2001_1":
           return 'XXIc. 1st. 中島みゆき in KEIO';
         case "2005_0":

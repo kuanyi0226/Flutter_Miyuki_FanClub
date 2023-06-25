@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/services/custom_search_delegate.dart';
+import 'package:project5_miyuki/services/yukicoin_service.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import './concert_page.dart';
@@ -42,12 +45,10 @@ class _MyHomePageState extends State<MyHomePage> {
     _readMiyukiUser();
 
     //read all song names for searching
-    var db = FirebaseFirestore.instance;
-    db.collection('songs').get().then((querySnapshot) {
-      for (var docSnapshot in querySnapshot.docs) {
-        InitData.allSongs.add(docSnapshot.id);
-      }
-    });
+    if (InitData.allSongs.isEmpty) {
+      CustomSearchDelegate.getAllSongs();
+      print('Reading all song names');
+    }
   }
 
   Future<MiyukiUser> _readMiyukiUser() async {
@@ -58,6 +59,62 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     return InitData.miyukiUser;
+  }
+
+  //sent message by add button
+  void _sentMessage() {
+    String snackBarString = '';
+    //dialog
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(
+                'Sure To Send Message?',
+                style: TextStyle(color: theme_purple, fontSize: 20),
+              ),
+              content: Text('It will cost you \$1 Yuki Coin.\nYou have \$' +
+                  InitData.miyukiUser.coin.toString()),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        if (Provider.of<InternetConnectionStatus>(context,
+                                listen: false) ==
+                            InternetConnectionStatus.connected) {
+                          try {
+                            if (InitData.miyukiUser.coin! > 0) {
+                              //cost 1 yuki coin
+                              YukicoinService.addCoins(-1);
+                              //send message
+                              final text = controller1.text;
+                              MessageService().createMessage(
+                                text: text,
+                                currMessage: currentMessage,
+                                userName: (InitData.miyukiUser.vip == false)
+                                    ? InitData.miyukiUser.name!
+                                    : '❆ ${InitData.miyukiUser.name}',
+                              );
+                              controller1.text = '';
+                              snackBarString =
+                                  'Successfully sent! You still have Yuki Coin \$${InitData.miyukiUser.coin.toString()}';
+                            }
+                          } catch (e) {}
+                        } else {
+                          snackBarString = 'No Wifi Connection';
+                        }
+
+                        //finish
+                        var snackBar = SnackBar(content: Text(snackBarString));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        Navigator.of(context).pop();
+                      });
+                    },
+                    child: Text(
+                      'Send',
+                      style: TextStyle(color: Colors.red, fontSize: 20),
+                    )),
+              ],
+            ));
   }
 
   @override
@@ -134,18 +191,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             hintText: '伝言板 Message Board'),
                       ),
                     ),
+                    //sent message
                     IconButton(
-                      onPressed: () {
-                        final text = controller1.text;
-                        MessageService().createMessage(
-                          text: text,
-                          currMessage: currentMessage,
-                          userName: (InitData.miyukiUser.vip == false)
-                              ? InitData.miyukiUser.name!
-                              : '❆ ${InitData.miyukiUser.name}',
-                        );
-                        controller1.text = '';
-                      },
+                      onPressed: () => _sentMessage(),
                       icon: Icon(Icons.add),
                     ),
                   ],

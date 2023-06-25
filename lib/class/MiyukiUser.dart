@@ -5,24 +5,28 @@ class MiyukiUser {
   String? name;
   String? email;
   bool? vip = false; //set by admin
+  int? coin = 0;
 
-  MiyukiUser({required this.name, required this.email, this.vip});
+  MiyukiUser({required this.name, required this.email, this.vip, this.coin});
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'email': email,
         'vip': vip,
+        'coin': coin,
       };
 
   static MiyukiUser fromJson(Map<String, dynamic> json) => MiyukiUser(
         name: json['name'],
         email: json['email'],
         vip: json['vip'],
+        coin: json['coin'],
       );
   //create user(only create once)
   static Future createUser(
       {required String name, required String email}) async {
-    MiyukiUser user = MiyukiUser(name: name, email: email, vip: false);
+    MiyukiUser user =
+        MiyukiUser(name: name, email: email, vip: false, coin: 50);
     Map<String, dynamic> userData = user.toJson();
     await FirebaseFirestore.instance
         .collection('miyukiusers')
