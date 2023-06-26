@@ -56,7 +56,7 @@ class _SongPageState extends State<SongPage> {
     lyricsList = song!.lyrics_jp!.split('%');
     if (lyricsList.elementAt(0) == '') {
       lyricsTexts.add(Text(
-        'No Lyrics',
+        '歌詞無し No Lyrics',
         style: TextStyle(fontSize: 18),
       ));
     } else {
@@ -66,7 +66,7 @@ class _SongPageState extends State<SongPage> {
           child: Container(
             child: Text(
               lyricsList.elementAt(i),
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 15),
             ),
           ),
         ));
@@ -327,21 +327,24 @@ class _SongPageState extends State<SongPage> {
         title: Text(song!.name),
       ),
       body: Column(children: [
-        (concert == null || InitData.miyukiUser.vip == false)
-            ? Container(
-                height: 200,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            : NetworkVideoPlayer(
-                concert: concert,
-                index: song_index,
-              ),
+        (InitData.miyukiUser.vip == false)
+            ? Container(height: 4) //No vip
+            : (concert == null) //No video
+                ? Container(
+                    height: 200,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : NetworkVideoPlayer(
+                    //video
+                    concert: concert,
+                    index: song_index,
+                  ),
         SizedBox(height: 20),
-        (_curr_index == 0)
+        (_curr_index == 0) //bottom bar
             ? //Live List
-            (song!.live != null)
+            (song!.live != null && song!.live![0] != '')
                 ? Expanded(
                     child: ListView.builder(
                         itemCount: song!.live!.length,
@@ -416,7 +419,10 @@ class _SongPageState extends State<SongPage> {
                           );
                         })),
                   )
-                : CircularProgressIndicator()
+                : Text(
+                    '公演無し No Live',
+                    style: TextStyle(fontSize: 18),
+                  )
             : (_curr_index == 1)
                 ? //Lyrics
                 Expanded(
@@ -502,7 +508,7 @@ class _SongPageState extends State<SongPage> {
                             })),
                       )
                     : Text(
-                        'No Comment',
+                        'コメント無し No Comment',
                         style: TextStyle(fontSize: 18),
                       )
       ]),

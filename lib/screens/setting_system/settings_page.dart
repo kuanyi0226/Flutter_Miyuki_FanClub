@@ -39,7 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
               leading: const Icon(Icons.person),
               title: Text(
                 'Account',
-                style: TextStyle(fontSize: 25),
+                style: TextStyle(fontSize: 22),
               ),
             ),
             //Account
@@ -73,8 +73,8 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               leading: const Icon(Icons.info),
               title: Text(
-                'More Info And Support',
-                style: TextStyle(fontSize: 25),
+                'More Info & Support',
+                style: TextStyle(fontSize: 22),
               ),
             ),
             Card(
