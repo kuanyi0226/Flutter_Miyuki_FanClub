@@ -137,6 +137,16 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
             onTap: () => _launchURL('https', 'bmc.link', 'kevinhe'),
           ),
           ListTile(
+            leading: Icon(Icons.comment),
+            title: Text('アドバイス Talk to us'),
+            onTap: () => _launchURL('https', 'forms.gle', 'pZduHPmGgd7MVpZw6'),
+          ),
+          ListTile(
+            leading: Icon(Icons.check_box),
+            title: Text('リソース共有する Share Resource'),
+            onTap: () => _launchURL('https', 'forms.gle', '7mJKqXmXtVU2xphQ6'),
+          ),
+          ListTile(
               leading: Icon(Icons.settings),
               title: Text('設定 Settings'),
               onTap: () {

@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final version = "Version: ${CURR_VERSION}";
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String currentMessage = 'message1';
+  String currentMessage = '1';
   final controller1 = TextEditingController();
 
   User? user = FirebaseAuth.instance.currentUser;
@@ -161,11 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: TextStyle(fontSize: 20),
                     ),
                   )),
-              //Image
-              Expanded(
-                child: Image.network(
-                    'https://github.com/kuanyi0226/Yuki_DataBase/raw/main/Image/Album/44/album44_17.jpg'),
-              ),
+
               //Message Board
               Container(
                 color: theme_dark_grey,
@@ -173,16 +169,22 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        if (currentMessage == 'message1') {
-                          currentMessage = 'message2';
-                        } else {
-                          currentMessage = 'message1';
-                        }
+                        int tempInt = int.parse(currentMessage) + 1;
+                        if (tempInt >= 7) tempInt = 1;
+                        currentMessage = tempInt.toString();
                         setState(() {});
                       },
-                      icon: (currentMessage == 'message1')
+                      icon: (currentMessage == '1')
                           ? Icon(Icons.looks_one)
-                          : Icon(Icons.looks_two),
+                          : (currentMessage == '2')
+                              ? Icon(Icons.looks_two)
+                              : (currentMessage == '3')
+                                  ? Icon(Icons.looks_3)
+                                  : (currentMessage == '4')
+                                      ? Icon(Icons.looks_4)
+                                      : (currentMessage == '5')
+                                          ? Icon(Icons.looks_5)
+                                          : Icon(Icons.looks_6),
                     ),
                     Expanded(
                       child: TextField(

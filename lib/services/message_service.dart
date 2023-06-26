@@ -9,13 +9,14 @@ class MessageService {
     required String userName,
   }) async {
     //Reference document
-    final docMessage =
-        FirebaseFirestore.instance.collection('message-board').doc(currMessage);
+    final docMessage = FirebaseFirestore.instance
+        .collection('message-board')
+        .doc('message' + currMessage);
     final now = DateTime.now();
 
     final message = Message(
       text: text,
-      id: (currMessage == 'message1') ? 1 : 2,
+      id: int.parse(currMessage),
       userName: userName,
       sentTime: DateTime(
         now.year,
