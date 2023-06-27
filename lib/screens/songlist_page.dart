@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:project5_miyuki/class/Song.dart';
+import 'package:project5_miyuki/services/ad_mob_service.dart';
 
 import '../class/Concert.dart';
 import '../materials/colors.dart';
@@ -22,89 +24,119 @@ class _PageState extends State<SonglistPage> {
   String? concert_type;
   _PageState({this.concert, required this.concert_type});
 
+  BannerAd? _bannerAd;
+  bool _bannerAdLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _createBannerAd();
+  }
+
+  void _createBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.fullBanner,
+      //adUnitId: AdMobService.bannerAdUnitId!,
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      listener: AdMobService.bannerAdListener,
+      request: const AdRequest(),
+    )..load();
+    setState(() {
+      _bannerAdLoaded = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Text("コンサート Concert"),
-        ]),
-      ),
-      body: Column(
-        children: [
-          Container(
-            height: 125,
-            //Top display Card
-            child: Card(
-              color: theme_dark_grey,
-              elevation: 15.0,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      //Image
-                      Image.network(
-                        'https://github.com/kuanyi0226/Yuki_DataBase/raw/main/Image/${concert_type}/${concert!.year}_${concert!.year_index}/poster.png',
-                        fit: BoxFit.contain,
-                      ),
-                      //Text(Introductions)
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 10, top: 5, bottom: 5),
-                        child: Center(
-                          child: Text(
-                            "${concert!.year}年\n${concert!.name}",
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Text("コンサート Concert"),
+          ]),
+        ),
+        body: Column(
+          children: [
+            Container(
+              height: 125,
+              //Top display Card
+              child: Card(
+                color: theme_dark_grey,
+                elevation: 15.0,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        //Image
+                        Image.network(
+                          'https://github.com/kuanyi0226/Yuki_DataBase/raw/main/Image/${concert_type}/${concert!.year}_${concert!.year_index}/poster.png',
+                          fit: BoxFit.contain,
+                        ),
+                        //Text(Introductions)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 10, top: 5, bottom: 5),
+                          child: Center(
+                            child: Text(
+                              "${concert!.year}年\n${concert!.name}",
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  )),
+                      ],
+                    )),
+              ),
             ),
-          ),
-          //Songs Lists
-          Expanded(
-            child: ListView.builder(
-                itemCount: concert!.songs!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  //ListTile
-                  return ListTile(
-                    leading: const Icon(Icons.music_note),
-                    title: Text(concert!.songs![index]),
-                    onTap: () async {
-                      String songName = MyDecoder.songNameToPure(
-                          concert!.songs!.elementAt(index));
-                      Song curr_song =
-                          await Song.readSong(songName); //search the song
-                      print('$index ${songName}');
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SongPage(
-                                concert: concert,
-                                song_index: index + 1,
-                                song: Song(
-                                  name: songName,
-                                  author: (curr_song.author != '')
-                                      ? curr_song.author
-                                      : '中島みゆき',
-                                  composer: (curr_song.composer != '')
-                                      ? curr_song.composer
-                                      : '中島みゆき',
-                                  live: curr_song.live,
-                                  lyrics_jp: curr_song.lyrics_jp,
-                                  lyrics_cn: curr_song.lyrics_cn,
-                                  lyrics_en: curr_song.lyrics_en,
-                                  comment: curr_song.comment,
-                                  review_cn: curr_song.review_cn,
-                                  review_en: curr_song.review_en,
-                                ),
-                              )));
-                    },
-                  );
-                }),
-          ),
-        ],
-      ));
+            //Songs Lists
+            Expanded(
+              child: ListView.builder(
+                  itemCount: concert!.songs!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    //ListTile
+                    return ListTile(
+                      //leading: const Icon(Icons.music_note),
+                      title: Text(concert!.songs![index]),
+                      onTap: () async {
+                        String songName = MyDecoder.songNameToPure(
+                            concert!.songs!.elementAt(index));
+                        Song curr_song =
+                            await Song.readSong(songName); //search the song
+                        print('$index ${songName}');
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => SongPage(
+                                  concert: concert,
+                                  song_index: index + 1,
+                                  song: Song(
+                                    name: songName,
+                                    author: (curr_song.author != '')
+                                        ? curr_song.author
+                                        : '中島みゆき',
+                                    composer: (curr_song.composer != '')
+                                        ? curr_song.composer
+                                        : '中島みゆき',
+                                    live: curr_song.live,
+                                    lyrics_jp: curr_song.lyrics_jp,
+                                    lyrics_cn: curr_song.lyrics_cn,
+                                    lyrics_en: curr_song.lyrics_en,
+                                    comment: curr_song.comment,
+                                    review_cn: curr_song.review_cn,
+                                    review_en: curr_song.review_en,
+                                  ),
+                                )));
+                      },
+                    );
+                  }),
+            ),
+          ],
+        ),
+        bottomNavigationBar: (_bannerAd == null || !_bannerAdLoaded)
+            ? Container()
+            : Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                height: 52,
+                child: AdWidget(ad: _bannerAd!),
+              ),
+      );
 }

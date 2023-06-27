@@ -4,6 +4,7 @@ class InitData {
   static List<String> allSongs = [];
   static MiyukiUser miyukiUser =
       MiyukiUser(name: 'No Name', email: 'No data', vip: false);
+  static String todaySong = 'No Song';
 
   //const
   static List<String> YAKAIS = [

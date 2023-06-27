@@ -1,17 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
+import 'package:project5_miyuki/screens/ad_page.dart';
+import 'package:project5_miyuki/services/ad_mob_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../services/yukicoin_service.dart';
 import './concert_page.dart';
 import './setting_system/settings_page.dart';
 import 'yakai/yakai_page.dart';
 
 import '../class/Message.dart';
-import '../materials/text.dart';
+import '../materials/MyText.dart';
 import '../materials/colors.dart';
 
 import '../services/message_service.dart';
@@ -71,9 +75,7 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
           UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: theme_dark_grey),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage(
-                  'https://github.com/kuanyi0226/Nakajima_Miyuki_DataBase/raw/main/Image/Album/44/album44_cover.jpg'),
-            ),
+                backgroundImage: AssetImage('assets/images/logo.png')),
             accountName:
                 Text(InitData.miyukiUser.name!, style: TextStyle(fontSize: 18)),
             accountEmail: Text(user!.email!, style: TextStyle(fontSize: 18)),
@@ -86,6 +88,9 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
             leading: Icon(Icons.disc_full),
             title: Text('作品 Discography'),
             onTap: () {
+              var snackBar =
+                  SnackBar(content: Text('The function is not ready yet!'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
               scaffoldKey.currentState!.openEndDrawer(); //close drawler
             },
           ),
@@ -130,6 +135,12 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 20),
             child: Text('Others'),
+          ),
+          ListTile(
+            leading: Icon(Icons.ad_units),
+            title: Text('Watch Ads to Earn Yuki Coin'),
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => AdPage())),
           ),
           ListTile(
             leading: Icon(Icons.coffee_rounded),

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/class/official/updateInfo.dart';
+import 'package:project5_miyuki/screens/setting_system/about_app_page.dart';
+import 'package:project5_miyuki/screens/setting_system/copyright_page.dart';
+import 'package:project5_miyuki/screens/setting_system/privacy_policy_page.dart';
 
 import '../../screens/auth_system/forgot_password_page.dart';
+import '../../services/ad_mob_service.dart';
 import '../../services/official_service.dart';
 import './update_page.dart';
 import './profile_page.dart';
@@ -15,10 +20,33 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  bool _bannerAdLoaded = false;
+  BannerAd? _bannerAd;
+
   UpdateInfo? updateInfo;
   _SettingsPageState() {
     _getInfo();
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _createBannerAd();
+  }
+
+  void _createBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.fullBanner,
+      //adUnitId: AdMobService.bannerAdUnitId!,
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      listener: AdMobService.bannerAdListener,
+      request: const AdRequest(),
+    )..load();
+    setState(() {
+      _bannerAdLoaded = true;
+    });
+  }
+
   Future _getInfo() async {
     updateInfo = await OfficialService.getUpdateInfo();
     print('latest version is: ${updateInfo!.version}');
@@ -50,7 +78,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       MaterialPageRoute(builder: (context) => ProfilePage())),
                   child: ListTile(
                     title: Text(
-                      'Profile',
+                      'プロフィール Profile',
                       style: TextStyle(fontSize: 20),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -61,7 +89,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       builder: (context) => ForGotPasswordPage())),
                   child: ListTile(
                     title: Text(
-                      'Forgot Password',
+                      'パスワード忘れる Forgot Password',
                       style: TextStyle(fontSize: 20),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -81,23 +109,23 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Column(children: [
                 //About App
                 GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => UpdatePage(info: updateInfo))),
+                  onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => AboutAppPage())),
                   child: ListTile(
                     title: Text(
-                      'About App',
+                      '基本データ About App',
                       style: TextStyle(fontSize: 20),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
                 ),
-                //Help and QAs
+
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => UpdatePage(info: updateInfo))),
                   child: ListTile(
                     title: Text(
-                      'Help and QAs',
+                      '更新確認する Check Update',
                       style: TextStyle(fontSize: 20),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -105,10 +133,22 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => UpdatePage(info: updateInfo))),
+                      builder: (context) => PrivacyPolicyPage())),
                   child: ListTile(
                     title: Text(
-                      'Check Update',
+                      'プライバシーポリシー Privacy Policy',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                ),
+                //Copyright
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => CopyrightPage())),
+                  child: ListTile(
+                    title: Text(
+                      '著作権 Copyright',
                       style: TextStyle(fontSize: 20),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -119,6 +159,13 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
       ),
+      bottomNavigationBar: (_bannerAd == null || !_bannerAdLoaded)
+          ? Container()
+          : Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              height: 52,
+              child: AdWidget(ad: _bannerAd!),
+            ),
     );
   }
 }

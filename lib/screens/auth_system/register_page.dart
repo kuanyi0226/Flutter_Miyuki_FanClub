@@ -112,7 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
             //user name textfield
             MyTextField(
               controller: _userNameController,
-              hintText: 'User Name',
+              hintText: 'User Name(假名&漢字 is OK)',
               obscureText: false,
             ),
             const SizedBox(height: 5),

@@ -406,12 +406,14 @@ class _SongPageState extends State<SongPage> {
                                         style: TextStyle(fontSize: 18),
                                       ),
                                     ),
-                                    IconButton(
-                                        onPressed: () async {
-                                          _switchVideo(
-                                              song!.live!.elementAt(index));
-                                        },
-                                        icon: Icon(Icons.music_video))
+                                    (InitData.miyukiUser.vip == false)
+                                        ? Container() //not vip
+                                        : IconButton(
+                                            onPressed: () async {
+                                              _switchVideo(
+                                                  song!.live!.elementAt(index));
+                                            },
+                                            icon: Icon(Icons.music_video))
                                   ],
                                 ),
                               ),
