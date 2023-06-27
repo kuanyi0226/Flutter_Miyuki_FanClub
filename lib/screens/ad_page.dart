@@ -28,8 +28,8 @@ class _AdPageState extends State<AdPage> {
   void _createBannerAd() {
     _bannerAd = BannerAd(
       size: AdSize.fullBanner,
-      //adUnitId: AdMobService.bannerAdUnitId!,
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      adUnitId: AdMobService.bannerAdUnitId!,
+      //adUnitId: 'ca-app-pub-3940256099942544/6300978111',
       listener: AdMobService.bannerAdListener,
       request: const AdRequest(),
     )..load();
@@ -40,8 +40,8 @@ class _AdPageState extends State<AdPage> {
 
   void _createRewardedAd() {
     RewardedAd.load(
-        //adUnitId: AdMobService.rewardedAdUnitId!,
-        adUnitId: 'ca-app-pub-3940256099942544/5224354917',
+        adUnitId: AdMobService.rewardedAdUnitId!,
+        //adUnitId: 'ca-app-pub-3940256099942544/5224354917',
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(
             onAdLoaded: (ad) => _rewardedAd = ad,

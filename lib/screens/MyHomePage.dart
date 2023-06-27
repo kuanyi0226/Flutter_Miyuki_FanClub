@@ -79,8 +79,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void _createBannerAd() {
     _bannerAd = BannerAd(
       size: AdSize.fullBanner,
-      //adUnitId: AdMobService.bannerAdUnitId!,
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      adUnitId: AdMobService.bannerAdUnitId!,
+      //adUnitId: 'ca-app-pub-3940256099942544/6300978111',
       listener: AdMobService.bannerAdListener,
       request: const AdRequest(),
     )..load();
