@@ -34,17 +34,17 @@ class UpdatePage extends StatelessWidget {
               style: TextStyle(fontSize: 25),
             ),
             SizedBox(height: 20),
-            MyButton(
-                onTap: () async {
-                  if (CURR_VERSION != info!.version) {
-                    _launchURL('https', 'drive.google.com', info!.link!);
-                  } else {
-                    var snackBar = SnackBar(
-                        content: Text('The current version is up to date'));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-                },
-                text: 'Download Latest Version'),
+            // MyButton(
+            //     onTap: () async {
+            //       if (CURR_VERSION != info!.version) {
+            //         _launchURL('https', 'drive.google.com', info!.link!);
+            //       } else {
+            //         var snackBar = SnackBar(
+            //             content: Text('The current version is up to date'));
+            //         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            //       }
+            //     },
+            //     text: 'Download Latest Version'),
             SizedBox(height: 30),
             Text(
               'Update History',
