@@ -10,9 +10,9 @@ class RandomSongService {
     int day = now.day;
     int weekday = now.weekday;
     if (InitData.allSongs.length > 0) {
-      int mapping =
-          (((year + month) * day + weekday + 7) % InitData.allSongs.length)
-              .round();
+      int mapping = (((year + month) * day + weekday + 7 + day) %
+              InitData.allSongs.length)
+          .round();
       InitData.todaySong = InitData.allSongs[mapping];
     } else {
       InitData.todaySong = 'No Song';

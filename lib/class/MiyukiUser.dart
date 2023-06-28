@@ -45,7 +45,7 @@ class MiyukiUser {
       return MiyukiUser.fromJson(data!);
     } else {
       print('Can not find the user by email');
-      return MiyukiUser(name: 'No User', email: 'No Data', vip: false);
+      return MiyukiUser(name: 'No Name', email: 'No Data', vip: false, coin: 0);
     }
   }
 

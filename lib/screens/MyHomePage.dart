@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
@@ -12,11 +11,9 @@ import 'package:project5_miyuki/services/custom_search_delegate.dart';
 import 'package:project5_miyuki/services/random_song_service.dart';
 import 'package:project5_miyuki/services/yukicoin_service.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 import './concert_page.dart';
-import './setting_system/settings_page.dart';
-import 'yakai/yakai_page.dart';
 import './home_drawer_page.dart';
 
 import '../class/Message.dart';
@@ -46,13 +43,16 @@ class _MyHomePageState extends State<MyHomePage> {
   BannerAd? _bannerAd;
   bool _bannerAdLoaded = false;
 
+  _MyHomePageState() {
+    _initSongs();
+  }
+
   //init all data needed
   @override
   void initState() {
     super.initState();
-    _createBannerAd();
     _readMiyukiUser();
-    _initSongs();
+    _createBannerAd();
   }
 
   Future<MiyukiUser> _readMiyukiUser() async {
@@ -71,8 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
       CustomSearchDelegate.getAllSongs();
       print('Reading all song names');
     }
-    await Future<void>.delayed(const Duration(milliseconds: 1000));
-    RandomSongService.selectSong(); //today song
     setState(() {});
   }
 
@@ -97,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         builder: (context) => AlertDialog(
               title: Text(
-                'Sure To Send Message?',
+                'Sure To Send Message\non channel $currentMessage?',
                 style: TextStyle(color: theme_purple, fontSize: 20),
               ),
               content: Text('It will cost you \$1 Yuki Coin.\nYou have \$' +
@@ -125,6 +123,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               controller1.text = '';
                               snackBarString =
                                   'Successfully sent! You still have Yuki Coin \$${InitData.miyukiUser.coin.toString()}';
+                            } else {
+                              snackBarString = 'Your money is not enough';
                             }
                           } catch (e) {}
                         } else {
@@ -180,28 +180,37 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               //Today's song
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: GestureDetector(
-                    onTap: () async {
-                      if (InitData.todaySong != 'No Song') {
-                        Song currSong = await Song.readSong(InitData.todaySong);
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SongPage(
-                                  song: currSong,
-                                )));
-                      }
-                    },
-                    child: Text(
-                      '今日の曲：${InitData.todaySong}',
-                      style: TextStyle(
-                          fontSize: 20, decoration: TextDecoration.underline),
+              StreamBuilder(
+                stream: Stream.periodic(Duration(seconds: 1)),
+                builder: (context, snapshot) {
+                  RandomSongService.selectSong();
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (InitData.todaySong != 'No Song') {
+                            Song currSong =
+                                await Song.readSong(InitData.todaySong);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => SongPage(
+                                      song: currSong,
+                                    )));
+                          }
+                        },
+                        child: Text(
+                          '今日の曲：${InitData.todaySong}',
+                          style: TextStyle(
+                              fontSize: 20,
+                              decoration: TextDecoration.underline),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
+
               SizedBox(height: 10),
               //Message Board
               Container(
