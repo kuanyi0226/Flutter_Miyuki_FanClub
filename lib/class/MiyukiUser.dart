@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:project5_miyuki/materials/InitData.dart';
 
 class MiyukiUser {
+  String? uid;
   String? name;
   String? email;
   bool? vip = false; //set by admin
   int? coin = 0;
+  String? imgUrl;
 
   MiyukiUser({required this.name, required this.email, this.vip, this.coin});
 
@@ -44,17 +47,19 @@ class MiyukiUser {
       Map<String, dynamic>? data = document.data();
       return MiyukiUser.fromJson(data!);
     } else {
+      User? user = await FirebaseAuth.instance.currentUser;
       print('Can not find the user by email');
-      return MiyukiUser(name: 'No Name', email: 'No Data', vip: false, coin: 0);
+      InitData.miyukiUser.coin = 50;
+      await MiyukiUser.createUser(name: 'No Name', email: user!.email!);
+      return await MiyukiUser.readUser(user.email!);
     }
   }
 
   //Change name
   static Future editUserName(String name) async {
-    final user = FirebaseAuth.instance.currentUser;
     await FirebaseFirestore.instance
         .collection('miyukiusers')
-        .doc(user!.email)
+        .doc(InitData.miyukiUser.email)
         .update({'name': name});
   }
 }

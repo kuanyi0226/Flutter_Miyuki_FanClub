@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/MyText.dart';
-import 'package:project5_miyuki/materials/colors.dart';
 
 class CopyrightPage extends StatelessWidget {
   const CopyrightPage({super.key});

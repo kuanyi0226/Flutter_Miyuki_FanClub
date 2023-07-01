@@ -77,13 +77,23 @@ class _AdPageState extends State<AdPage> {
     return Scaffold(
       appBar: AppBar(title: Text('Thanks for watching Ads')),
       body: Center(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(primary: theme_purple),
-          child: Text(
-            'Watch Ad!',
-            style: TextStyle(fontSize: 50),
-          ),
-          onPressed: _showRewardedAd,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/images/cover1.jpg'),
+            SizedBox(height: 5),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: theme_purple),
+              child: Text(
+                'Watch Ad!',
+                style: TextStyle(fontSize: 50),
+              ),
+              onPressed: _showRewardedAd,
+            ),
+            SizedBox(height: 5),
+            Text('広告を見る、Yuki Coinを稼ぐ'),
+            Text('ありがとうございます！'),
+          ],
         ),
       ),
       bottomNavigationBar: (_bannerAd == null || !_bannerAdLoaded)

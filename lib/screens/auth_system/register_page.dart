@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project5_miyuki/materials/InitData.dart';
 
 import '../../services/auth_service.dart';
 
@@ -177,7 +178,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       .doc(user.email)
                       .get();
                   if (userInfo.exists == false) {
-                    MiyukiUser.createUser(name: 'No Name', email: user.email!);
+                    InitData.miyukiUser.coin = 50;
+                    await MiyukiUser.createUser(
+                        name: 'No Name', email: user.email!);
+                    InitData.miyukiUser = await MiyukiUser.readUser(
+                        FirebaseAuth.instance.currentUser!.email!);
                   }
                 } catch (err) {
                   //do again
@@ -188,7 +193,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       .doc(user.email)
                       .get();
                   if (userInfo.exists == false) {
-                    MiyukiUser.createUser(name: 'No Name', email: user.email!);
+                    InitData.miyukiUser.coin = 50;
+                    await MiyukiUser.createUser(
+                        name: 'No Name', email: user.email!);
+                    InitData.miyukiUser = await MiyukiUser.readUser(
+                        FirebaseAuth.instance.currentUser!.email!);
                   }
                 }
               },
@@ -206,6 +215,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Text(
                     'Login now',
                     style: TextStyle(
+                      fontSize: 17,
                       color: theme_dark_purple,
                       fontWeight: FontWeight.bold,
                     ),

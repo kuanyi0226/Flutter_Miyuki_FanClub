@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/class/official/updateInfo.dart';
-import 'package:project5_miyuki/widgets/MyButton.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../materials/MyText.dart';

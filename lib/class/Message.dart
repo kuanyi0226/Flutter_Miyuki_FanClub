@@ -5,12 +5,14 @@ class Message {
   String text = '';
   final DateTime sentTime;
   String? userName = '匿名';
+  String? senderImgUrl;
 
   Message({
     required this.id,
     required this.text,
     this.userName,
     required this.sentTime,
+    required this.senderImgUrl,
   });
 
   Map<String, dynamic> toJson() => {
@@ -18,6 +20,7 @@ class Message {
         'userName': userName,
         'text': text,
         'sentTime': sentTime,
+        'senderImgUrl': senderImgUrl,
       };
 
   static Message fromJson(Map<String, dynamic> json) => Message(
@@ -25,5 +28,6 @@ class Message {
         userName: json['userName'],
         text: json['text'],
         sentTime: (json['sentTime'] as Timestamp).toDate(),
+        senderImgUrl: json['senderImgUrl'],
       );
 }

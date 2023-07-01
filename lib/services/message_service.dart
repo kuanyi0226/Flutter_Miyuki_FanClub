@@ -7,6 +7,7 @@ class MessageService {
     required String currMessage,
     required String text,
     required String userName,
+    required String? senderImgUrl,
   }) async {
     //Reference document
     final docMessage = FirebaseFirestore.instance
@@ -18,6 +19,7 @@ class MessageService {
       text: text,
       id: int.parse(currMessage),
       userName: userName,
+      senderImgUrl: senderImgUrl,
       sentTime: DateTime(
         now.year,
         now.month,

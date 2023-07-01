@@ -2,14 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:project5_miyuki/class/MyDecoder.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/screens/yakai/yakai_songlist_page.dart';
-import 'package:video_player/video_player.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import '../songlist_page.dart';
-
-import '../../widgets/VideoPlayerWidget.dart';
-import '../../widgets/NetworkVideoPlayer.dart';
-import '../../class/Concert.dart';
 
 class YakaiPage extends StatefulWidget {
   @override

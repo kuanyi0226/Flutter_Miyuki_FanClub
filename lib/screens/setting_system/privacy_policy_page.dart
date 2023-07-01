@@ -39,7 +39,8 @@ class PrivacyPolicyPage extends StatelessWidget {
                         '(3) The amount of YUKI Coin you have in this app\n' +
                         '(4) Whether you are vip\n' +
                         '(5) The Comments you commented in the public homepage or a song page\n' +
-                        '(6) The Resources you want to share via Google Survey Sheet\n\n' +
+                        '(6) The Resources you want to share via Google Survey Sheet\n' +
+                        '(7) The Images or Video you uploaded\n\n' +
                         '※Vip means the friends of developer, you can not get Vip by cash(we will not sell the vip!)\n\n'
                             '※(Important!!!) We can not see your password in backend, so only you can see or modify it through "Forgot Password"',
                     style: TextStyle(fontSize: 15),

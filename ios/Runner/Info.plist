@@ -57,9 +57,20 @@
 		</array>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true/>
+		</dict>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Photo Library usage</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Camera usage</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Microphone usage</string>
 	</dict>
 </plist>

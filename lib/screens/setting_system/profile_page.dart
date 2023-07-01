@@ -1,12 +1,18 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
+import 'package:project5_miyuki/services/yukicoin_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../materials/colors.dart';
+import '../../services/image_service.dart';
 
 class ProfilePage extends StatefulWidget {
+  static String imgSelectJudge = '';
   ProfilePage();
 
   @override
@@ -14,7 +20,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  _ProfilePageState();
+  Uint8List? _image;
+  final UPDATE_IMG_COST = 200;
 
   Future _editUserName(String originalName) {
     final nameController = TextEditingController();
@@ -55,6 +62,67 @@ class _ProfilePageState extends State<ProfilePage> {
             ));
   }
 
+  void _selectImg() async {
+    ProfilePage.imgSelectJudge = '';
+    Uint8List? img = await ImageService.pickImage(ImageSource.gallery);
+    print('ImgSelectJudge: ' + ProfilePage.imgSelectJudge);
+    if (ProfilePage.imgSelectJudge == 'No Img Selected') {
+    } else {
+      return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text(
+                  '写真を更新する',
+                  style: TextStyle(color: theme_purple, fontSize: 20),
+                ),
+                content: Text(
+                    'Update Photo will cost \$$UPDATE_IMG_COST Yuki Coin, sure to update your photo?'),
+                actions: [
+                  TextButton(
+                      onPressed: () async {
+                        var snackBarText = '';
+                        if (Provider.of<InternetConnectionStatus>(context,
+                                listen: false) ==
+                            InternetConnectionStatus.connected) {
+                          //check money
+                          if (InitData.miyukiUser.coin! >= UPDATE_IMG_COST) {
+                            YukicoinService.addCoins(-200);
+                            snackBarText =
+                                'Successfully updated photo! You still have Yuki Coin \$${InitData.miyukiUser.coin}';
+                            var snackBar =
+                                SnackBar(content: Text(snackBarText));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            Navigator.of(context).pop();
+                            _image = img;
+                            String uploadResponse =
+                                await ImageService.saveData(file: _image!);
+                            print(uploadResponse);
+                            setState(() {});
+                          } else {
+                            snackBarText = 'You don\'t have enough Yuki Coin';
+                            var snackBar =
+                                SnackBar(content: Text(snackBarText));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            Navigator.of(context).pop();
+                          }
+                        } else {
+                          snackBarText = 'Update failed! No Wifi Connection';
+                          var snackBar = SnackBar(content: Text(snackBarText));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: Text(
+                        'Update Photo',
+                        style: TextStyle(color: theme_purple, fontSize: 20),
+                      )),
+                ],
+              ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +135,33 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              //Image
+              Stack(
+                children: [
+                  (_image != null)
+                      ? CircleAvatar(
+                          radius: 64,
+                          backgroundImage: MemoryImage(_image!),
+                        )
+                      : (InitData.miyukiUser.imgUrl != null)
+                          ? CircleAvatar(
+                              radius: 64,
+                              backgroundImage:
+                                  NetworkImage(InitData.miyukiUser.imgUrl!))
+                          : CircleAvatar(
+                              radius: 64,
+                              backgroundImage:
+                                  AssetImage('assets/images/logo.png')),
+                  Positioned(
+                    child: IconButton(
+                      onPressed: _selectImg,
+                      icon: Icon(Icons.add_a_photo),
+                    ),
+                    bottom: -10,
+                    left: 80,
+                  )
+                ],
+              ),
               //User Name
               ListTile(
                 title: Text(
@@ -121,7 +216,7 @@ class _ProfilePageState extends State<ProfilePage> {
               //Vip Type
               ListTile(
                 title: Text(
-                  'Vip Type',
+                  'User Type',
                   style: TextStyle(fontSize: 23),
                 ),
               ),

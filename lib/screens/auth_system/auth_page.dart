@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:project5_miyuki/class/MiyukiUser.dart';
-import 'package:project5_miyuki/materials/InitData.dart';
 
 import '../MyHomePage.dart';
 
@@ -20,7 +18,6 @@ class AuthPage extends StatelessWidget {
         builder: (context, snapshot) {
           //user is logged in
           if (snapshot.hasData) {
-            InitData.miyukiUser.coin = 50;
             return MyHomePage(title: APPNAME_JP);
           }
           //user is not logged in

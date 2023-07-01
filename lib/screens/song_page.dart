@@ -1,16 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:animated_background/animated_background.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
-import 'package:project5_miyuki/screens/MyHomePage.dart';
 import 'package:project5_miyuki/screens/yakai/yakai_songlist_page.dart';
 import 'package:project5_miyuki/services/report_service.dart';
 import 'package:provider/provider.dart';
 
 import '../class/Concert.dart';
+import '../services/custom_search_delegate.dart';
 import './songlist_page.dart';
 import '../class/Song.dart';
 import '../widgets/NetworkVideoPlayer.dart';
@@ -37,7 +35,7 @@ class SongPage extends StatefulWidget {
       );
 }
 
-class _SongPageState extends State<SongPage> {
+class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   Song? song;
   Concert? concert;
   int? song_index;
@@ -75,14 +73,14 @@ class _SongPageState extends State<SongPage> {
   }
 
   //bottom navigation
-  int _curr_index = 0;
+  int _curr_index = 1;
 
   void _onTap(int index) {
     setState(() {
       _curr_index = index;
     });
     //back to home
-    if (_curr_index == 3) {
+    if (_curr_index == 0) {
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
@@ -90,8 +88,8 @@ class _SongPageState extends State<SongPage> {
   //add comment
   Future _createComment() async {
     //user info
-    User? user = FirebaseAuth.instance.currentUser;
-    MiyukiUser miyukiUser = await MiyukiUser.readUser(user!.email!);
+    MiyukiUser miyukiUser =
+        await MiyukiUser.readUser(InitData.miyukiUser.email!);
 
     final commentController = TextEditingController();
     commentController.text = '';
@@ -120,7 +118,7 @@ class _SongPageState extends State<SongPage> {
                             String userName = (miyukiUser.vip == true)
                                 ? ('❆' + miyukiUser.name!)
                                 : miyukiUser.name!;
-                            String newComment = user.uid +
+                            String newComment = InitData.miyukiUser.uid! +
                                 '%%' +
                                 userName +
                                 '%%' +
@@ -210,9 +208,6 @@ class _SongPageState extends State<SongPage> {
 
   //report comment
   Future _reportComment(String reportComment) async {
-    //user info
-    User? user = FirebaseAuth.instance.currentUser;
-
     final reportController = TextEditingController();
     reportController.text = '';
     String snackBarString = '';
@@ -243,7 +238,7 @@ class _SongPageState extends State<SongPage> {
                                 ';Report Context: ' +
                                 reportController.text;
                             ReportService.createReport(
-                                sender: user!.uid,
+                                sender: InitData.miyukiUser.uid!,
                                 type: 'Comment',
                                 text: reportString);
                             Navigator.of(context).pop();
@@ -325,199 +320,235 @@ class _SongPageState extends State<SongPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(song!.name),
+        actions: [
+          IconButton(
+              onPressed: () {
+                showSearch(context: context, delegate: CustomSearchDelegate());
+              },
+              icon: const Icon(Icons.search))
+        ],
       ),
-      body: Column(children: [
-        (InitData.miyukiUser.vip == false)
-            ? Container(height: 4) //No vip
-            : (concert == null) //No video
-                ? Container(
-                    height: 200,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                : NetworkVideoPlayer(
-                    //video
-                    concert: concert,
-                    index: song_index,
-                  ),
-        SizedBox(height: 20),
-        (_curr_index == 0) //bottom bar
-            ? //Live List
-            (song!.live != null && song!.live![0] != '')
-                ? Expanded(
-                    child: ListView.builder(
-                        itemCount: song!.live!.length,
-                        itemBuilder: ((context, index) {
-                          //shorten concert name
-                          String concertName = MyDecoder.yearToConcertName(
-                              song!.live!.elementAt(index));
-                          if (concertName.length > 15) {
-                            concertName = concertName.substring(0, 15) + '...';
-                          }
-                          return Container(
-                            height: 60,
-                            child: GestureDetector(
-                              onTap: () async {
-                                String concertYear =
-                                    song!.live!.elementAt(index);
-                                //Yakai
-                                if (concertYear[0] == 'y') {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => YakaiSonglistPage(
-                                          yakai_year: concertYear)));
-                                } else {
-                                  //Concert
-                                  //Read the concert tapped
-                                  Concert tap_concert =
-                                      await Concert.readConcert(
-                                          song!.live!.elementAt(index));
-                                  //Jump to the correspond concert songlist page
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => SonglistPage(
-                                            concert: tap_concert,
-                                            concert_type: 'Concert',
-                                          )));
-                                }
-                              },
-                              child: Card(
-                                elevation: 10,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    //Year
-                                    Card(
-                                      color: theme_dark_grey,
-                                      child: Text(
-                                        MyDecoder.yearToConcertYear(
-                                            song!.live!.elementAt(index)),
-                                        style: TextStyle(fontSize: 18),
-                                      ),
-                                    ),
-                                    //Concert Name
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        concertName,
-                                        style: TextStyle(fontSize: 18),
-                                      ),
-                                    ),
-                                    (InitData.miyukiUser.vip == false)
-                                        ? Container() //not vip
-                                        : IconButton(
-                                            onPressed: () async {
-                                              _switchVideo(
-                                                  song!.live!.elementAt(index));
-                                            },
-                                            icon: Icon(Icons.music_video))
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        })),
-                  )
-                : Text(
-                    '公演無し No Live',
-                    style: TextStyle(fontSize: 18),
-                  )
-            : (_curr_index == 1)
-                ? //Lyrics
-                Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(children: lyricsTexts),
-                    ),
-                  )
-                : // Comment
-                (song!.comment != null && song!.comment!.elementAt(0) != '')
+      body: Stack(
+        children: [
+          //Background
+          AnimatedBackground(
+            behaviour: BubblesBehaviour(
+              options: BubbleOptions(
+                bubbleCount: 10,
+                maxTargetRadius: 100,
+              ),
+            ),
+            vsync: this,
+            child: Container(),
+          ),
+          Column(children: [
+            (InitData.miyukiUser.vip == false)
+                ? Container(height: 4) //No vip
+                : (concert == null) //No video
+                    ? Container(
+                        height: 200,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : NetworkVideoPlayer(
+                        //video
+                        concert: concert,
+                        index: song_index,
+                      ),
+            SizedBox(height: 20),
+            (_curr_index == 1) //bottom bar
+                ? //Live List
+                (song!.live != null && song!.live![0] != '')
                     ? Expanded(
                         child: ListView.builder(
-                            itemCount: song!.comment!.length,
+                            itemCount: song!.live!.length,
                             itemBuilder: ((context, index) {
-                              User? curr_user =
-                                  FirebaseAuth.instance.currentUser;
-                              //0:uid,1:userName,2:date,3:comment
-                              List<String> commentSplit =
-                                  song!.comment!.elementAt(index).split('%%');
-                              //shorten the name, avoid exceeding boundary
-                              if (commentSplit[1].length > 13) {
-                                commentSplit[1] =
-                                    commentSplit[1].substring(0, 13) + '...';
+                              //shorten concert name
+                              String concertName = MyDecoder.yearToConcertName(
+                                  song!.live!.elementAt(index));
+                              if (concertName.length > 15) {
+                                concertName =
+                                    concertName.substring(0, 15) + '...';
                               }
-                              return Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(1.0),
-                                    child: ListTile(
-                                      title: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          //User Name
-                                          Container(
-                                            child: Text(
-                                              commentSplit.elementAt(1),
-                                              style: (commentSplit
-                                                          .elementAt(1)[0] ==
-                                                      '❆')
-                                                  ? TextStyle(
-                                                      fontSize: 20,
-                                                      color: theme_light_blue)
-                                                  : TextStyle(fontSize: 20),
-                                            ),
+                              return Container(
+                                height: 60,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    String concertYear =
+                                        song!.live!.elementAt(index);
+                                    //Yakai
+                                    if (concertYear[0] == 'y') {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  YakaiSonglistPage(
+                                                      yakai_year:
+                                                          concertYear)));
+                                    } else {
+                                      //Concert
+                                      //Read the concert tapped
+                                      Concert tap_concert =
+                                          await Concert.readConcert(
+                                              song!.live!.elementAt(index));
+                                      //Jump to the correspond concert songlist page
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SonglistPage(
+                                                    concert: tap_concert,
+                                                    concert_type: 'Concert',
+                                                  )));
+                                    }
+                                  },
+                                  child: Card(
+                                    elevation: 10,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        //Year
+                                        Card(
+                                          color: theme_dark_grey,
+                                          child: Text(
+                                            MyDecoder.yearToConcertYear(
+                                                song!.live!.elementAt(index)),
+                                            style: TextStyle(fontSize: 18),
                                           ),
-                                          SizedBox(width: 5),
-                                          //Sent Time
-                                          Container(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.only(top: 5),
-                                              child: Text(
-                                                  commentSplit.elementAt(2),
-                                                  style:
-                                                      TextStyle(fontSize: 10)),
-                                            ),
+                                        ),
+                                        //Concert Name
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            concertName,
+                                            style: TextStyle(fontSize: 18),
                                           ),
-                                        ],
-                                      ),
-                                      //Message Text
-                                      subtitle: Text(
-                                        commentSplit.elementAt(3),
-                                        style: TextStyle(
-                                            fontSize: 18, color: Colors.white),
-                                      ),
-                                      trailing: (curr_user!.uid ==
-                                              commentSplit[0])
-                                          ? IconButton(
-                                              onPressed: () async =>
-                                                  _deleteComment(song!.comment!
-                                                      .elementAt(index)),
-                                              icon: Icon(Icons.delete))
-                                          : IconButton(
-                                              onPressed: () async =>
-                                                  _reportComment(song!.comment!
-                                                      .elementAt(index)),
-                                              icon: Icon(Icons.report)),
+                                        ),
+                                        (InitData.miyukiUser.vip == false)
+                                            ? Container() //not vip
+                                            : IconButton(
+                                                onPressed: () async {
+                                                  _switchVideo(song!.live!
+                                                      .elementAt(index));
+                                                },
+                                                icon: Icon(Icons.music_video))
+                                      ],
                                     ),
                                   ),
-                                  Divider(),
-                                ],
+                                ),
                               );
                             })),
                       )
                     : Text(
-                        'コメント無し No Comment',
+                        '公演無し No Live',
                         style: TextStyle(fontSize: 18),
                       )
-      ]),
+                : (_curr_index == 2)
+                    ? //Lyrics
+                    Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(children: lyricsTexts),
+                        ),
+                      )
+                    : // Comment
+                    (song!.comment != null && song!.comment!.elementAt(0) != '')
+                        ? Expanded(
+                            child: ListView.builder(
+                                itemCount: song!.comment!.length,
+                                itemBuilder: ((context, index) {
+                                  //0:uid,1:userName,2:date,3:comment
+                                  List<String> commentSplit = song!.comment!
+                                      .elementAt(index)
+                                      .split('%%');
+                                  //shorten the name, avoid exceeding boundary
+                                  if (commentSplit[1].length > 13) {
+                                    commentSplit[1] =
+                                        commentSplit[1].substring(0, 13) +
+                                            '...';
+                                  }
+                                  return Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(1.0),
+                                        child: ListTile(
+                                          title: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              //User Name
+                                              Container(
+                                                child: Text(
+                                                  commentSplit.elementAt(1),
+                                                  style: (commentSplit
+                                                              .elementAt(
+                                                                  1)[0] ==
+                                                          '❆')
+                                                      ? TextStyle(
+                                                          fontSize: 20,
+                                                          color:
+                                                              theme_light_blue)
+                                                      : TextStyle(fontSize: 20),
+                                                ),
+                                              ),
+                                              SizedBox(width: 5),
+                                              //Sent Time
+                                              Container(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 5),
+                                                  child: Text(
+                                                      commentSplit.elementAt(2),
+                                                      style: TextStyle(
+                                                          fontSize: 10)),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          //Message Text
+                                          subtitle: Text(
+                                            commentSplit.elementAt(3),
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.white),
+                                          ),
+                                          trailing: (InitData.miyukiUser.uid ==
+                                                  commentSplit[0])
+                                              ? IconButton(
+                                                  onPressed: () async =>
+                                                      _deleteComment(song!
+                                                          .comment!
+                                                          .elementAt(index)),
+                                                  icon: Icon(Icons.delete))
+                                              : IconButton(
+                                                  onPressed: () async =>
+                                                      _reportComment(song!
+                                                          .comment!
+                                                          .elementAt(index)),
+                                                  icon: Icon(Icons.report)),
+                                        ),
+                                      ),
+                                      Divider(),
+                                    ],
+                                  );
+                                })),
+                          )
+                        : Text(
+                            'コメント無し No Comment',
+                            style: TextStyle(fontSize: 18),
+                          )
+          ]),
+        ],
+      ),
+
       //Add Comment Button
       floatingActionButton: Visibility(
-        visible: _curr_index == 2,
+        visible: _curr_index == 3,
         child: FloatingActionButton(
+          backgroundColor: theme_purple,
           onPressed: _createComment,
           child: Icon(Icons.add),
         ),
@@ -525,13 +556,14 @@ class _SongPageState extends State<SongPage> {
       //Bottom Bar
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
+        fixedColor: theme_purple,
         currentIndex: _curr_index,
         items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month), label: 'Lives'),
           BottomNavigationBarItem(icon: Icon(Icons.lyrics), label: 'Lyrics'),
           BottomNavigationBarItem(icon: Icon(Icons.comment), label: 'Comment'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         ],
         onTap: (idx) => _onTap(idx),
       ),
