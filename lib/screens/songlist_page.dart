@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:project5_miyuki/class/Song.dart';
-import 'package:project5_miyuki/services/ad_mob_service.dart';
+import '../services/string_service.dart';
+import '../class/Song.dart';
 
 import '../class/Concert.dart';
 import '../materials/colors.dart';
@@ -24,26 +23,9 @@ class _PageState extends State<SonglistPage> {
   String? concert_type;
   _PageState({this.concert, required this.concert_type});
 
-  BannerAd? _bannerAd;
-  bool _bannerAdLoaded = false;
-
   @override
   void initState() {
     super.initState();
-    _createBannerAd();
-  }
-
-  void _createBannerAd() {
-    _bannerAd = BannerAd(
-      size: AdSize.fullBanner,
-      adUnitId: AdMobService.bannerAdUnitId!,
-      //adUnitId: 'ca-app-pub-3940256099942544/6300978111',
-      listener: AdMobService.bannerAdListener,
-      request: const AdRequest(),
-    )..load();
-    setState(() {
-      _bannerAdLoaded = true;
-    });
   }
 
   @override
@@ -97,7 +79,8 @@ class _PageState extends State<SonglistPage> {
                     //ListTile
                     return ListTile(
                       //leading: const Icon(Icons.music_note),
-                      title: Text(concert!.songs![index]),
+                      title: Text(
+                          StringService.dashToSpace(concert!.songs![index])),
                       onTap: () async {
                         String songName = MyDecoder.songNameToPure(
                             concert!.songs!.elementAt(index));
@@ -131,12 +114,5 @@ class _PageState extends State<SonglistPage> {
             ),
           ],
         ),
-        bottomNavigationBar: (_bannerAd == null || !_bannerAdLoaded)
-            ? Container()
-            : Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                height: 52,
-                child: AdWidget(ad: _bannerAd!),
-              ),
       );
 }

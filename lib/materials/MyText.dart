@@ -1,8 +1,10 @@
-const CURR_VERSION = 'V1.0.0';
+const CURR_VERSION = 'V1.0.2';
 const APPNAME_EN = 'YUKI CLUB';
-const APPNAME_JP = 'ゆき クラブ';
+const APPNAME_JP = '雪クラブ';
 
 const UPDATE_CONTENT = [
+  '--V1.0.2-- 2023/7/06\nfix: optimization',
+  '--V1.0.1-- 2023/7/06\nfix: optimization',
   '--V1.0.0-- 2023/7/01\nrelease version',
   '--beta V0.2.4-- 2023/6/30\nadd: discography, profile photo\nfix: optimization, google login database error',
   '--beta V0.2.3-- 2023/6/29\nadd: background & music',

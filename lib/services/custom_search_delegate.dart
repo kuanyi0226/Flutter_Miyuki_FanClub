@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:project5_miyuki/class/Song.dart';
-import 'package:project5_miyuki/materials/InitData.dart';
-import 'package:project5_miyuki/screens/song_page.dart';
+import '../services/string_service.dart';
+import '../class/Song.dart';
+import '../materials/InitData.dart';
+import '../screens/song_page.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
   @override
@@ -32,7 +32,8 @@ class CustomSearchDelegate extends SearchDelegate {
     // show the match
     List<String> matchQuery = [];
     for (var song in InitData.allSongs) {
-      if (song.toLowerCase().contains(query.toLowerCase())) {
+      if (StringService.dashToSpace(song.toLowerCase())
+          .contains(query.toLowerCase())) {
         matchQuery.add(song);
       }
     }
@@ -41,8 +42,9 @@ class CustomSearchDelegate extends SearchDelegate {
       itemCount: matchQuery.length,
       itemBuilder: (context, index) {
         var result = matchQuery[index];
+        var result_display = StringService.dashToSpace(matchQuery[index]);
         return ListTile(
-          title: Text(result),
+          title: Text(result_display),
           onTap: () async {
             Song currSong = await Song.readSong(result);
             Navigator.of(context).push(MaterialPageRoute(
@@ -60,7 +62,8 @@ class CustomSearchDelegate extends SearchDelegate {
     // show the match
     List<String> matchQuery = [];
     for (var song in InitData.allSongs) {
-      if (song.toLowerCase().contains(query.toLowerCase())) {
+      if (StringService.dashToSpace(song.toLowerCase())
+          .contains(query.toLowerCase())) {
         matchQuery.add(song);
       }
     }
@@ -69,8 +72,9 @@ class CustomSearchDelegate extends SearchDelegate {
       itemCount: matchQuery.length,
       itemBuilder: (context, index) {
         var result = matchQuery[index];
+        var result_display = StringService.dashToSpace(matchQuery[index]);
         return ListTile(
-          title: Text(result),
+          title: Text(result_display),
           onTap: () async {
             Song currSong = await Song.readSong(result);
             Navigator.of(context).push(MaterialPageRoute(

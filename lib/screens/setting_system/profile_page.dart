@@ -43,10 +43,16 @@ class _ProfilePageState extends State<ProfilePage> {
                       if (Provider.of<InternetConnectionStatus>(context,
                               listen: false) ==
                           InternetConnectionStatus.connected) {
-                        setState(() {
-                          MiyukiUser.editUserName(nameController.text);
-                          InitData.miyukiUser.name = nameController.text;
-                        });
+                        if (nameController.text != '') {
+                          setState(() {
+                            MiyukiUser.editUserName(nameController.text);
+                            InitData.miyukiUser.name = nameController.text;
+                          });
+                        } else {
+                          const snackBar =
+                              SnackBar(content: Text('Please type your name'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
                       } else {
                         const snackBar =
                             SnackBar(content: Text('No Wifi Connection'));

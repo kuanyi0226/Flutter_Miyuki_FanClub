@@ -73,4 +73,8 @@
 		<key>NSMicrophoneUsageDescription</key>
 		<string>Microphone usage</string>
 	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 </plist>

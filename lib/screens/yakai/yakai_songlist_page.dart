@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:project5_miyuki/class/Concert.dart';
-import 'package:project5_miyuki/class/MyDecoder.dart';
-import 'package:project5_miyuki/class/Song.dart';
-import 'package:project5_miyuki/materials/colors.dart';
-import 'package:project5_miyuki/screens/song_page.dart';
-
-import '../../services/ad_mob_service.dart';
+import '../../services/string_service.dart';
+import '../../class/Concert.dart';
+import '../../class/MyDecoder.dart';
+import '../../class/Song.dart';
+import '../../materials/colors.dart';
+import '../../screens/song_page.dart';
 
 class YakaiSonglistPage extends StatefulWidget {
   String yakai_year;
@@ -22,32 +20,15 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
   List<String> songlist = [];
   _YakaiSonglistPageState({required this.yakai_year});
 
-  BannerAd? _bannerAd;
-  bool _bannerAdLoaded = false;
-
   @override
   void initState() {
     super.initState();
-    _createBannerAd();
     // get the certain yakai song list
     songlist = MyDecoder.getYakaiSongList(yakai: yakai_year);
     yakaiName = MyDecoder.yearToConcertName(yakai_year);
     if (yakaiName.length > 16) {
       yakaiName = yakaiName.substring(0, 16) + '...';
     }
-  }
-
-  void _createBannerAd() {
-    _bannerAd = BannerAd(
-      size: AdSize.fullBanner,
-      adUnitId: AdMobService.bannerAdUnitId!,
-      //adUnitId: 'ca-app-pub-3940256099942544/6300978111',
-      listener: AdMobService.bannerAdListener,
-      request: const AdRequest(),
-    )..load();
-    setState(() {
-      _bannerAdLoaded = true;
-    });
   }
 
   @override
@@ -102,7 +83,7 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
                     return ListTile(
                       //leading: const Icon(Icons.music_note),
                       title: Text(
-                        songlist[index],
+                        StringService.dashToSpace(songlist[index]),
                         style: TextStyle(
                             color: (songlist[index].substring(0, 2) == '//')
                                 ? theme_light_blue //poem
@@ -147,12 +128,5 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
             ),
           ],
         ),
-        bottomNavigationBar: (_bannerAd == null || !_bannerAdLoaded)
-            ? Container()
-            : Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                height: 52,
-                child: AdWidget(ad: _bannerAd!),
-              ),
       );
 }

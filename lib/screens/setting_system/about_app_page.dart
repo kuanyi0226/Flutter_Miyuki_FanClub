@@ -18,7 +18,7 @@ class AboutAppPage extends StatelessWidget {
                 style: TextStyle(fontSize: 20),
               ),
               Text(
-                '${APPNAME_EN} is an APP to gather all the 中島みゆき fans in the world holding by an "Non-official" fan club in TW.(You can also contact me via Instagram:@miyukisama.fans.club).\n\n' +
+                '${APPNAME_EN} (miyukisamafansclub@gmail.com) is an APP to gather all the 中島みゆき fans in the world holding by an "Non-official" fan club in TW.(You can also contact me via Instagram:@miyukisama.fans.club).\n\n' +
                     'Everyone can share their thoughts about any of her songs with other fans. Let\'s make this community greater! Let more people know 中島みゆきさん. ',
                 style: TextStyle(fontSize: 15),
               ),
