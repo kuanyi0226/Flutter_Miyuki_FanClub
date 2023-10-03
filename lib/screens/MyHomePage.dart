@@ -170,7 +170,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         key: _scaffoldKey,
         //App Bar
         appBar: AppBar(
-          title: Text('❆ ' + APPNAME_EN),
+          title: Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Image.asset(
+              'assets/images/yuki_club.png',
+              width: 170,
+            ),
+          ),
           leading: IconButton(
             icon: Icon(Icons.menu),
             onPressed: () {
@@ -313,7 +319,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                         //sent message
                         IconButton(
                           onPressed: () => _sentMessage(),
-                          icon: Icon(Icons.add),
+                          icon: Icon(Icons.send),
                         ),
                       ],
                     ),

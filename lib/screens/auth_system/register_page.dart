@@ -97,19 +97,19 @@ class _RegisterPageState extends State<RegisterPage> {
       body: Center(
         child: SingleChildScrollView(
           child: Column(children: [
-            const SizedBox(height: 50),
+            const SizedBox(height: 10),
             //logo
             Image.asset(
               'assets/images/login_icon.jpg',
               height: 150,
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 5),
             //welcome text
             Text(
               '中島みゆきファンになりたい！',
               style: TextStyle(fontSize: 15),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 5),
             //user name textfield
             MyTextField(
               controller: _userNameController,
@@ -164,7 +164,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 10.0),
             //sign in with google
             SquareTile(
               imagePath: 'assets/images/google_icon.png',
@@ -202,7 +202,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 }
               },
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 10.0),
             //not a member register now
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -69,19 +69,19 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: SingleChildScrollView(
           child: Column(children: [
-            const SizedBox(height: 50),
+            const SizedBox(height: 20),
             //logo
             Image.asset(
               'assets/images/login_icon.jpg',
               height: 150,
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 15),
             //welcome text
             Text(
               'みゆきさん、同じ時代に生まれてくれてありがとう！',
               style: TextStyle(fontSize: 15),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             //email textfield
             MyTextField(
               controller: _emailController,
@@ -121,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20),
             //sign in button
             MyButton(onTap: signIn, text: 'Sign In'),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             //or continue with
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),

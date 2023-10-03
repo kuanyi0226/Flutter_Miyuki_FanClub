@@ -1,4 +1,4 @@
-import 'package:project5_miyuki/class/MiyukiUser.dart';
+import '../class/MiyukiUser.dart';
 
 class InitData {
   static MiyukiUser miyukiUser =
@@ -383,6 +383,7 @@ class InitData {
     '御機嫌如何',
     '心守歌',
     '心月',
+    '心音',
     '忘れてはいけない',
     '忘れな草をもう一度',
     '忘れられるものならば',
@@ -452,6 +453,7 @@ class InitData {
     '月虹',
     '月迎え',
     '有機体は過去を喰らふ',
+    '有謬の者共',
     '朝焼け',
     '木曜の夜',
     '未完成',
@@ -602,7 +604,6 @@ class InitData {
     '裸爪のライオン',
     '裸足で走れ',
     '見返り美人',
-    '見返り美人（NEW_VERSION）',
     '親愛なる者へ',
     '観音橋',
     '計画(詩篇)',
