@@ -1,8 +1,9 @@
-const CURR_VERSION = 'V1.0.2';
+const CURR_VERSION = 'V1.0.3';
 const APPNAME_EN = 'YUKI CLUB';
 const APPNAME_JP = '雪クラブ';
 
 const UPDATE_CONTENT = [
+  '--V1.0.3-- 2023/10/04\nfix: change logo, optimization',
   '--V1.0.2-- 2023/7/06\nfix: optimization',
   '--V1.0.1-- 2023/7/06\nfix: optimization',
   '--V1.0.0-- 2023/7/01\nrelease version',
