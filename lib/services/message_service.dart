@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class MessageService {
   //create data
   Future createMessage({
+    required String target_to_send,
     required String currMessage,
     required String text,
     required String userName,
@@ -11,7 +12,7 @@ class MessageService {
   }) async {
     //Reference document
     final docMessage = FirebaseFirestore.instance
-        .collection('message-board')
+        .collection(target_to_send)
         .doc('message' + currMessage);
     final now = DateTime.now();
 
@@ -35,9 +36,11 @@ class MessageService {
   }
 
   //read data
-  Stream<List<Message>> readMessages() => FirebaseFirestore.instance
-      .collection('message-board')
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Message.fromJson(doc.data())).toList());
+  Stream<List<Message>> readMessages({required String target_to_read}) {
+    return FirebaseFirestore.instance
+        .collection(target_to_read)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Message.fromJson(doc.data())).toList());
+  }
 }

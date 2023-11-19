@@ -7,7 +7,10 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/class/Song.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
+import 'package:project5_miyuki/screens/concert_page.dart';
+import 'package:project5_miyuki/screens/public_chat_room_page.dart';
 import 'package:project5_miyuki/screens/song_page.dart';
+import 'package:project5_miyuki/screens/yakai/yakai_page.dart';
 import 'package:project5_miyuki/services/ad_mob_service.dart';
 import 'package:project5_miyuki/services/custom_search_delegate.dart';
 import 'package:project5_miyuki/services/random_song_service.dart';
@@ -17,7 +20,6 @@ import 'package:provider/provider.dart';
 import './home_drawer_page.dart';
 
 import '../class/Message.dart';
-import '../materials/MyText.dart';
 import '../materials/colors.dart';
 
 import '../services/message_service.dart';
@@ -127,6 +129,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               //send message
                               final text = controller1.text;
                               MessageService().createMessage(
+                                target_to_send: 'message-board',
                                 text: text,
                                 currMessage: currentMessage,
                                 senderImgUrl:
@@ -171,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         //App Bar
         appBar: AppBar(
           title: Padding(
-            padding: const EdgeInsets.only(top: 12),
+            padding: const EdgeInsets.only(top: 2),
             child: Image.asset(
               'assets/images/yuki_club.png',
               width: 170,
@@ -200,167 +203,208 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 icon: const Icon(Icons.search))
           ],
         ),
-        body: Stack(
-          children: [
-            //background
-            StreamBuilder(
-              stream: Stream.periodic(Duration(seconds: 1)),
-              builder: (context, snapshot) {
-                final curr_time = DateTime.now();
-                //decide music
-                if (curr_time.minute % 30 == 0 && curr_time.second == 0) {
-                  //start
-                  if (ModalRoute.of(context)?.isCurrent ?? false) {
-                    //top stack page
-                    audioPlayer.play(AssetSource('jidai_music.mp3'),
-                        volume: 0.10);
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Stack(
+            children: [
+              //background
+              StreamBuilder(
+                stream: Stream.periodic(Duration(seconds: 1)),
+                builder: (context, snapshot) {
+                  final curr_time = DateTime.now();
+                  //decide music
+                  if (curr_time.minute % 30 == 0 && curr_time.second == 0) {
+                    //start
+                    if (ModalRoute.of(context)?.isCurrent ?? false) {
+                      //top stack page
+                      audioPlayer.play(AssetSource('jidai_music.mp3'),
+                          volume: 0.10);
+                    } else {
+                      audioPlayer.play(AssetSource('jidai_music.mp3'),
+                          volume: 0);
+                    }
+                  } else if (curr_time.minute % 30 == 0 &&
+                      curr_time.second < 50) {
+                    //playing
+                    if (ModalRoute.of(context)?.isCurrent ?? false) {
+                      //top stack page
+                      audioPlayer.setVolume(0.10);
+                    } else {
+                      audioPlayer.setVolume(0);
+                    }
                   } else {
-                    audioPlayer.play(AssetSource('jidai_music.mp3'), volume: 0);
-                  }
-                } else if (curr_time.minute % 30 == 0 &&
-                    curr_time.second < 50) {
-                  //playing
-                  if (ModalRoute.of(context)?.isCurrent ?? false) {
-                    //top stack page
-                    audioPlayer.setVolume(0.10);
-                  } else {
+                    //not playing
                     audioPlayer.setVolume(0);
                   }
-                } else {
-                  //not playing
-                  audioPlayer.setVolume(0);
-                }
-                //decide background effect
-                return (curr_time.minute % 30 == 0)
-                    ? WeatherBg(
-                        weatherType: WeatherType.heavySnow,
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.height,
-                      )
-                    : WeatherBg(
-                        weatherType: WeatherType.cloudyNight,
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.height,
-                      );
-              },
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  //Today's song
-                  StreamBuilder(
-                    stream: Stream.periodic(Duration(seconds: 1)),
-                    builder: (context, snapshot) {
-                      RandomSongService.selectSong();
-                      return Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: GestureDetector(
-                            onTap: () async {
-                              if (InitData.todaySong != 'No Song') {
-                                Song currSong =
-                                    await Song.readSong(InitData.todaySong);
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => SongPage(
-                                          song: currSong,
-                                        )));
-                              }
-                            },
-                            child: Text(
-                              '今日の曲：${InitData.todaySong}',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  decoration: TextDecoration.underline),
+                  //decide background effect
+                  return (curr_time.minute % 30 == 0)
+                      ? WeatherBg(
+                          weatherType: WeatherType.heavySnow,
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.height,
+                        )
+                      : WeatherBg(
+                          weatherType: WeatherType.cloudyNight,
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.height,
+                        );
+                },
+              ),
+              Container(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    //Today's song
+                    StreamBuilder(
+                      stream: Stream.periodic(Duration(seconds: 1)),
+                      builder: (context, snapshot) {
+                        RandomSongService.selectSong();
+                        return Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: GestureDetector(
+                              onTap: () async {
+                                if (InitData.todaySong != 'No Song') {
+                                  Song currSong =
+                                      await Song.readSong(InitData.todaySong);
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => SongPage(
+                                            song: currSong,
+                                          )));
+                                }
+                              },
+                              child: Text(
+                                '今日の曲：${InitData.todaySong.replaceAll('_', ' ')}',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    decoration: TextDecoration.underline),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
+                        );
+                      },
+                    ),
 
-                  SizedBox(height: 10),
-                  //Message Board
-                  Container(
-                    color: theme_dark_grey,
-                    child: Row(
+                    SizedBox(height: 10),
+                    //Function Buttons
+                    Row(
                       children: [
-                        IconButton(
+                        //Public Chat Room
+                        FilledButton.tonal(
+                          //style: ButtonStyle(backgroundColor: ),
+                          child: Text("Chat Room"),
                           onPressed: () {
-                            int tempInt = int.parse(currentMessage) + 1;
-                            if (tempInt >= 7) tempInt = 1;
-                            currentMessage = tempInt.toString();
-                            setState(() {});
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => PublicChatRoomPage()));
                           },
-                          icon: (currentMessage == '1')
-                              ? Icon(Icons.looks_one, color: Colors.orange)
-                              : (currentMessage == '2')
-                                  ? Icon(Icons.looks_two, color: Colors.orange)
-                                  : (currentMessage == '3')
-                                      ? Icon(Icons.looks_3,
-                                          color: Colors.orange)
-                                      : (currentMessage == '4')
-                                          ? Icon(Icons.looks_4,
-                                              color: Colors.orange)
-                                          : (currentMessage == '5')
-                                              ? Icon(Icons.looks_5,
-                                                  color: Colors.orange)
-                                              : Icon(Icons.looks_6,
-                                                  color: Colors.orange),
                         ),
-                        Expanded(
-                          child: TextField(
-                            controller: controller1,
-                            decoration: InputDecoration.collapsed(
-                                hintText: '伝言板 Message Board'),
-                          ),
+                        SizedBox(width: 10),
+                        //Public Chat Room
+                        FilledButton.tonal(
+                          //style: ButtonStyle(backgroundColor: ),
+                          child: Text("Concert"),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ConcertPage()));
+                          },
                         ),
-                        //sent message
-                        IconButton(
-                          onPressed: () => _sentMessage(),
-                          icon: Icon(Icons.send),
+                        SizedBox(width: 10),
+                        //Public Chat Room
+                        FilledButton.tonal(
+                          //style: ButtonStyle(backgroundColor: ),
+                          child: Text("Yakai"),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => YakaiPage()));
+                          },
                         ),
                       ],
                     ),
-                  ),
-                  Expanded(
-                    child: StreamBuilder<List<Message>>(
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Text('Something went wrong!');
-                        } else if (snapshot.hasData) {
-                          final messages = snapshot.data!;
-
-                          return Column(
-                            children: [
-                              Expanded(
-                                  child: ListView(
-                                children: messages.map(buildMessage).toList(),
-                              )),
-                            ],
-                          );
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
-                      stream: MessageService().readMessages(),
+                    SizedBox(height: 10),
+                    //Message Board
+                    Container(
+                      color: theme_dark_grey,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              int tempInt = int.parse(currentMessage) + 1;
+                              if (tempInt >= 7) tempInt = 1;
+                              currentMessage = tempInt.toString();
+                              setState(() {});
+                            },
+                            icon: (currentMessage == '1')
+                                ? Icon(Icons.looks_one, color: Colors.orange)
+                                : (currentMessage == '2')
+                                    ? Icon(Icons.looks_two,
+                                        color: Colors.orange)
+                                    : (currentMessage == '3')
+                                        ? Icon(Icons.looks_3,
+                                            color: Colors.orange)
+                                        : (currentMessage == '4')
+                                            ? Icon(Icons.looks_4,
+                                                color: Colors.orange)
+                                            : (currentMessage == '5')
+                                                ? Icon(Icons.looks_5,
+                                                    color: Colors.orange)
+                                                : Icon(Icons.looks_6,
+                                                    color: Colors.orange),
+                          ),
+                          Expanded(
+                            child: TextField(
+                              controller: controller1,
+                              decoration: InputDecoration.collapsed(
+                                  hintText: '伝言板 Message Board'),
+                            ),
+                          ),
+                          //sent message
+                          IconButton(
+                            onPressed: () => _sentMessage(),
+                            icon: Icon(Icons.send),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: StreamBuilder<List<Message>>(
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Something went wrong!');
+                          } else if (snapshot.hasData) {
+                            final messages = snapshot.data!;
+
+                            return Column(
+                              children: [
+                                Expanded(
+                                    child: ListView(
+                                  children: messages.map(buildMessage).toList(),
+                                )),
+                              ],
+                            );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
+                        stream: MessageService()
+                            .readMessages(target_to_read: 'message-board'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        bottomNavigationBar: (_bannerAd == null || !_bannerAdLoaded)
-            ? Container()
-            : Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                height: 52,
-                child: AdWidget(ad: _bannerAd!),
-              ),
+        // bottomNavigationBar: (_bannerAd == null || !_bannerAdLoaded)
+        //     ? Container()
+        //     : Container(
+        //         margin: const EdgeInsets.only(bottom: 12),
+        //         height: 52,
+        //         child: AdWidget(ad: _bannerAd!),
+        //       ),
         //Drawer
         drawer: HomeDrawerPage(
           user: user,
@@ -433,7 +477,7 @@ Widget buildMessage(Message message) {
           child: Padding(
             padding: const EdgeInsets.only(top: 5),
             child: Text(
-                '${message.sentTime.timeZoneName}: ${message.sentTime.year}/${message.sentTime.month}/${message.sentTime.day} ${message.sentTime.hour}:${message.sentTime.minute}',
+                '${message.sentTime.year}/${message.sentTime.month}/${message.sentTime.day} ${(message.sentTime.hour < 10 ? '0' + message.sentTime.hour.toString() : message.sentTime.hour)}:${(message.sentTime.minute < 10 ? '0' + message.sentTime.minute.toString() : message.sentTime.minute)}',
                 style: TextStyle(fontSize: 10)),
           ),
         ),
