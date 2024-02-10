@@ -147,6 +147,8 @@ class MyDecoder {
           return '一会（いちえ）2015~2016';
         case "2020_0":
           return 'ラスト・ツアー 「 結果オーライ」';
+        case "2024_0":
+          return '歌会 VOL.1';
         default:
           return 'No live';
       }
@@ -720,10 +722,10 @@ class MyDecoder {
           '03	笹舟',
           '04	遠近法',
           '05	ささやかな花',
-          '06	Last_Scene',
+          '06	LAST_SCENE',
           '07	奇妙な音楽',
           '08	鏡の中の他人',
-          '09	Never_Cry_Over_Spilt_Milk',
+          '09	NEVER_CRY_OVER_SPILT_MILK',
           '10	ギヴ・アンド・テイク',
           '11	奇妙な音楽',
           '12	彼と私と、もう１人',
@@ -765,8 +767,8 @@ class MyDecoder {
           '02	産声',
           '03	十二月',
           '04	月の赤ん坊',
-          '05	さよならの鐘',
-          '06	Last_Scene',
+          '05 キツネ狩りの歌',
+          '06	さよならの鐘',
           '07	泣かないでアマテラス',
           '08	笑わせるじゃないか',
           '09	シャングリラ',
