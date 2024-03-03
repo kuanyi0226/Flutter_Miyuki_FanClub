@@ -1,9 +1,15 @@
+import 'package:project5_miyuki/class/Yuki_Sekai/PlayerInfo.dart';
+import 'package:project5_miyuki/services/YukiSekai.dart';
+import 'package:project5_miyuki/widgets/Yuki_Sekai/players/player.dart';
+
 import '../class/MiyukiUser.dart';
 
 class InitData {
   static MiyukiUser miyukiUser =
       MiyukiUser(name: 'No Name', email: 'No data', vip: false);
   static String todaySong = 'No Song';
+  static YukiSekai yukiSekai = YukiSekai();
+  static List<PlayerInfo> playersInfo = [];
 
   //const
   static List<String> YAKAIS = [
@@ -369,6 +375,7 @@ class InitData {
     '川の音が聞こえる',
     '川風',
     '市場は眠らない',
+    '帰っておいで',
     '帰れない者たちへ',
     '帰省',
     '帰郷(ききょう)',
