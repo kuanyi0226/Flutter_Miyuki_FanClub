@@ -1,5 +1,5 @@
 name: project5_miyuki
-description: A new Flutter project.
+description: Nakajima Miyuki Non-official Fan Club
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.1.1+11
+version: 1.2.0+12
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
@@ -37,7 +37,6 @@ dependencies:
   get: ^4.6.5
 
   #decoration
-  flutter_weather_bg_null_safety: ^1.0.0
   animated_background: ^2.0.0
   dropdown_search: ^5.0.6
   
@@ -47,6 +46,7 @@ dependencies:
   firebase_auth: ^4.2.0
   firebase_core: ^2.4.0
   google_sign_in: ^5.4.2
+  firebase_database: ^10.4.0
 
   #play audio
   audioplayers: ^1.1.0
@@ -70,7 +70,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flame: ^1.9.1
   flame_tiled: ^1.14.1
-  firebase_database: ^10.4.0
+  
+  flutter_weather_bg_null_safety: ^1.0.0
 
 dev_dependencies:
   flutter_test:

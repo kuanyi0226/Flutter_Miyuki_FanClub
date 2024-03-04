@@ -1,6 +1,5 @@
 import 'package:project5_miyuki/class/Yuki_Sekai/PlayerInfo.dart';
 import 'package:project5_miyuki/services/YukiSekai.dart';
-import 'package:project5_miyuki/widgets/Yuki_Sekai/players/player.dart';
 
 import '../class/MiyukiUser.dart';
 

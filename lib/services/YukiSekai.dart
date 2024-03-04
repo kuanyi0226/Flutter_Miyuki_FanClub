@@ -24,7 +24,7 @@ class YukiSekai extends FlameGame
   Player player = Player(costume: 'Yakai_14_pink_dress');
 
   @override
-  Color backgroundColor() => const Color(0xFF211F30);
+  Color backgroundColor() => Color.fromARGB(255, 0, 0, 0);
   late final CameraComponent cam;
   late JoystickComponent joystick;
   bool showControl = true;
@@ -42,6 +42,7 @@ class YukiSekai extends FlameGame
         world: world, width: 640, height: 300);
     cam.viewfinder.anchor = Anchor.centerLeft;
     cam.follow(player, verticalOnly: true);
+    cam.priority = 0;
     addAll([cam, world]);
     if (showControl) {
       addJoystick();
@@ -58,6 +59,7 @@ class YukiSekai extends FlameGame
 
   void addJoystick() {
     joystick = JoystickComponent(
+      priority: 20,
       background: CircleComponent(
         radius: 48,
         paint: Paint()..color = Color.fromARGB(30, 0, 0, 0),
@@ -66,7 +68,8 @@ class YukiSekai extends FlameGame
         radius: 25,
         paint: Paint()..color = Color.fromARGB(76, 255, 255, 255),
       ),
-      margin: const EdgeInsets.only(left: 32, bottom: 32),
+      position: Vector2(65, 247),
+      //margin: const EdgeInsets.only(left: 40, bottom: 40),
     );
 
     cam.viewport.add(joystick);

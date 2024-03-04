@@ -1,4 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +32,7 @@ class _YukiSekaiPageState extends State<YukiSekaiPage> {
           Flame.device.setPortrait();
           InitData.yukiSekai = YukiSekai();
           InitData.playersInfo = [];
-          PlayerInfo.deletePlayer();
+          PlayerInfo.deletePlayer(InitData.miyukiUser.uid!);
         },
       )),
       body: GameWidget(game: InitData.yukiSekai),

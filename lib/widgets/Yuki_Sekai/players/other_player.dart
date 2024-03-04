@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/services/YukiSekai.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/components/collision_block.dart';
@@ -15,6 +17,9 @@ class OtherPlayer extends SpriteAnimationGroupComponent
   late final SpriteAnimation jumpingAnimation;
   late final SpriteAnimation fallingAnimation;
   final double stepTime = 0.05;
+
+  String name;
+  TextComponent nameTag = TextBoxComponent();
 
   String uid;
   String costume;
@@ -38,10 +43,19 @@ class OtherPlayer extends SpriteAnimationGroupComponent
   OtherPlayer(
       {super.position,
       required this.uid,
-      this.costume = 'Yakai_14_pink_dress'});
+      this.costume = 'Yakai_14_pink_dress',
+      this.name = 'No Name'});
 
   @override
   FutureOr<void> onLoad() {
+    //init name tag
+    nameTag = TextComponent(text: name)
+      ..textRenderer = TextPaint(style: TextStyle(fontSize: 13))
+      ..anchor = Anchor.topCenter
+      ..position = Vector2(sqrt((75 - name.length.toDouble()) * 15), -16.0)
+      ..priority = 300;
+    add(nameTag);
+    //init animation
     _loadAllAnimations();
     add(RectangleHitbox(
       position: Vector2(hitbox.offsetX, hitbox.offsetY),
@@ -91,7 +105,6 @@ class OtherPlayer extends SpriteAnimationGroupComponent
   }
 
   void _updatePlayerState() {
-    PlayerState playerState = PlayerState.idle;
     bool stillInWorld = false;
     InitData.playersInfo.forEach((element) {
       if (uid == element.uid) {
@@ -121,10 +134,9 @@ class OtherPlayer extends SpriteAnimationGroupComponent
       removeFromParent();
     }
 
-    if (velocity.x < 0 && scale.x > 0) {
+    if ((velocity.x < 0 && scale.x > 0) || (velocity.x > 0 && scale.x < 0)) {
       flipHorizontallyAroundCenter();
-    } else if (velocity.x > 0 && scale.x < 0) {
-      flipHorizontallyAroundCenter();
+      nameTag.flipHorizontallyAroundCenter();
     }
   }
 }

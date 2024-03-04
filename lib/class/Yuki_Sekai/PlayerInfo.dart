@@ -95,16 +95,22 @@ class PlayerInfo {
   }
 
   //Delete player info
-  //update player position
-  static Future deletePlayer() async {
+  static Future deletePlayer(String playerUid) async {
     final DatabaseReference fireBaseDB = FirebaseDatabase.instance.reference();
     fireBaseDB
         .child("Yuki_Sekai")
         .child("World1")
-        .child(InitData.miyukiUser.uid!)
+        .child(playerUid)
         .remove()
         .whenComplete(() {
-      print('Exit Yuki Sekai');
+      print('A Player Exit Yuki Sekai');
+    }).catchError((err) => print(err));
+  }
+
+  static Future deleteAllPlayers() async {
+    final DatabaseReference fireBaseDB = FirebaseDatabase.instance.reference();
+    fireBaseDB.child("Yuki_Sekai").child("World1").remove().whenComplete(() {
+      print('A Player Exit Yuki Sekai');
     }).catchError((err) => print(err));
   }
 }

@@ -75,16 +75,11 @@ class Level extends World {
           OtherPlayer new_player = OtherPlayer(
               uid: element.uid,
               position: Vector2(element.x, element.y),
-              costume: element.costume);
+              costume: element.costume,
+              name: element.name);
           new_player.priority = 100;
           otherplayers.add(new_player.uid);
-          //name tag
-          final nameTag = TextComponent(text: element.name)
-            ..anchor = Anchor.topLeft
-            ..size = Vector2(1, 1)
-            ..position = Vector2(-30 / 2, -32.0)
-            ..priority = 300;
-          new_player.add(nameTag);
+
           this.add(new_player);
           print('Added new player to Level: ${element.uid}');
         }

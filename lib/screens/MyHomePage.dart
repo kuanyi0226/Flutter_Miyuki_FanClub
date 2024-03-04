@@ -1,7 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flame/flame.dart';
-import 'package:flame/game.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_bg_null_safety/flutter_weather_bg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -14,7 +13,6 @@ import 'package:project5_miyuki/screens/concert_page.dart';
 import 'package:project5_miyuki/screens/public_chat_room_page.dart';
 import 'package:project5_miyuki/screens/song_page.dart';
 import 'package:project5_miyuki/screens/yakai/yakai_page.dart';
-import 'package:project5_miyuki/services/YukiSeKai.dart';
 import 'package:project5_miyuki/services/ad_mob_service.dart';
 import 'package:project5_miyuki/services/custom_search_delegate.dart';
 import 'package:project5_miyuki/services/random_song_service.dart';
@@ -332,6 +330,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             //style: ButtonStyle(backgroundColor: ),
                             child: Text("Yuki World"),
                             onPressed: () async {
+                              //PlayerInfo.deleteAllPlayers();
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => YukiSekaiPage()));
                             },
