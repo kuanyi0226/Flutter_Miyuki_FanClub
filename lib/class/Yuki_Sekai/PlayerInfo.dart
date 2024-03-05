@@ -72,18 +72,23 @@ class PlayerInfo {
   }
 
   //update player position
-  static Future updatePlayer(
-      {required double x,
-      required double y,
-      required double velocityX,
-      required double velocityY,
-      required String state}) async {
+  static Future updatePlayer({
+    required double x,
+    required double y,
+    required double velocityX,
+    required double velocityY,
+    required String state,
+    //required String costume,
+  }) async {
     Map<String, dynamic> data = {
+      //'name': InitData.miyukiUser.name,
+      //'uid': InitData.miyukiUser.uid,
       'x': x,
       'y': y,
       'velocityX': velocityX,
       'velocityY': velocityY,
       'state': state,
+      //'costume': costume,
     };
     final DatabaseReference fireBaseDB = FirebaseDatabase.instance.reference();
     fireBaseDB

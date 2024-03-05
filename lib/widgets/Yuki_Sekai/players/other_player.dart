@@ -48,6 +48,8 @@ class OtherPlayer extends SpriteAnimationGroupComponent
 
   @override
   FutureOr<void> onLoad() {
+    //init animation
+    _loadAllAnimations();
     //init name tag
     nameTag = TextComponent(text: name)
       ..textRenderer = TextPaint(style: TextStyle(fontSize: 13))
@@ -55,8 +57,6 @@ class OtherPlayer extends SpriteAnimationGroupComponent
       ..position = Vector2(sqrt((75 - name.length.toDouble()) * 15), -16.0)
       ..priority = 300;
     add(nameTag);
-    //init animation
-    _loadAllAnimations();
     add(RectangleHitbox(
       position: Vector2(hitbox.offsetX, hitbox.offsetY),
       size: Vector2(hitbox.width, hitbox.height),
@@ -89,7 +89,7 @@ class OtherPlayer extends SpriteAnimationGroupComponent
       PlayerState.falling: fallingAnimation,
     };
     //Set current animation
-    current = PlayerState.idle;
+    current = PlayerState.falling;
   }
 
   SpriteAnimation _spriteAnimation(String state, int amount) {

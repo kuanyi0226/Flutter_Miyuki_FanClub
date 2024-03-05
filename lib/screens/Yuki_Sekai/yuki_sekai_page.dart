@@ -30,8 +30,9 @@ class _YukiSekaiPageState extends State<YukiSekaiPage> {
           //Quit Yuki Sekai
           Navigator.of(context).popUntil((route) => route.isFirst);
           Flame.device.setPortrait();
+
           InitData.yukiSekai = YukiSekai();
-          InitData.playersInfo = [];
+          InitData.playersInfo.clear();
           PlayerInfo.deletePlayer(InitData.miyukiUser.uid!);
         },
       )),

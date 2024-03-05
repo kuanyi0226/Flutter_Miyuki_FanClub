@@ -17,6 +17,7 @@ class Level extends World {
 
   @override
   FutureOr<void> onLoad() async {
+    otherplayers.clear();
     level = await TiledComponent.load('$levelName.tmx', Vector2.all(16));
 
     add(level);
@@ -32,6 +33,7 @@ class Level extends World {
             //   ..position = Vector2(-30 / 2, -32.0)
             //   ..priority = 300;
             player.position = Vector2(spawnPoint.x, spawnPoint.y);
+            player.priority = 7;
             add(player);
             //player.add(nameTag);
             break;
@@ -77,7 +79,7 @@ class Level extends World {
               position: Vector2(element.x, element.y),
               costume: element.costume,
               name: element.name);
-          new_player.priority = 100;
+          new_player.priority = 5;
           otherplayers.add(new_player.uid);
 
           this.add(new_player);
@@ -92,7 +94,10 @@ class Level extends World {
         InitData.playersInfo.forEach((element) {
           if (element.uid == otherplayers[i]) stillInWorld = true;
         });
-        if (!stillInWorld) otherplayers.removeAt(i);
+        if (!stillInWorld) {
+          otherplayers.removeAt(i);
+          print('otherPlayers.length = ${otherplayers.length}');
+        }
       }
     }
     super.update(dt);

@@ -31,6 +31,7 @@ class YukiSekai extends FlameGame
 
   @override
   FutureOr<void> onLoad() async {
+    InitData.playersInfo.clear();
     //load all images into cache
     await images.loadAllImages();
 
@@ -112,7 +113,8 @@ class YukiSekai extends FlameGame
           if (data.child('uid').value.toString() ==
               InitData.playersInfo[i].uid) {
             InitData.playersInfo.removeAt(i);
-            print('player info removed: ${data.child('uid').value.toString()}');
+            print(
+                'player info removed: ${data.child('uid').value.toString()}\nthere are ${InitData.playersInfo.length} otherPlayers');
             break;
           }
         }
@@ -133,9 +135,13 @@ class YukiSekai extends FlameGame
           state: data.child('state').value.toString());
 
       if (new_info.uid != InitData.miyukiUser.uid) {
-        //add new player
-        InitData.playersInfo.add(new_info);
-        print('player info added');
+        if (InitData.playersInfo
+            .every((element) => element.uid != new_info.uid)) {
+          //add new player
+          InitData.playersInfo.add(new_info);
+          print(
+              'player info added: there are ${InitData.playersInfo.length} otherPlayers');
+        }
       }
     });
     //onchanged
@@ -155,20 +161,19 @@ class YukiSekai extends FlameGame
       //print('player_info: + ${new_info.x}');
       //not the self
       if (new_info.uid != InitData.miyukiUser.uid) {
-        if (InitData.playersInfo.isEmpty) {
+        if (InitData.playersInfo
+            .every((element) => element.uid != new_info.uid)) {
           //add new player
           InitData.playersInfo.add(new_info);
-          print('player info added');
+          print(
+              'player info added: there are ${InitData.playersInfo.length} otherPlayers');
         } else {
-          bool notInList = true;
           for (int i = 0; i < InitData.playersInfo.length; i++) {
             if (InitData.playersInfo[i].uid == new_info.uid) {
-              notInList = false;
               InitData.playersInfo[i] = new_info;
               break;
             }
           }
-          if (notInList) InitData.playersInfo.add(new_info);
         }
       }
       // InitData.playersInfo.forEach((element) {

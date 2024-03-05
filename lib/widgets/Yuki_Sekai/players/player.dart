@@ -45,6 +45,7 @@ class Player extends SpriteAnimationGroupComponent
 
   @override
   FutureOr<void> onLoad() {
+    isIdle = false;
     _loadAllAnimations();
     add(RectangleHitbox(
       position: Vector2(hitbox.offsetX, hitbox.offsetY),
@@ -155,6 +156,7 @@ class Player extends SpriteAnimationGroupComponent
       if (!isIdle || velocity.y != 0) {
         isIdle = true;
         PlayerInfo.updatePlayer(
+            //costume: costume,
             x: position.x,
             y: position.y,
             velocityX: velocity.x,
@@ -164,6 +166,7 @@ class Player extends SpriteAnimationGroupComponent
     } else {
       isIdle = false;
       PlayerInfo.updatePlayer(
+          //costume: costume,
           x: position.x,
           y: position.y,
           velocityX: velocity.x,
