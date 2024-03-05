@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -21,7 +22,7 @@ class YukiSekai extends FlameGame
   final DatabaseReference fireBaseDB =
       FirebaseDatabase.instance.ref('Yuki_Sekai/World1');
 
-  Player player = Player(costume: 'Yakai_14_pink_dress');
+  Player player = Player();
 
   @override
   Color backgroundColor() => Color.fromARGB(255, 0, 0, 0);
@@ -32,6 +33,9 @@ class YukiSekai extends FlameGame
   @override
   FutureOr<void> onLoad() async {
     InitData.playersInfo.clear();
+    player.costume = (Random().nextInt(100) > 40)
+        ? 'Yakai_14_black_dress'
+        : 'Yakai_14_pink_dress';
     //load all images into cache
     await images.loadAllImages();
 

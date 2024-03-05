@@ -112,7 +112,7 @@ class Player extends SpriteAnimationGroupComponent
           .fromCache('yuki_sekai/Main Characters/$costume/$state (32x32).png'),
       SpriteAnimationData.sequenced(
         amount: amount, //amount of pictures in the animation
-        stepTime: stepTime,
+        stepTime: (state == 'Run') ? stepTime * 2 : stepTime,
         textureSize: Vector2.all(64),
       ),
     );

@@ -27,15 +27,9 @@ class Level extends World {
       for (final spawnPoint in spawnPointsLayer.objects) {
         switch (spawnPoint.class_) {
           case 'Player':
-            // final nameTag = TextComponent(text: InitData.miyukiUser.name)
-            //   ..anchor = Anchor.topLeft
-            //   ..size = Vector2(1, 1)
-            //   ..position = Vector2(-30 / 2, -32.0)
-            //   ..priority = 300;
             player.position = Vector2(spawnPoint.x, spawnPoint.y);
             player.priority = 7;
             add(player);
-            //player.add(nameTag);
             break;
           default:
         }
