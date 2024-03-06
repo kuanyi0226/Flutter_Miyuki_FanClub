@@ -298,7 +298,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           //Public Chat Room
                           FilledButton.tonal(
                             //style: ButtonStyle(backgroundColor: ),
-                            child: Text("Chat Room"),
+                            child: Text("Chat\nRoom"),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => PublicChatRoomPage()));
@@ -328,11 +328,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           //Yuki World
                           FilledButton.tonal(
                             //style: ButtonStyle(backgroundColor: ),
-                            child: Text("Yuki World"),
+                            child: Text("Yuki\nWorld"),
                             onPressed: () async {
-                              //PlayerInfo.deleteAllPlayers();
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => YukiSekaiPage()));
+                              InitData.isInSekai = true;
                             },
                           ),
                         ],

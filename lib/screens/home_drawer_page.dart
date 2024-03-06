@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
+import 'package:project5_miyuki/screens/Yuki_Sekai/yuki_sekai_page.dart';
 import 'package:project5_miyuki/screens/ad_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -123,6 +124,15 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) => YakaiPage()));
+                scaffoldKey.currentState!.openEndDrawer(); //close drawer
+              }),
+          ListTile(
+              leading: Icon(Icons.meeting_room_outlined),
+              title: Text('ゆき世界 Yuki World'),
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => YukiSekaiPage()));
+                InitData.isInSekai = true;
                 scaffoldKey.currentState!.openEndDrawer(); //close drawer
               }),
           //Websites

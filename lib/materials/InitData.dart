@@ -8,6 +8,8 @@ class InitData {
       MiyukiUser(name: 'No Name', email: 'No data', vip: false);
   static String todaySong = 'No Song';
   static YukiSekai yukiSekai = YukiSekai();
+
+  static bool isInSekai = false;
   static List<PlayerInfo> playersInfo = [];
 
   //const

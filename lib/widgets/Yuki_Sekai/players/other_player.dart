@@ -89,7 +89,7 @@ class OtherPlayer extends SpriteAnimationGroupComponent
       PlayerState.falling: fallingAnimation,
     };
     //Set current animation
-    current = PlayerState.falling;
+    current = PlayerState.idle;
   }
 
   SpriteAnimation _spriteAnimation(String state, int amount) {

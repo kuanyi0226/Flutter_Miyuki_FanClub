@@ -371,9 +371,9 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                               //shorten concert name
                               String concertName = MyDecoder.yearToConcertName(
                                   song!.live!.elementAt(index));
-                              if (concertName.length > 15) {
+                              if (concertName.length > 18) {
                                 concertName =
-                                    concertName.substring(0, 15) + '...';
+                                    concertName.substring(0, 18) + '...';
                               }
                               return Container(
                                 height: 60,
@@ -417,10 +417,17 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                         //Year
                                         Card(
                                           color: theme_dark_grey,
-                                          child: Text(
-                                            MyDecoder.yearToConcertYear(
-                                                song!.live!.elementAt(index)),
-                                            style: TextStyle(fontSize: 18),
+                                          child: Container(
+                                            height: 28,
+                                            width: 50,
+                                            child: Center(
+                                              child: Text(
+                                                MyDecoder.yearToConcertYear(
+                                                    song!.live!
+                                                        .elementAt(index)),
+                                                style: TextStyle(fontSize: 15),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                         //Concert Name
@@ -428,7 +435,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                           alignment: Alignment.centerRight,
                                           child: Text(
                                             concertName,
-                                            style: TextStyle(fontSize: 18),
+                                            style: TextStyle(fontSize: 13),
                                           ),
                                         ),
                                         (InitData.miyukiUser.vip == false)

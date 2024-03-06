@@ -83,7 +83,7 @@ class _AdPageState extends State<AdPage> {
             Image.asset('assets/images/cover1.jpg'),
             SizedBox(height: 5),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(primary: theme_purple),
+              style: ElevatedButton.styleFrom(foregroundColor: theme_purple),
               child: Text(
                 'Watch Ad!',
                 style: TextStyle(fontSize: 50),

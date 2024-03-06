@@ -28,6 +28,7 @@ class _YukiSekaiPageState extends State<YukiSekaiPage> {
         icon: Icon(Icons.exit_to_app),
         onPressed: () {
           //Quit Yuki Sekai
+          InitData.isInSekai = false;
           Navigator.of(context).popUntil((route) => route.isFirst);
           Flame.device.setPortrait();
 
