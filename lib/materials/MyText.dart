@@ -1,8 +1,9 @@
-const CURR_VERSION = 'V1.2.2';
+const CURR_VERSION = 'V1.2.3';
 const APPNAME_EN = 'YUKI CLUB';
 const APPNAME_JP = '雪クラブ';
 
 const UPDATE_CONTENT = [
+  '--V1.2.3-- 2024/05/27\nfix: 夜会(Yakai)vol.11&12 セトリ(Set list)',
   '--V1.2.2-- 2024/03/06\nfix: Yuki World- fix multiplayer bugs, new UI(Material3)',
   '--V1.2.1-- 2024/03/06\nnew: Yuki World-New Costume, fix: Yuki World- fix multiplayer fatal bugs',
   '--V1.2.0-- 2024/03/04\nnew: 雪の世界Yuki World, fix: optimization',

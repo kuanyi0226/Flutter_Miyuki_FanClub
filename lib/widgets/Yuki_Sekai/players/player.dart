@@ -71,24 +71,24 @@ class Player extends SpriteAnimationGroupComponent
     super.update(dt);
   }
 
-  @override
-  bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    horizontalMovement = 0;
-    //left
-    final isLeftKeyPressed = keysPressed.contains(LogicalKeyboardKey.keyA) ||
-        keysPressed.contains(LogicalKeyboardKey.arrowLeft);
-    //right
-    final isRightKeyPressed = keysPressed.contains(LogicalKeyboardKey.keyD) ||
-        keysPressed.contains(LogicalKeyboardKey.arrowRight);
-    //jump
-    hasJumped = keysPressed.contains(LogicalKeyboardKey.space) ||
-        keysPressed.contains(LogicalKeyboardKey.arrowUp);
+  // @override
+  // bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  //   horizontalMovement = 0;
+  //   //left
+  //   final isLeftKeyPressed = keysPressed.contains(LogicalKeyboardKey.keyA) ||
+  //       keysPressed.contains(LogicalKeyboardKey.arrowLeft);
+  //   //right
+  //   final isRightKeyPressed = keysPressed.contains(LogicalKeyboardKey.keyD) ||
+  //       keysPressed.contains(LogicalKeyboardKey.arrowRight);
+  //   //jump
+  //   hasJumped = keysPressed.contains(LogicalKeyboardKey.space) ||
+  //       keysPressed.contains(LogicalKeyboardKey.arrowUp);
 
-    horizontalMovement += isLeftKeyPressed ? -1 : 0;
-    horizontalMovement += isRightKeyPressed ? 1 : 0;
+  //   horizontalMovement += isLeftKeyPressed ? -1 : 0;
+  //   horizontalMovement += isRightKeyPressed ? 1 : 0;
 
-    return super.onKeyEvent(event, keysPressed);
-  }
+  //   return super.onKeyEvent(event, keysPressed);
+  // }
 
   void _loadAllAnimations() {
     idleAnimation = _spriteAnimation('Idle', 11);
