@@ -1,3 +1,4 @@
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -58,10 +59,22 @@ Widget buildConcert(Concert concert, BuildContext context) => ListTile(
                 concert: concert,
                 concert_type: "Concert",
               ))),
-      leading: Image.network(
-        'https://github.com/kuanyi0226/Yuki_DataBase/raw/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
-        scale: 2.3,
+      leading: Container(
+        width: 40,
+        height: 40,
+        child: FastCachedImage(
+          url:
+              'https://raw.githubusercontent.com//kuanyi0226/Yuki_DataBase/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
+          // errorBuilder: (context, exception, stacktrace) {
+          //   return Text(stacktrace.toString());
+          // },
+          fit: BoxFit.contain,
+        ),
       ),
+      // Image.network(
+      //   'https://github.com/kuanyi0226/Yuki_DataBase/raw/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
+      //   scale: 2.3,
+      // ),
       title: Text(
         concert.name,
         style: TextStyle(fontSize: 21),

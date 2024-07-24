@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../class/MiyukiUser.dart';
 import '../../materials/colors.dart';
 import '../../services/auth_service.dart';
@@ -69,7 +69,6 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: SingleChildScrollView(
           child: Column(children: [
-            const SizedBox(height: 20),
             //logo
             Image.asset(
               'assets/images/login_icon.jpg',
@@ -85,14 +84,14 @@ class _LoginPageState extends State<LoginPage> {
             //email textfield
             MyTextField(
               controller: _emailController,
-              hintText: 'Email',
+              hintText: AppLocalizations.of(context)!.email,
               obscureText: false,
             ),
             const SizedBox(height: 10),
             //password textfield
             MyTextField(
               controller: _passwordController,
-              hintText: 'Password',
+              hintText: AppLocalizations.of(context)!.password,
               obscureText: true,
             ),
             const SizedBox(height: 10),
@@ -108,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                         MaterialPageRoute(
                             builder: (context) => ForGotPasswordPage())),
                     child: Text(
-                      'Forgot password?',
+                      AppLocalizations.of(context)!.forgot_password,
                       style: TextStyle(
                           fontSize: 17,
                           color: theme_dark_purple,
@@ -120,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 20),
             //sign in button
-            MyButton(onTap: signIn, text: 'Sign In'),
+            MyButton(onTap: signIn, text: AppLocalizations.of(context)!.login),
             const SizedBox(height: 20),
             //or continue with
             Padding(
@@ -134,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                   )),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Text('Or Continue With'),
+                    child: Text(AppLocalizations.of(context)!.or),
                   ),
                   Expanded(
                     child: Divider(
@@ -145,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 10.0),
             //sign in with google
             SquareTile(
               imagePath: 'assets/images/google_icon.png',
@@ -159,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                       .doc(user.email)
                       .get();
                   if (userInfo.exists == false) {
-                    InitData.miyukiUser.coin = 50;
+                    InitData.miyukiUser.coin = 1023;
                     await MiyukiUser.createUser(
                         name: 'No Name', email: user.email!);
                     InitData.miyukiUser = await MiyukiUser.readUser(
@@ -174,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                       .doc(user.email)
                       .get();
                   if (userInfo.exists == false) {
-                    InitData.miyukiUser.coin = 50;
+                    InitData.miyukiUser.coin = 1023;
                     await MiyukiUser.createUser(
                         name: 'No Name', email: user.email!);
                     InitData.miyukiUser = await MiyukiUser.readUser(
@@ -183,18 +182,18 @@ class _LoginPageState extends State<LoginPage> {
                 }
               },
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 10.0),
             //not a member register now
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Not a member?'),
+                Text(AppLocalizations.of(context)!.not_a_member),
                 const SizedBox(width: 4),
                 GestureDetector(
                   //stateful: must add widget.
                   onTap: widget.onTap,
                   child: Text(
-                    'Register now',
+                    AppLocalizations.of(context)!.sign_up,
                     style: TextStyle(
                       fontSize: 17,
                       color: theme_dark_purple,

@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -7,7 +6,7 @@ import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/services/yukicoin_service.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../materials/colors.dart';
 import '../../services/image_service.dart';
 
@@ -40,9 +39,10 @@ class _ProfilePageState extends State<ProfilePage> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      if (Provider.of<InternetConnectionStatus>(context,
-                              listen: false) ==
-                          InternetConnectionStatus.connected) {
+                      if (kIsWeb ||
+                          Provider.of<InternetConnectionStatus>(context,
+                                  listen: false) ==
+                              InternetConnectionStatus.connected) {
                         if (nameController.text != '') {
                           setState(() {
                             MiyukiUser.editUserName(nameController.text);
@@ -87,9 +87,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   TextButton(
                       onPressed: () async {
                         var snackBarText = '';
-                        if (Provider.of<InternetConnectionStatus>(context,
-                                listen: false) ==
-                            InternetConnectionStatus.connected) {
+                        if (kIsWeb ||
+                            Provider.of<InternetConnectionStatus>(context,
+                                    listen: false) ==
+                                InternetConnectionStatus.connected) {
                           //check money
                           if (InitData.miyukiUser.coin! >= UPDATE_IMG_COST) {
                             YukicoinService.addCoins(-200);
@@ -133,7 +134,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Text(AppLocalizations.of(context)!.profile),
       ),
       body: Padding(
         padding: EdgeInsets.all(10),
@@ -171,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
               //User Name
               ListTile(
                 title: Text(
-                  'User Name',
+                  AppLocalizations.of(context)!.user_name,
                   style: TextStyle(fontSize: 23),
                 ),
               ),
@@ -192,7 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
               //Email
               ListTile(
                 title: Text(
-                  'Email',
+                  AppLocalizations.of(context)!.email,
                   style: TextStyle(fontSize: 23),
                 ),
               ),

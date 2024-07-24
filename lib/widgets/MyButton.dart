@@ -14,8 +14,8 @@ class MyButton extends StatelessWidget {
     return TextButton(
       onPressed: onTap,
       child: Container(
-        padding: const EdgeInsets.all(25.0),
-        margin: EdgeInsets.symmetric(horizontal: 25.0),
+        padding: const EdgeInsets.all(15.0),
+        margin: EdgeInsets.symmetric(horizontal: 15.0),
         decoration: BoxDecoration(
           color: theme_dark_purple,
           borderRadius: BorderRadius.circular(7),
@@ -24,7 +24,7 @@ class MyButton extends StatelessWidget {
           child: Text(
             text,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),

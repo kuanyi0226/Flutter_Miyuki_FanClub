@@ -1,10 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:project5_miyuki/class/official/updateInfo.dart';
 import 'package:project5_miyuki/screens/setting_system/about_app_page.dart';
 import 'package:project5_miyuki/screens/setting_system/copyright_page.dart';
 import 'package:project5_miyuki/screens/setting_system/privacy_policy_page.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../screens/auth_system/forgot_password_page.dart';
 import '../../services/ad_mob_service.dart';
 import '../../services/official_service.dart';
@@ -30,7 +31,9 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    _createBannerAd();
+    if (!kIsWeb) {
+      _createBannerAd();
+    }
   }
 
   void _createBannerAd() {
@@ -65,7 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               leading: const Icon(Icons.person),
               title: Text(
-                'Account',
+                AppLocalizations.of(context)!.account,
                 style: TextStyle(fontSize: 22),
               ),
             ),
@@ -77,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       MaterialPageRoute(builder: (context) => ProfilePage())),
                   child: ListTile(
                     title: Text(
-                      'プロフィール Profile',
+                      AppLocalizations.of(context)!.profile,
                       style: TextStyle(fontSize: 20),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -88,7 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       builder: (context) => ForGotPasswordPage())),
                   child: ListTile(
                     title: Text(
-                      'パスワード忘れる Forgot Password',
+                      AppLocalizations.of(context)!.forgot_password,
                       style: TextStyle(fontSize: 20),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -100,7 +103,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               leading: const Icon(Icons.info),
               title: Text(
-                'More Info & Support',
+                AppLocalizations.of(context)!.more_info_support,
                 style: TextStyle(fontSize: 22),
               ),
             ),
@@ -112,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       MaterialPageRoute(builder: (context) => AboutAppPage())),
                   child: ListTile(
                     title: Text(
-                      '基本データ About App',
+                      AppLocalizations.of(context)!.about_app,
                       style: TextStyle(fontSize: 20),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -124,7 +127,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       builder: (context) => UpdatePage(info: updateInfo))),
                   child: ListTile(
                     title: Text(
-                      '更新確認する Check Update',
+                      AppLocalizations.of(context)!.check_update,
                       style: TextStyle(fontSize: 20),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -135,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       builder: (context) => PrivacyPolicyPage())),
                   child: ListTile(
                     title: Text(
-                      'プライバシーポリシー Privacy Policy',
+                      AppLocalizations.of(context)!.privacy_policy,
                       style: TextStyle(fontSize: 20),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -147,7 +150,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       MaterialPageRoute(builder: (context) => CopyrightPage())),
                   child: ListTile(
                     title: Text(
-                      '著作権 Copyright',
+                      AppLocalizations.of(context)!.copyright,
                       style: TextStyle(fontSize: 20),
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
@@ -159,7 +162,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
       bottomNavigationBar: (_bannerAd == null || !_bannerAdLoaded)
-          ? Container()
+          ? Container(height: 52)
           : Container(
               margin: const EdgeInsets.only(bottom: 12),
               height: 52,

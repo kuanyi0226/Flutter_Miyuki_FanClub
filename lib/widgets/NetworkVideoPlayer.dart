@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -36,8 +37,13 @@ class _PageState extends State<NetworkVideoPlayer> {
     }
     controller = VideoPlayerController.network(videoUrl)
       ..addListener(() => setState(() {}))
-      ..setLooping(true)
-      ..initialize().then((_) => controller!.play());
+      ..setLooping(true);
+    if (kIsWeb) {
+      controller!.initialize();
+    } else {
+      //auto begin
+      controller!.initialize().then((_) => controller!.play());
+    }
   }
 
   @override

@@ -29,7 +29,7 @@ class MiyukiUser {
   static Future createUser(
       {required String name, required String email}) async {
     MiyukiUser user =
-        MiyukiUser(name: name, email: email, vip: false, coin: 250);
+        MiyukiUser(name: name, email: email, vip: false, coin: 1023);
     Map<String, dynamic> userData = user.toJson();
     await FirebaseFirestore.instance
         .collection('miyukiusers')
@@ -49,7 +49,7 @@ class MiyukiUser {
     } else {
       User? user = await FirebaseAuth.instance.currentUser;
       print('Can not find the user by email');
-      InitData.miyukiUser.coin = 50;
+      InitData.miyukiUser.coin = 1023;
       await MiyukiUser.createUser(name: 'No Name', email: user!.email!);
       return await MiyukiUser.readUser(user.email!);
     }

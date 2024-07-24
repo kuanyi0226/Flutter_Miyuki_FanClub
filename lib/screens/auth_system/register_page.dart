@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../services/auth_service.dart';
 
 import '../../materials/colors.dart';
@@ -39,17 +39,17 @@ class _RegisterPageState extends State<RegisterPage> {
     //try to creating user
     try {
       //check whether the name is empty
-      if (_passwordController.text.trim() == '') {
+      if (_userNameController.text.trim() == '') {
         //pop the loading circle: failed to sign up
         Navigator.pop(context);
-        _showErrorMessage('Please type your user name');
+        _showErrorMessage(AppLocalizations.of(context)!.type_username);
         return;
       }
       //check the number of password is longer than 6
       if (_passwordController.text.trim().length < 6) {
         //pop the loading circle: failed to sign up
         Navigator.pop(context);
-        _showErrorMessage('Passwords has to be at least 6 letters');
+        _showErrorMessage(AppLocalizations.of(context)!.password_length_error);
         return;
       }
       //check whether the confirm password is correct
@@ -69,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
         //pop the loading circle: successfully sign up
         Navigator.pop(context);
         //confirm password doesn't match
-        _showErrorMessage('Passwords don\'t match!');
+        _showErrorMessage(AppLocalizations.of(context)!.password_not_match);
       }
     } on FirebaseAuthException catch (err) {
       //pop the loading circle: failed to sign up
@@ -97,49 +97,43 @@ class _RegisterPageState extends State<RegisterPage> {
       body: Center(
         child: SingleChildScrollView(
           child: Column(children: [
-            const SizedBox(height: 10),
-            //logo
-            Image.asset(
-              'assets/images/login_icon.jpg',
-              height: 150,
-            ),
-            const SizedBox(height: 5),
             //welcome text
             Text(
-              '中島みゆきファンになりたい！',
+              AppLocalizations.of(context)!.sign_up_warning,
               style: TextStyle(fontSize: 15),
             ),
             const SizedBox(height: 5),
             //user name textfield
             MyTextField(
               controller: _userNameController,
-              hintText: 'User Name(Nickname)',
+              hintText: AppLocalizations.of(context)!.user_name,
               obscureText: false,
             ),
             const SizedBox(height: 5),
             //email textfield
             MyTextField(
               controller: _emailController,
-              hintText: 'Email',
+              hintText: AppLocalizations.of(context)!.email,
               obscureText: false,
             ),
             const SizedBox(height: 5),
             //password textfield
             MyTextField(
               controller: _passwordController,
-              hintText: 'Password',
+              hintText: AppLocalizations.of(context)!.password,
               obscureText: true,
             ),
             const SizedBox(height: 5),
             //confirm-password textfield
             MyTextField(
               controller: _confirmPasswordController,
-              hintText: 'ConFirm Password',
+              hintText: AppLocalizations.of(context)!.password_type_again,
               obscureText: true,
             ),
             const SizedBox(height: 5),
             //sign in button
-            MyButton(onTap: signUp, text: 'Sign Up'),
+            MyButton(
+                onTap: signUp, text: AppLocalizations.of(context)!.sign_up),
             const SizedBox(height: 15),
             //or continue with
             Padding(
@@ -153,7 +147,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   )),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Text('Or Continue With'),
+                    child: Text(AppLocalizations.of(context)!.or),
                   ),
                   Expanded(
                     child: Divider(
@@ -178,7 +172,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       .doc(user.email)
                       .get();
                   if (userInfo.exists == false) {
-                    InitData.miyukiUser.coin = 50;
+                    InitData.miyukiUser.coin = 1023;
                     await MiyukiUser.createUser(
                         name: 'No Name', email: user.email!);
                     InitData.miyukiUser = await MiyukiUser.readUser(
@@ -193,7 +187,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       .doc(user.email)
                       .get();
                   if (userInfo.exists == false) {
-                    InitData.miyukiUser.coin = 50;
+                    InitData.miyukiUser.coin = 1023;
                     await MiyukiUser.createUser(
                         name: 'No Name', email: user.email!);
                     InitData.miyukiUser = await MiyukiUser.readUser(
@@ -207,13 +201,13 @@ class _RegisterPageState extends State<RegisterPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Already have an account?'),
+                Text(AppLocalizations.of(context)!.already_have_account),
                 const SizedBox(width: 4),
                 GestureDetector(
                   //stateful: must add widget.
                   onTap: widget.onTap,
                   child: Text(
-                    'Login now',
+                    AppLocalizations.of(context)!.login,
                     style: TextStyle(
                       fontSize: 17,
                       color: theme_dark_purple,

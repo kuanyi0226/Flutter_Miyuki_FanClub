@@ -52,7 +52,8 @@ class OtherPlayer extends SpriteAnimationGroupComponent
     _loadAllAnimations();
     //init name tag
     nameTag = TextComponent(text: name)
-      ..textRenderer = TextPaint(style: TextStyle(fontSize: 13))
+      ..textRenderer =
+          TextPaint(style: TextStyle(fontSize: 13, color: Colors.white))
       ..anchor = Anchor.topCenter
       ..position = Vector2(sqrt((75 - name.length.toDouble()) * 15), -16.0)
       ..priority = 300;

@@ -1,11 +1,11 @@
 {
-    "name": "project5_miyuki",
-    "short_name": "project5_miyuki",
+    "name": "雪クラブ",
+    "short_name": "Yuki Club",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "中島みゆき 非公式のファンクラブ A Non-official Miyuki Fan Club.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

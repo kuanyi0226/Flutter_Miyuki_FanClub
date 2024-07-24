@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "miyuki-b1c80"
+  },
+  "targets": {
+    "miyuki-b1c80": {
+      "hosting": {
+        "yukiclub": [
+          "myweb-yukiclub"
+        ],
+        "app": [
+          "miyuki-b1c80"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

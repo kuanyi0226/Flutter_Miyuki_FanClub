@@ -1,4 +1,5 @@
 import 'package:animated_background/animated_background.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../class/MiyukiUser.dart';
@@ -7,13 +8,13 @@ import '../screens/yakai/yakai_songlist_page.dart';
 import '../services/report_service.dart';
 import 'package:provider/provider.dart';
 import '../services/string_service.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../class/Concert.dart';
 import '../services/custom_search_delegate.dart';
 import './songlist_page.dart';
 import '../class/Song.dart';
 import '../widgets/NetworkVideoPlayer.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../class/MyDecoder.dart';
 import '../materials/colors.dart';
 
@@ -97,26 +98,29 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
 
     final commentController = TextEditingController();
     commentController.text = '';
-    String snackBarString = 'Thanks for your comment~';
+    String snackBarString = AppLocalizations.of(context)!.comment_thank;
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
               title: Text(
-                'Comment',
+                AppLocalizations.of(context)!.comment,
                 style: TextStyle(color: theme_purple, fontSize: 20),
               ),
               content: TextField(
+                maxLines: null,
                 controller: commentController,
-                decoration: InputDecoration(hintText: 'Comment'),
+                decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.type_here),
               ),
               actions: [
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        if (commentController.text.length >= 15) {
-                          if (Provider.of<InternetConnectionStatus>(context,
-                                  listen: false) ==
-                              InternetConnectionStatus.connected) {
+                        if (commentController.text.length >= 16) {
+                          if (kIsWeb ||
+                              Provider.of<InternetConnectionStatus>(context,
+                                      listen: false) ==
+                                  InternetConnectionStatus.connected) {
                             final now = DateTime.now();
                             //newComment: uid + userName + sentTime + comment
                             String userName = (miyukiUser.vip == true)
@@ -138,13 +142,16 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                             song!.comment!.add(newComment);
 
                             Navigator.of(context).pop();
-                            snackBarString = 'Thanks for your comment~';
+                            snackBarString =
+                                AppLocalizations.of(context)!.comment_thank;
                           } else {
-                            snackBarString = 'No Wifi Connection';
+                            snackBarString =
+                                AppLocalizations.of(context)!.no_wifi;
                             Navigator.of(context).pop();
                           }
                         } else {
-                          snackBarString = 'Please Type More Than 15 letters';
+                          snackBarString = AppLocalizations.of(context)!
+                              .comment_length_error;
                         }
                       });
 
@@ -152,8 +159,8 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
                     child: Text(
-                      'Add',
-                      style: TextStyle(color: theme_purple, fontSize: 20),
+                      AppLocalizations.of(context)!.send,
+                      style: TextStyle(color: theme_purple, fontSize: 18),
                     )),
               ],
             ));
@@ -163,22 +170,24 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   Future _deleteComment(String deleteComment) async {
     final commentController = TextEditingController();
     commentController.text = '';
-    String snackBarString = 'Deleted a comment';
+    String snackBarString = AppLocalizations.of(context)!.comment_deleted;
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
               title: Text(
-                'Delete Comment',
+                AppLocalizations.of(context)!.comment_delete,
                 style: TextStyle(color: theme_purple, fontSize: 20),
               ),
-              content: Text('Sure to delete this comment?'),
+              content:
+                  Text(AppLocalizations.of(context)!.comment_delete_confirm),
               actions: [
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        if (Provider.of<InternetConnectionStatus>(context,
-                                listen: false) ==
-                            InternetConnectionStatus.connected) {
+                        if (kIsWeb ||
+                            Provider.of<InternetConnectionStatus>(context,
+                                    listen: false) ==
+                                InternetConnectionStatus.connected) {
                           //delete from firebase
                           Song.deleteComment(song!.name, deleteComment);
                           //delete from current display
@@ -193,7 +202,8 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                             song!.comment!.add('');
                           }
                         } else {
-                          snackBarString = 'No Wifi Connection';
+                          snackBarString =
+                              AppLocalizations.of(context)!.no_wifi;
                         }
 
                         //finish
@@ -203,8 +213,8 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                       });
                     },
                     child: Text(
-                      'Delete',
-                      style: TextStyle(color: Colors.red, fontSize: 20),
+                      AppLocalizations.of(context)!.delete,
+                      style: TextStyle(color: Colors.red, fontSize: 18),
                     )),
               ],
             ));
@@ -219,7 +229,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
         context: context,
         builder: (context) => AlertDialog(
               title: Text(
-                'Report This Comment',
+                AppLocalizations.of(context)!.comment_report,
                 style: TextStyle(color: theme_purple, fontSize: 20),
               ),
               content: TextField(
@@ -231,9 +241,10 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        if (Provider.of<InternetConnectionStatus>(context,
-                                listen: false) ==
-                            InternetConnectionStatus.connected) {
+                        if (kIsWeb ||
+                            Provider.of<InternetConnectionStatus>(context,
+                                    listen: false) ==
+                                InternetConnectionStatus.connected) {
                           if (reportController.text.length >= 15) {
                             String reportString = 'Song Name: ' +
                                 song!.name +
@@ -246,12 +257,15 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                 type: 'Comment',
                                 text: reportString);
                             Navigator.of(context).pop();
-                            snackBarString = 'We have Received your report!';
+                            snackBarString =
+                                AppLocalizations.of(context)!.comment_received;
                           } else {
-                            snackBarString = 'Please Type More Than 15 words';
+                            snackBarString = AppLocalizations.of(context)!
+                                .comment_length_error;
                           }
                         } else {
-                          snackBarString = 'No Wifi Connection';
+                          snackBarString =
+                              AppLocalizations.of(context)!.no_wifi;
                           Navigator.of(context).pop();
                         }
 
@@ -260,8 +274,8 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                       });
                     },
                     child: Text(
-                      'Report',
-                      style: TextStyle(color: Colors.red, fontSize: 20),
+                      AppLocalizations.of(context)!.report,
+                      style: TextStyle(color: Colors.red, fontSize: 18),
                     )),
               ],
             ));
@@ -371,10 +385,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                               //shorten concert name
                               String concertName = MyDecoder.yearToConcertName(
                                   song!.live!.elementAt(index));
-                              if (concertName.length > 18) {
-                                concertName =
-                                    concertName.substring(0, 18) + '...';
-                              }
+
                               return Container(
                                 height: 60,
                                 child: GestureDetector(
@@ -431,11 +442,14 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                           ),
                                         ),
                                         //Concert Name
-                                        Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            concertName,
-                                            style: TextStyle(fontSize: 13),
+                                        SizedBox(
+                                          width: 220,
+                                          child: Align(
+                                            child: Text(
+                                              concertName,
+                                              style: TextStyle(fontSize: 13),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
                                           ),
                                         ),
                                         (InitData.miyukiUser.vip == false)
@@ -562,7 +576,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
       //Add Comment Button
       floatingActionButton: Visibility(
         visible: _curr_index == 3,
-        child: FloatingActionButton(
+        child: FloatingActionButton.small(
           backgroundColor: theme_purple,
           onPressed: _createComment,
           child: Icon(Icons.add),
@@ -574,11 +588,18 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
         fixedColor: theme_purple,
         currentIndex: _curr_index,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month), label: 'Lives'),
-          BottomNavigationBarItem(icon: Icon(Icons.lyrics), label: 'Lyrics'),
-          BottomNavigationBarItem(icon: Icon(Icons.comment), label: 'Comment'),
+              icon: Icon(Icons.home),
+              label: AppLocalizations.of(context)!.home),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_month),
+              label: AppLocalizations.of(context)!.lives),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.lyrics),
+              label: AppLocalizations.of(context)!.lyrics),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.comment),
+              label: AppLocalizations.of(context)!.comment),
         ],
         onTap: (idx) => _onTap(idx),
       ),

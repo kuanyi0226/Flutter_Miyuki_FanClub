@@ -59,7 +59,7 @@ class PlayerInfo {
         velocityY: player.velocity.y,
         state: PlayerState.idle.toString()); //default idle
     final data = userInfo.toJson();
-    final DatabaseReference fireBaseDB = FirebaseDatabase.instance.reference();
+    final DatabaseReference fireBaseDB = FirebaseDatabase.instance.ref();
     fireBaseDB
         .child("Yuki_Sekai")
         .child("World1")
@@ -90,7 +90,7 @@ class PlayerInfo {
       'state': state,
       //'costume': costume,
     };
-    final DatabaseReference fireBaseDB = FirebaseDatabase.instance.reference();
+    final DatabaseReference fireBaseDB = FirebaseDatabase.instance.ref();
     fireBaseDB
         .child("Yuki_Sekai")
         .child("World1/${InitData.miyukiUser.uid}")
@@ -101,7 +101,7 @@ class PlayerInfo {
 
   //Delete player info
   static Future deletePlayer(String playerUid) async {
-    final DatabaseReference fireBaseDB = FirebaseDatabase.instance.reference();
+    final DatabaseReference fireBaseDB = FirebaseDatabase.instance.ref();
     fireBaseDB
         .child("Yuki_Sekai")
         .child("World1")
@@ -113,7 +113,7 @@ class PlayerInfo {
   }
 
   static Future deleteAllPlayers() async {
-    final DatabaseReference fireBaseDB = FirebaseDatabase.instance.reference();
+    final DatabaseReference fireBaseDB = FirebaseDatabase.instance.ref();
     fireBaseDB.child("Yuki_Sekai").child("World1").remove().whenComplete(() {
       print('A Player Exit Yuki Sekai');
     }).catchError((err) => print(err));

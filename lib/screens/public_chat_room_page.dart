@@ -1,4 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,7 @@ import 'package:project5_miyuki/screens/song_page.dart';
 import 'package:project5_miyuki/services/chatroom_service.dart';
 import 'package:provider/provider.dart';
 import '../materials/colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PublicChatRoomPage extends StatefulWidget {
   const PublicChatRoomPage({Key? key}) : super(key: key);
@@ -26,41 +28,65 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
   final ScrollController _scrollController = ScrollController();
   bool _firstTimeLoad = true;
   String _chosenSong = '';
-  //sent message by add button
-  void _sentMessage() {
-    String snackBarString = '';
+  bool _isBottom = false;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   // Setup the listener.
+  //   _scrollController.addListener(() {
+  //     if (_scrollController.position ==
+  //         _scrollController.position.maxScrollExtent) {
+  //       _isBottom = true;
+  //     } else {
+  //       _isBottom = false;
+  //     }
+  //   });
+  // }
+  //go to bottom
+  Future<void> _jumpToBottom() async {
+    // await Future.delayed(const Duration(milliseconds: 150));
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    //   _scrollController.jumpTo(
+    //     _scrollController.position.maxScrollExtent + 180,
+    //   );
+    // });
     setState(() {
-      if (Provider.of<InternetConnectionStatus>(context, listen: false) ==
-          InternetConnectionStatus.connected) {
-        try {
-          //send message
-          final text = _text_controller1.text;
-          ChatroomService().createMessage(
-            sender_email: InitData.miyukiUser.email!,
-            text: text,
-            senderImgUrl: (InitData.miyukiUser.imgUrl != null)
-                ? InitData.miyukiUser.imgUrl!
-                : '',
-            senderName: (InitData.miyukiUser.vip == false)
-                ? InitData.miyukiUser.name!
-                : '❆ ${InitData.miyukiUser.name}',
-          );
-          _text_controller1.text = '';
-          FocusScope.of(context).unfocus();
-          SchedulerBinding.instance.addPostFrameCallback((_) {
-            _scrollController.jumpTo(
-              _scrollController.position.maxScrollExtent,
-            );
-          });
-        } catch (e) {
-          print(e.toString());
-        }
-      } else {
-        snackBarString = 'No Wifi Connection';
-        var snackBar = SnackBar(content: Text(snackBarString));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
+      _firstTimeLoad = true;
     });
+  }
+
+  //sent message by add button
+  Future<void> _sentMessage() async {
+    String snackBarString = '';
+    if (kIsWeb ||
+        Provider.of<InternetConnectionStatus>(context, listen: false) ==
+            InternetConnectionStatus.connected) {
+      try {
+        //send message
+        final text = _text_controller1.text;
+        ChatroomService().createMessage(
+          sender_email: InitData.miyukiUser.email!,
+          text: text,
+          senderImgUrl: (InitData.miyukiUser.imgUrl != null)
+              ? InitData.miyukiUser.imgUrl!
+              : '',
+          senderName: (InitData.miyukiUser.vip == false)
+              ? InitData.miyukiUser.name!
+              : '❆ ${InitData.miyukiUser.name}',
+        );
+        _text_controller1.text = '';
+        _jumpToBottom();
+        if (!kIsWeb) FocusScope.of(context).unfocus();
+      } catch (e) {
+        print(e.toString());
+      }
+    } else {
+      snackBarString = AppLocalizations.of(context)!.no_wifi;
+      var snackBar = SnackBar(content: Text(snackBarString));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   void _shareSong() {
@@ -71,10 +97,10 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
         context: context,
         builder: (context) => AlertDialog(
               title: Text(
-                '曲をシェアする Share a song',
+                AppLocalizations.of(context)!.share_song,
                 style: TextStyle(color: theme_purple, fontSize: 20),
               ),
-              content: Text('曲を選択してください\nChoose a song from the list'),
+              content: Text(AppLocalizations.of(context)!.choose_song),
               actions: [
                 Container(
                   padding: EdgeInsets.only(left: 17),
@@ -84,8 +110,8 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                     ),
                     items: InitData.allSongs,
                     dropdownDecoratorProps: DropDownDecoratorProps(
-                      dropdownSearchDecoration:
-                          InputDecoration(labelText: "Song Name"),
+                      dropdownSearchDecoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.song_name),
                     ),
                     selectedItem: _chosenSong,
                     onChanged: (songName) => setState(() {
@@ -100,53 +126,38 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                   children: [
                     //Share Button
                     TextButton(
-                        onPressed: () {
-                          setState(() {
-                            if (_chosenSong.isNotEmpty && _chosenSong != '') {
-                              if (Provider.of<InternetConnectionStatus>(context,
-                                      listen: false) ==
-                                  InternetConnectionStatus.connected) {
-                                ChatroomService().createMessage(
-                                  sender_email: InitData.miyukiUser.email!,
-                                  text: '###song_name###' + _chosenSong,
-                                  senderImgUrl:
-                                      (InitData.miyukiUser.imgUrl != null)
-                                          ? InitData.miyukiUser.imgUrl!
-                                          : '',
-                                  senderName: (InitData.miyukiUser.vip == false)
-                                      ? InitData.miyukiUser.name!
-                                      : '❆ ${InitData.miyukiUser.name}',
-                                );
-                                SchedulerBinding.instance
-                                    .addPostFrameCallback((_) {
-                                  _scrollController.jumpTo(
-                                    _scrollController.position.maxScrollExtent +
-                                        150,
-                                  );
-                                });
-                              } else {
-                                snackBarString = 'No Wifi Connection';
-                                var snackBar =
-                                    SnackBar(content: Text(snackBarString));
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              }
+                        onPressed: () async {
+                          if (_chosenSong.isNotEmpty && _chosenSong != '') {
+                            if (kIsWeb ||
+                                Provider.of<InternetConnectionStatus>(context,
+                                        listen: false) ==
+                                    InternetConnectionStatus.connected) {
+                              ChatroomService().createMessage(
+                                sender_email: InitData.miyukiUser.email!,
+                                text: '###song_name###' + _chosenSong,
+                                senderImgUrl:
+                                    (InitData.miyukiUser.imgUrl != null)
+                                        ? InitData.miyukiUser.imgUrl!
+                                        : '',
+                                senderName: (InitData.miyukiUser.vip == false)
+                                    ? InitData.miyukiUser.name!
+                                    : '❆ ${InitData.miyukiUser.name}',
+                              );
+                              _jumpToBottom();
+                            } else {
+                              snackBarString =
+                                  AppLocalizations.of(context)!.no_wifi;
+                              var snackBar =
+                                  SnackBar(content: Text(snackBarString));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                             }
-                            Navigator.of(context).pop();
-                          });
-                        },
-                        child: Text(
-                          'Share',
-                          style: TextStyle(color: theme_purple, fontSize: 20),
-                        )),
-                    //Cancel Button
-                    TextButton(
-                        onPressed: () {
+                          }
                           Navigator.of(context).pop();
                         },
                         child: Text(
-                          'Cancel',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          AppLocalizations.of(context)!.share,
+                          style: TextStyle(color: theme_purple, fontSize: 18),
                         )),
                   ],
                 ),
@@ -167,6 +178,7 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
         child: Container(
           padding: EdgeInsets.all(10),
           child: Column(
+            //messages & textfield
             children: [
               SizedBox(height: 10),
               Expanded(
@@ -176,28 +188,37 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                       return Text('Something went wrong!');
                     } else if (snapshot.hasData) {
                       final messages = snapshot.data!;
-
+                      print("Message Amount: ${messages.length}");
                       if (_firstTimeLoad == true) {
                         _firstTimeLoad = false;
+                        //jump to bottom
                         SchedulerBinding.instance.addPostFrameCallback((_) {
                           _scrollController.jumpTo(
-                            _scrollController.position.maxScrollExtent,
+                            _scrollController.position.maxScrollExtent + 180,
                           );
                         });
                       }
 
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: ListView(
-                              controller: _scrollController,
-                              children: messages
-                                  .map((message) =>
-                                      buildMessage(message, context))
-                                  .toList(),
-                            ),
-                          ),
-                        ],
+                      return NotificationListener<ScrollNotification>(
+                        onNotification: (notification) {
+                          final metrices = notification.metrics;
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            setState(() {
+                              if (metrices.pixels >= metrices.maxScrollExtent) {
+                                _isBottom = true;
+                              } else {
+                                _isBottom = false;
+                              }
+                            });
+                          });
+                          return false;
+                        },
+                        child: ListView(
+                          controller: _scrollController,
+                          children: messages
+                              .map((message) => buildMessage(message, context))
+                              .toList(),
+                        ),
                       );
                     } else {
                       return Center(
@@ -212,7 +233,7 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 color: theme_dark,
-                height: 100,
+                height: 80,
                 child: Row(
                   children: [
                     IconButton(
@@ -225,7 +246,7 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 14),
-                        height: 60,
+                        height: 50,
                         decoration: BoxDecoration(
                           color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(30),
@@ -242,9 +263,11 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                                 ],
                                 controller: _text_controller1,
                                 style: TextStyle(color: theme_dark),
+                                maxLines: null,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  hintText: 'Type message ...',
+                                  hintText:
+                                      AppLocalizations.of(context)!.type_here,
                                   hintStyle: TextStyle(color: Colors.grey[500]),
                                 ),
                               ),
@@ -264,11 +287,37 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
+      //jump to bottom button
+      floatingActionButton: Visibility(
+        visible: !_isBottom && !_firstTimeLoad,
+        maintainState: true,
+        maintainAnimation: true,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 80),
+          child: FloatingActionButton.small(
+            backgroundColor: theme_dark_purple,
+            elevation: 5,
+            child: Icon(
+              Icons.arrow_downward,
+              color: Colors.white,
+              size: 20,
+            ),
+            onPressed: () {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                _scrollController.jumpTo(
+                  _scrollController.position.maxScrollExtent + 180,
+                );
+              });
+            },
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

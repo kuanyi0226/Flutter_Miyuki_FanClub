@@ -1,3 +1,4 @@
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../services/string_service.dart';
 import '../../class/Concert.dart';
@@ -26,9 +27,6 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
     // get the certain yakai song list
     songlist = MyDecoder.getYakaiSongList(yakai: yakai_year);
     yakaiName = MyDecoder.yearToConcertName(yakai_year);
-    if (yakaiName.length > 16) {
-      yakaiName = yakaiName.substring(0, 16) + '...';
-    }
   }
 
   @override
@@ -54,19 +52,30 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         //Image
-                        Image.network(
-                          'https://github.com/kuanyi0226/Yuki_DataBase/raw/main/Image/Yakai/${yakai_year.substring(1)}_0/poster.jpg',
-                          fit: BoxFit.contain,
+                        Container(
+                          width: 85,
+                          height: 85,
+                          child: FastCachedImage(
+                            url:
+                                'https://raw.githubusercontent.com//kuanyi0226/Yuki_DataBase/main/Image/Yakai/${yakai_year.substring(1)}_0/poster.jpg',
+                            // errorBuilder: (context, exception, stacktrace) {
+                            //   return Text(stacktrace.toString());
+                            // },
+                            fit: BoxFit.contain,
+                          ),
                         ),
                         //Text(Introductions)
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 10, top: 5, bottom: 5),
                           child: Center(
-                            child: Text(
-                              "${yakai_year.substring(1)}年\n${yakaiName}",
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            child: SizedBox(
+                              width: 220,
+                              child: Text(
+                                "${yakai_year.substring(1)}年\n${yakaiName}",
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         ),

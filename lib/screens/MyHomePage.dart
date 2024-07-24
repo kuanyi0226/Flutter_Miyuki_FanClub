@@ -1,9 +1,11 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_bg_null_safety/flutter_weather_bg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/class/Song.dart';
@@ -18,6 +20,7 @@ import 'package:project5_miyuki/services/custom_search_delegate.dart';
 import 'package:project5_miyuki/services/random_song_service.dart';
 import 'package:project5_miyuki/services/yukicoin_service.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './home_drawer_page.dart';
 
@@ -54,7 +57,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _readMiyukiUser();
-    _createBannerAd();
+
+    if (!kIsWeb) {
+      checkForUpdate();
+      _createBannerAd();
+    }
   }
 
   @override
@@ -112,7 +119,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         context: context,
         builder: (context) => AlertDialog(
               title: Text(
-                'Sure To Send Message\non channel "$currentMessage"?',
+                AppLocalizations.of(context)!.message_board_confirm +
+                    '$currentMessage',
                 style: TextStyle(color: theme_purple, fontSize: 20),
               ),
               content: Text('It will cost you \$1 Yuki Coin.\nYou have \$' +
@@ -121,9 +129,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        if (Provider.of<InternetConnectionStatus>(context,
-                                listen: false) ==
-                            InternetConnectionStatus.connected) {
+                        if (kIsWeb ||
+                            Provider.of<InternetConnectionStatus>(context,
+                                    listen: false) ==
+                                InternetConnectionStatus.connected) {
                           try {
                             if (InitData.miyukiUser.coin! > 0) {
                               //cost 1 yuki coin
@@ -146,13 +155,15 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               snackBarString =
                                   'Successfully sent! You still have Yuki Coin \$${InitData.miyukiUser.coin}';
                             } else {
-                              snackBarString = 'Your money is not enough';
+                              snackBarString = AppLocalizations.of(context)!
+                                  .money_not_enough;
                             }
                           } catch (e) {
                             print(e.toString());
                           }
                         } else {
-                          snackBarString = 'No Wifi Connection';
+                          snackBarString =
+                              AppLocalizations.of(context)!.no_wifi;
                         }
 
                         //finish
@@ -162,11 +173,34 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       });
                     },
                     child: Text(
-                      'Send',
+                      AppLocalizations.of(context)!.send,
                       style: TextStyle(color: Colors.red, fontSize: 20),
                     )),
               ],
             ));
+  }
+
+  //For in-app update
+  Future<void> checkForUpdate() async {
+    print('checking for Update');
+    InAppUpdate.checkForUpdate().then((info) {
+      setState(() {
+        if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+          print('update available');
+          update();
+        }
+      });
+    }).catchError((e) {
+      print(e.toString());
+    });
+  }
+
+  void update() async {
+    print('Updating');
+    await InAppUpdate.startFlexibleUpdate();
+    InAppUpdate.completeFlexibleUpdate().then((_) {}).catchError((e) {
+      print(e.toString());
+    });
   }
 
   @override
@@ -214,29 +248,31 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 stream: Stream.periodic(Duration(seconds: 1)),
                 builder: (context, snapshot) {
                   final curr_time = DateTime.now();
-                  //decide music
-                  if (curr_time.minute % 30 == 0 && curr_time.second == 0) {
-                    //start
-                    if (ModalRoute.of(context)?.isCurrent ?? false) {
-                      //top stack page
-                      audioPlayer.play(AssetSource('jidai_music.mp3'),
-                          volume: 0.10);
+                  //decide music(mobile)
+                  if (!kIsWeb) {
+                    if (curr_time.minute % 30 == 0 && curr_time.second == 0) {
+                      //start
+                      if (ModalRoute.of(context)?.isCurrent ?? false) {
+                        //top stack page
+                        audioPlayer.play(AssetSource('jidai_music.mp3'),
+                            volume: 0.10);
+                      } else {
+                        audioPlayer.play(AssetSource('jidai_music.mp3'),
+                            volume: 0);
+                      }
+                    } else if (curr_time.minute % 30 == 0 &&
+                        curr_time.second < 50) {
+                      //playing
+                      if (ModalRoute.of(context)?.isCurrent ?? false) {
+                        //top stack page
+                        audioPlayer.setVolume(0.10);
+                      } else {
+                        audioPlayer.setVolume(0);
+                      }
                     } else {
-                      audioPlayer.play(AssetSource('jidai_music.mp3'),
-                          volume: 0);
-                    }
-                  } else if (curr_time.minute % 30 == 0 &&
-                      curr_time.second < 50) {
-                    //playing
-                    if (ModalRoute.of(context)?.isCurrent ?? false) {
-                      //top stack page
-                      audioPlayer.setVolume(0.10);
-                    } else {
+                      //not playing
                       audioPlayer.setVolume(0);
                     }
-                  } else {
-                    //not playing
-                    audioPlayer.setVolume(0);
                   }
                   //decide background effect
                   return (curr_time.minute % 30 == 0)
@@ -246,7 +282,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           width: MediaQuery.of(context).size.height,
                         )
                       : WeatherBg(
-                          weatherType: WeatherType.cloudyNight,
+                          weatherType: (kIsWeb)
+                              ? WeatherType.sunnyNight
+                              : WeatherType.cloudyNight,
                           height: MediaQuery.of(context).size.height,
                           width: MediaQuery.of(context).size.height,
                         );
@@ -298,7 +336,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           //Public Chat Room
                           FilledButton.tonal(
                             //style: ButtonStyle(backgroundColor: ),
-                            child: Text("Chat\nRoom"),
+                            child:
+                                Text(AppLocalizations.of(context)!.chat_room),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => PublicChatRoomPage()));
@@ -308,7 +347,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           //Concert
                           FilledButton.tonal(
                             //style: ButtonStyle(backgroundColor: ),
-                            child: Text("Concert"),
+                            child: Text(AppLocalizations.of(context)!.concert),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => ConcertPage()));
@@ -318,7 +357,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           //Yakai
                           FilledButton.tonal(
                             //style: ButtonStyle(backgroundColor: ),
-                            child: Text("Yakai"),
+                            child: Text(AppLocalizations.of(context)!.yakai),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => YakaiPage()));
@@ -328,7 +367,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           //Yuki World
                           FilledButton.tonal(
                             //style: ButtonStyle(backgroundColor: ),
-                            child: Text("Yuki\nWorld"),
+                            child:
+                                Text(AppLocalizations.of(context)!.yuki_world),
                             onPressed: () async {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => YukiSekaiPage()));
@@ -370,9 +410,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           ),
                           Expanded(
                             child: TextField(
+                              maxLines: null,
                               controller: controller1,
                               decoration: InputDecoration.collapsed(
-                                  hintText: '伝言板 Message Board'),
+                                  hintText: AppLocalizations.of(context)!
+                                      .message_board),
                             ),
                           ),
                           //sent message
@@ -432,12 +474,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
 //build messages
 Widget buildMessage(Message message) {
-  String messageName;
-  if (message.userName!.length > 13) {
-    messageName = message.userName!.substring(0, 13) + '...';
-  } else {
-    messageName = message.userName!;
-  }
+  String messageName = message.userName!;
+  // if (message.userName!.length > 13) {
+  //   messageName = message.userName!.substring(0, 13) + '...';
+  // } else {
+  //   messageName = message.userName!;
+  // }
 
   return ListTile(
     shape: RoundedRectangleBorder(
@@ -477,13 +519,14 @@ Widget buildMessage(Message message) {
         Flexible(
           child: Text(
             messageName,
+            overflow: TextOverflow.ellipsis,
             style: (message.userName![0] == '❆')
                 ? TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     color: theme_light_blue,
                     overflow: TextOverflow.ellipsis)
                 : TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     overflow: TextOverflow.ellipsis,
                   ),
           ),
@@ -503,7 +546,7 @@ Widget buildMessage(Message message) {
     //Message Text
     subtitle: Text(
       message.text,
-      style: TextStyle(fontSize: 18, color: Colors.white),
+      style: TextStyle(fontSize: 16, color: Colors.white),
     ),
   );
 }

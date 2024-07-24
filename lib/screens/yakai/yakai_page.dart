@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:project5_miyuki/class/MyDecoder.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/screens/yakai/yakai_songlist_page.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 
 class YakaiPage extends StatefulWidget {
   @override
@@ -25,9 +27,17 @@ class _PageState extends State<YakaiPage> {
                   builder: (context) => YakaiSonglistPage(
                         yakai_year: curr_yakai_year,
                       ))),
-              leading: Image.network(
-                'https://github.com/kuanyi0226/Yuki_DataBase/raw/main/Image/Yakai/${curr_yakai_year.substring(1)}_0/poster.jpg',
-                scale: 2.5,
+              leading: Container(
+                width: 40,
+                height: 40,
+                child: FastCachedImage(
+                  url:
+                      'https://raw.githubusercontent.com//kuanyi0226/Yuki_DataBase/main/Image/Yakai/${curr_yakai_year.substring(1)}_0/poster.jpg',
+                  // errorBuilder: (context, exception, stacktrace) {
+                  //   return Text(stacktrace.toString());
+                  // },
+                  fit: BoxFit.contain,
+                ),
               ),
               title: Text(
                 MyDecoder.yearToConcertName(curr_yakai_year),

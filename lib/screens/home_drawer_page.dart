@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/screens/Yuki_Sekai/yuki_sekai_page.dart';
@@ -162,12 +163,14 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
             padding: const EdgeInsets.only(left: 16, top: 20),
             child: Text('Others'),
           ),
-          ListTile(
-            leading: Icon(Icons.ad_units),
-            title: Text('Watch Ads to Earn Yuki Coin'),
-            onTap: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => AdPage())),
-          ),
+          kIsWeb
+              ? Container()
+              : ListTile(
+                  leading: Icon(Icons.ad_units),
+                  title: Text('Watch Ads to Earn Yuki Coin'),
+                  onTap: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => AdPage())),
+                ),
           ListTile(
             leading: Icon(Icons.coffee_rounded),
             title: Text('寄付する Donate Me'),

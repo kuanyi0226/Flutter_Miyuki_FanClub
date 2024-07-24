@@ -23,11 +23,14 @@ class VideoPlayerWidget extends StatelessWidget {
                 child: CircularProgressIndicator(),
               ),
             );
-  Widget buildVideo() => Stack(
-        children: [
-          buildVideoPlayer(),
-          Positioned.fill(child: BasicOverlayWidget(controller: controller!)),
-        ],
+  Widget buildVideo() => Container(
+        constraints: BoxConstraints(maxHeight: 280),
+        child: Stack(
+          children: [
+            buildVideoPlayer(),
+            Positioned.fill(child: BasicOverlayWidget(controller: controller!)),
+          ],
+        ),
       );
   Widget buildVideoPlayer() => AspectRatio(
         aspectRatio: controller!.value.aspectRatio,
