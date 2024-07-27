@@ -93,7 +93,8 @@ class _PageState extends State<SonglistPage> {
                     //ListTile
                     return (songName.trim().startsWith('[text]'))
                         ? Padding(
-                            padding: const EdgeInsets.only(left: 16.0),
+                            padding: const EdgeInsets.only(
+                                left: 16.0, top: 5, bottom: 5),
                             child: Text(
                               songName.trim().substring(6),
                               style: TextStyle(color: theme_purple),

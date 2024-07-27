@@ -89,50 +89,61 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
                   itemCount: songlist.length,
                   itemBuilder: (BuildContext context, int index) {
                     //ListTile
-                    return ListTile(
-                      //leading: const Icon(Icons.music_note),
-                      title: Text(
-                        StringService.dashToSpace(songlist[index]),
-                        style: TextStyle(
-                            color: (songlist[index].substring(0, 2) == '//')
-                                ? theme_light_blue //poem
-                                : Colors.white),
-                      ),
-                      onTap: () async {
-                        String songName =
-                            MyDecoder.songNameToPure(songlist.elementAt(index));
-                        Song curr_song =
-                            await Song.readSong(songName); //search the song
-                        print('$index ${songName}');
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SongPage(
-                                  song: Song(
-                                    name: songName,
-                                    author: (curr_song.author != '')
-                                        ? curr_song.author
-                                        : '中島みゆき',
-                                    composer: (curr_song.composer != '')
-                                        ? curr_song.composer
-                                        : '中島みゆき',
-                                    live: curr_song.live,
-                                    lyrics_jp: curr_song.lyrics_jp,
-                                    lyrics_cn: curr_song.lyrics_cn,
-                                    lyrics_en: curr_song.lyrics_en,
-                                    comment: curr_song.comment,
-                                    review_cn: curr_song.review_cn,
-                                    review_en: curr_song.review_en,
-                                  ),
-                                  song_index: index + 1,
-                                  concert: Concert(
-                                    name: yakaiName,
-                                    year: yakai_year,
-                                    year_index: '0',
-                                    songs: MyDecoder.getYakaiSongList(
-                                        yakai: yakai_year),
-                                  ),
-                                )));
-                      },
-                    );
+                    return (songlist[index].startsWith('[text]'))
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16.0, top: 3, bottom: 3),
+                            child: Text(
+                              songlist[index].trim().substring(6),
+                              style: TextStyle(color: theme_purple),
+                            ),
+                          )
+                        : ListTile(
+                            //leading: const Icon(Icons.music_note),
+                            title: Text(
+                              StringService.dashToSpace(songlist[index]),
+                              style: TextStyle(
+                                  color:
+                                      (songlist[index].substring(0, 2) == '//')
+                                          ? theme_light_blue //poem
+                                          : Colors.white),
+                            ),
+                            visualDensity: VisualDensity(vertical: -2),
+                            onTap: () async {
+                              String songName = MyDecoder.songNameToPure(
+                                  songlist.elementAt(index));
+                              Song curr_song = await Song.readSong(
+                                  songName); //search the song
+                              print('$index ${songName}');
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => SongPage(
+                                        song: Song(
+                                          name: songName,
+                                          author: (curr_song.author != '')
+                                              ? curr_song.author
+                                              : '中島みゆき',
+                                          composer: (curr_song.composer != '')
+                                              ? curr_song.composer
+                                              : '中島みゆき',
+                                          live: curr_song.live,
+                                          lyrics_jp: curr_song.lyrics_jp,
+                                          lyrics_cn: curr_song.lyrics_cn,
+                                          lyrics_en: curr_song.lyrics_en,
+                                          comment: curr_song.comment,
+                                          review_cn: curr_song.review_cn,
+                                          review_en: curr_song.review_en,
+                                        ),
+                                        song_index: index + 1,
+                                        concert: Concert(
+                                          name: yakaiName,
+                                          year: yakai_year,
+                                          year_index: '0',
+                                          songs: MyDecoder.getYakaiSongList(
+                                              yakai: yakai_year),
+                                        ),
+                                      )));
+                            },
+                          );
                   }),
             ),
           ],

@@ -337,7 +337,15 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(StringService.dashToSpace(song!.name)),
+        title: SizedBox(
+          width: 230,
+          child: SelectableText(
+            StringService.dashToSpace(song!.name),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            minLines: 1,
+            maxLines: 3,
+          ),
+        ),
         actions: [
           IconButton(
               onPressed: () {
@@ -364,17 +372,19 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                 ? Container(height: 4) //No vip
                 : (concert == null) //No video
                     ? Container(
-                        height: 200,
+                        height: 245,
                         child: Center(
                           child: CircularProgressIndicator(),
                         ),
                       )
-                    : NetworkVideoPlayer(
-                        //video
-                        concert: concert,
-                        index: song_index,
+                    : Container(
+                        height: 245,
+                        child: NetworkVideoPlayer(
+                          //video
+                          concert: concert,
+                          index: song_index,
+                        ),
                       ),
-            SizedBox(height: 20),
             (_curr_index == 1) //bottom bar
                 ? //Live List
                 (song!.live != null && song!.live![0] != '')
@@ -489,7 +499,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                             child: ListView.builder(
                                 itemCount: song!.comment!.length,
                                 itemBuilder: ((context, index) {
-                                  //0:uid,1:userName,2:date,3:comment
+                                  //0:uid,1:userName,2:sent time,3:comment
                                   List<String> commentSplit = song!.comment!
                                       .elementAt(index)
                                       .split('%%');
@@ -513,13 +523,13 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                                       ? TextStyle(
                                                           overflow: TextOverflow
                                                               .ellipsis,
-                                                          fontSize: 20,
+                                                          fontSize: 18,
                                                           color:
                                                               theme_light_blue)
                                                       : TextStyle(
                                                           overflow: TextOverflow
                                                               .ellipsis,
-                                                          fontSize: 20),
+                                                          fontSize: 18),
                                                 ),
                                               ),
                                               SizedBox(width: 5),
@@ -530,7 +540,11 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                                       const EdgeInsets.only(
                                                           top: 5),
                                                   child: Text(
-                                                      commentSplit.elementAt(2),
+                                                      StringService
+                                                          .commentTimeFix(
+                                                              commentSplit
+                                                                  .elementAt(
+                                                                      2)),
                                                       style: TextStyle(
                                                           fontSize: 10)),
                                                 ),
@@ -541,7 +555,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                           subtitle: Text(
                                             commentSplit.elementAt(3),
                                             style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 17,
                                                 color: Colors.white),
                                           ),
                                           trailing: (InitData.miyukiUser.uid ==
@@ -568,7 +582,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                         : Text(
                             'コメント無し No Comment',
                             style: TextStyle(fontSize: 18),
-                          )
+                          ),
           ]),
         ],
       ),

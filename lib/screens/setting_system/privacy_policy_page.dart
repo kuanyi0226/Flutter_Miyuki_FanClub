@@ -95,7 +95,7 @@ class PrivacyPolicyPage extends StatelessWidget {
                         '(3) (Important!!!) We can not see your password in backend, so only you can see or modify it through "Forgot Password"\n'
                     : (AppLocalizations.of(context)!.language == '日本語')
                         ? '(1) 匿名掲示板での不適切な発言や違法行為はご遠慮ください\n' +
-                            '(2) VIP認証を取得したいお客様は、開発者のメールアドレスにお問い合わせください。\n' +
+                            '(2) VIPは管理者の友達です。VIP認証を取得したいお客様は、開発者のメールアドレスにお問い合わせください。(VIP認証は無料で取得できます。)\n' +
                             '(3) バックエンドではお客様のパスワードを見ることができません。\n' +
                             'パスワードの変更は「パスワードを忘れた場合」からのみ行うことができます。\n\n'
                         : '(1)請勿在本平台留下不適當的發言，或是做出違法的行為\n' +
