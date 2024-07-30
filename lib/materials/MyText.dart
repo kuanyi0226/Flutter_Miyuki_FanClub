@@ -1,9 +1,9 @@
-const CURR_VERSION = 'V1.2.5';
+const CURR_VERSION = 'V1.2.6';
 const APPNAME_EN = 'YUKI CLUB';
 const APPNAME_JP = '雪クラブ';
 
 const UPDATE_CONTENT = [
-  '--V1.2.6-- 2024/07/??\nfix: optimization, song list, yakai list',
+  '--V1.2.6-- 2024/07/31\nnew: light effects in yuki world, concert list; fix: optimization, song list, yakai list',
   '--V1.2.5-- 2024/07/24\nfix: optimization(many updates)',
   '--V1.2.4-- 2024/07/18\nnew: Update announce, multi-language system',
   '--V1.2.3-- 2024/05/27\nfix: 夜会(Yakai)vol.11&12 セトリ(Set list)',

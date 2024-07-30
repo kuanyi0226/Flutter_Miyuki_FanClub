@@ -6,7 +6,8 @@ import 'package:project5_miyuki/screens/Yuki_Sekai/yuki_sekai_page.dart';
 import 'package:project5_miyuki/screens/ad_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import './concert_page.dart';
 import './setting_system/settings_page.dart';
 import 'yakai/yakai_page.dart';
@@ -38,7 +39,7 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
         context: context,
         builder: (context) => AlertDialog(
               title: Text(
-                'Ready to log out?',
+                AppLocalizations.of(context)!.sign_out_confirm,
                 style: TextStyle(color: theme_purple, fontSize: 25),
               ),
               actions: [
@@ -48,7 +49,7 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      'ログアウト Sign Out',
+                      AppLocalizations.of(context)!.sign_out,
                       style: TextStyle(color: theme_purple, fontSize: 15),
                     )),
               ],
@@ -90,7 +91,9 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
                   ],
                 )),
             accountEmail: Text(
-              user!.email!,
+              AppLocalizations.of(context)!.yuki_coin +
+                  ': \$' +
+                  InitData.miyukiUser.coin.toString(),
               style: TextStyle(
                 fontSize: 18,
                 shadows: [
@@ -129,7 +132,7 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
               }),
           ListTile(
               leading: Icon(Icons.meeting_room_outlined),
-              title: Text('ゆき世界 Yuki World'),
+              title: Text('雪の世界 Yuki World'),
               onTap: () {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => YukiSekaiPage()));
@@ -163,7 +166,15 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
             padding: const EdgeInsets.only(left: 16, top: 20),
             child: Text('Others'),
           ),
-          kIsWeb
+          (kIsWeb)
+              ? ListTile(
+                  leading: Icon(Icons.android),
+                  title: Text('アプリをダウンロードする Download Android App'),
+                  onTap: () => launchUrlString(Uri.decodeComponent(
+                      'https://play.google.com/store/apps/details?id=com.yukiclub.yukiclub')),
+                )
+              : Container(),
+          (kIsWeb)
               ? Container()
               : ListTile(
                   leading: Icon(Icons.ad_units),

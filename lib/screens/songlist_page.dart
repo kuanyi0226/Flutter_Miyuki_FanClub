@@ -102,8 +102,15 @@ class _PageState extends State<SonglistPage> {
                           )
                         : ListTile(
                             //leading: const Icon(Icons.music_note),
-                            title: Text(StringService.dashToSpace(
-                                concert!.songs![index])),
+                            title: Text(
+                                (concert!.songs![index].contains('[song]'))
+                                    ? StringService.dashToSpace(
+                                        concert!.songs![index].substring(
+                                            0,
+                                            concert!.songs![index]
+                                                .indexOf('[song]')))
+                                    : StringService.dashToSpace(
+                                        concert!.songs![index])),
                             visualDensity: VisualDensity(vertical: -2),
                             onTap: () async {
                               Song curr_song = await Song.readSong(

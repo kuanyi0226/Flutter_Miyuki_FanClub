@@ -52,5 +52,9 @@
     "check_update": "Check Update",
     "privacy_policy": "Privacy Policy",
     "copyright": "Copyright",
-    "all": "All"
+    "all": "All",
+    "yuki_coin": "Yuki Coin",
+    "sign_out": "Sign Out",
+    "sign_out_confirm": "Sure To Sign Out?",
+    "mirage_hotel": "Mirage Hotel"
 }

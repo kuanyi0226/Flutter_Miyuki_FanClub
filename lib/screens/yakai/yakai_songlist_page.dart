@@ -101,7 +101,11 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
                         : ListTile(
                             //leading: const Icon(Icons.music_note),
                             title: Text(
-                              StringService.dashToSpace(songlist[index]),
+                              (songlist[index].contains('[song]'))
+                                  ? StringService.dashToSpace(songlist[index]
+                                      .substring(
+                                          0, songlist[index].indexOf('[song]')))
+                                  : StringService.dashToSpace(songlist[index]),
                               style: TextStyle(
                                   color:
                                       (songlist[index].substring(0, 2) == '//')

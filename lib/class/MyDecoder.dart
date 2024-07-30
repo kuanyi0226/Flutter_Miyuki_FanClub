@@ -14,10 +14,17 @@ class MyDecoder {
       //poem
       sub = songName.trim().substring(5);
     } else if (songName.trim().startsWith('[text]')) {
+      //text
       return songName.trim(); //text, not a song name
     } else {
       //song
-      sub = songName.trim().substring(3);
+      if (songName.trim().contains('[song]')) {
+        //01 XXXX [song]XXXX
+        sub = songName.trim().substring(songName.indexOf('[song]') + 6);
+      } else {
+        //01 XXXX
+        sub = songName.trim().substring(3);
+      }
     }
 
     int spaceIndex = sub.indexOf(' '); //has space
@@ -935,7 +942,7 @@ class MyDecoder {
           '38	目撃者の証言',
           '39	暗闇のジャスミン',
           '40	幸せになりなさい',
-          '41	二隻の舟 (※二雙の舟)',
+          '41	二雙の舟 [song]二隻の舟',
           '42	幸せになりなさい （旅人よ我に帰れ）',
           '[text]＜第三幕＞',
           '[text]第１場	鏡の中の夏',
@@ -943,7 +950,7 @@ class MyDecoder {
         ];
       case "y2013":
         return [
-          '01	二隻の舟 (※二雙の舟)（Inst.）',
+          '01	二雙の舟 （Inst.） [song]二隻の舟',
           '[text]MC',
           '02	産声',
           '03	十二月',
@@ -971,7 +978,7 @@ class MyDecoder {
           '22 竹の歌',
           '[text]MC',
           '23 産声',
-          '24 二隻の舟 (※二雙の舟)（カーテンコール）',
+          '24 二雙の舟 （カーテンコール） [song]二隻の舟',
         ];
       case "y2014":
         return [
@@ -1012,7 +1019,7 @@ class MyDecoder {
           '30	シャッター街 （中島、中村）',
           '31	恋なんていつでもできる （中村）',
           '32	雨天順延 （中村）',
-          '33	二隻の舟 (※二雙の舟)（中島）',
+          '33	二雙の舟 （中島） [song]二隻の舟',
           '34	水晶球 （石田）',
           '35 一族 （中島）',
           '36	呑んだくれのラヴレター （中村、宮下）',
@@ -1067,7 +1074,7 @@ class MyDecoder {
           '30	シャッター街 （中島、中村）',
           '31	恋なんていつでもできる （中村）',
           '32	雨天順延 （中村）',
-          '33	二隻の舟 (※二雙の舟)（中島）',
+          '33	二雙の舟 （中島） [song]二隻の舟',
           '34	水晶球 （石田）',
           '35 一族 （中島）',
           '36	呑んだくれのラヴレター （中村、宮下）',
@@ -1087,7 +1094,7 @@ class MyDecoder {
         return [
           '[text]＜第一幕＞',
           '[text]第１場 工場',
-          '01	二隻の舟 (※二雙の舟)（Inst.）',
+          '01	二雙の舟 （Inst.） [song]二隻の舟',
           '[text]MC',
           '[text]第２場 「1989」',
           '02	泣きたい夜に （中島、杉本）',
@@ -1186,7 +1193,7 @@ class MyDecoder {
           '25	梅が枝 （植野）',
           '26	リトル・トーキョー （渡辺,石田,中島,植野,香坂）',
           '27	月虹 （中島）',
-          '28	二隻の舟 (※二雙の舟)（中島,渡辺,宮下,植野,香坂）',
+          '28	二雙の舟 （中島,渡辺,宮下,植野,香坂）[song]二隻の舟',
           '29 放生 （中島）',
           '[text]第６場 ホテル＆パブ・オークマ 2001年1月30日 崩落',
           '30 いつ帰ってくるの （中島, 宮下）',

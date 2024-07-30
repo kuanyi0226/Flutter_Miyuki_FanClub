@@ -341,7 +341,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
           width: 230,
           child: SelectableText(
             StringService.dashToSpace(song!.name),
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18),
             minLines: 1,
             maxLines: 3,
           ),

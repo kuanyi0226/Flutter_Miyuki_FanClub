@@ -3,14 +3,20 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
+import 'package:project5_miyuki/widgets/Yuki_Sekai/components/darkeffect.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/players/player.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/components/collision_block.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/players/other_player.dart';
+
+import '../../components/spotlight.dart';
 
 class Level extends World {
   late TiledComponent level;
   final String levelName;
   final Player player;
+  late final Spotlight spotlight1;
+  late final Spotlight spotlight2;
+  late final DarkEffect darkEffect;
   List<CollisionBlock> collisionBlocks = [];
   List<String> otherplayers = []; //uid
   Level({required this.levelName, required this.player});
@@ -60,6 +66,26 @@ class Level extends World {
       }
     }
     player.collisionBlocks = collisionBlocks;
+
+    //dark effect
+    darkEffect = DarkEffect();
+    add(darkEffect);
+    darkEffect.priority = 6;
+
+    //spotlights
+    spotlight1 = Spotlight(
+        playerSize: player.size, source: Vector2(50, -150), following: true)
+      ..size = Vector2(100, 100) // Set size to match the shadow size
+      ..position = Vector2.zero();
+    add(spotlight1);
+    spotlight1.priority = 100;
+    spotlight2 = Spotlight(
+        playerSize: player.size, source: Vector2(650, -150), following: true)
+      ..size = Vector2(100, 100) // Set size to match the shadow size
+      ..position = Vector2.zero();
+    add(spotlight2);
+    spotlight2.priority = 100;
+
     return super.onLoad();
   }
 
@@ -94,6 +120,26 @@ class Level extends World {
         }
       }
     }
+    //lights following player
+    spotlight1.updateCharacterPosition(player.position, player.faceRight);
+    spotlight2.updateCharacterPosition(player.position, player.faceRight);
+    //turn on/off the effect
+    if (InitData.turnOnEffect)
+      turnOnEffect();
+    else
+      turnOffEffect();
     super.update(dt);
+  }
+
+  void turnOnEffect() {
+    spotlight1.enable = true;
+    spotlight2.enable = true;
+    darkEffect.enable = true;
+  }
+
+  void turnOffEffect() {
+    spotlight1.enable = false;
+    spotlight2.enable = false;
+    darkEffect.enable = false;
   }
 }

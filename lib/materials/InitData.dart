@@ -11,6 +11,7 @@ class InitData {
 
   static bool isInSekai = false;
   static List<PlayerInfo> playersInfo = [];
+  static bool turnOnEffect = true;
 
   //const
   static List<String> YAKAIS = [
@@ -74,6 +75,7 @@ class InitData {
     'Nobody_Is_Right',
     'PAIN',
     'RAIN',
+    'SCENE21・祭り街',
     'SE・TSU・NA・KU・TE',
     'SINGLES_BAR',
     'SMILE,_SMILE',
@@ -185,6 +187,7 @@ class InitData {
     'ふられた気分',
     'ほうせんか',
     'ほうやれほ',
+    'ほっといてよ',
     'まつりばやし',
     'まるで高速電車のようにあたしたちは擦れ違う',
     'みにくいあひるの子',
@@ -217,6 +220,7 @@ class InitData {
     'クレンジング_クリーム',
     'グッバイガール',
     'コマーシャル',
+    'コール',
     'サッポロSNOWY',
     'サバイバル・ロード',
     'サメの歌',
@@ -335,6 +339,7 @@ class InitData {
     '十年',
     '十文字',
     '南三条',
+    '単・純・愛_vs_本当の嘘',
     '友情',
     '古い帽子(詩篇)',
     '台風情報',

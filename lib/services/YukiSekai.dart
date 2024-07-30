@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:project5_miyuki/class/Yuki_Sekai/PlayerInfo.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/World1/levels/level.dart';
+import 'package:project5_miyuki/widgets/Yuki_Sekai/components/spotlight.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/players/player.dart';
 
 enum PlayerState { idle, running, jumping, falling }
@@ -48,6 +49,7 @@ class YukiSekai extends FlameGame
     cam.follow(player, verticalOnly: true);
     cam.priority = 0;
     addAll([cam, world]);
+
     if (showControl) {
       addJoystick();
     }

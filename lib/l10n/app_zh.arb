@@ -49,5 +49,9 @@
     "check_update": "檢查更新",
     "privacy_policy": "隱私政策",
     "copyright": "著作權",
-    "all": "全部"
+    "all": "全部",
+    "yuki_coin": "Yuki幣",
+    "sign_out": "登出",
+    "sign_out_confirm": "確定要登出嗎?",
+    "mirage_hotel": "幻景酒店"
 }

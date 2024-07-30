@@ -24,6 +24,7 @@ class Player extends SpriteAnimationGroupComponent
   Vector2 velocity = Vector2.zero();
   bool isOnGround = false;
   bool hasJumped = false;
+  bool faceRight = true;
   final double _gravity = 9.8;
   final double _jumpForce = 260;
   final double _terminalVelocity = 300; //max falling speed
@@ -137,8 +138,10 @@ class Player extends SpriteAnimationGroupComponent
 
     if (velocity.x < 0 && scale.x > 0) {
       flipHorizontallyAroundCenter();
+      faceRight = false;
     } else if (velocity.x > 0 && scale.x < 0) {
       flipHorizontallyAroundCenter();
+      faceRight = true;
     }
     //check if moving, set running
     if (velocity.x > 0 || velocity.x < 0) playerState = PlayerState.running;

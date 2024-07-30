@@ -49,5 +49,9 @@
     "check_update": "アップデートを確認する",
     "privacy_policy": "プライバシーポリシー",
     "copyright": "著作権",
-    "all": "全部"
+    "all": "全部",
+    "yuki_coin": "ユキコイン",
+    "sign_out": "サインアウト",
+    "sign_out_confirm": "サインアウトしますか？",
+    "mirage_hotel": "ミラージュ・ホテル"
 }

@@ -27,7 +27,7 @@ class AboutAppPage extends StatelessWidget {
                     ? '${APPNAME_EN} (miyukisamafansclub@gmail.com) is an APP to gather all the 中島みゆき fans in the world holding by an "Non-official" fan club in TW.(You can also contact me via Instagram:@miyukisama.fans.club).\n\n' +
                         'Everyone can share their thoughts about any of her songs with other fans. Let\'s make this community greater! Let more people know 中島みゆきさん. '
                     : (AppLocalizations.of(context)!.language == '日本語')
-                        ? '${APPNAME_JP}(miyukisamafansclub@gmail.com)は世界中の中島みゆきファンを集め、中島みゆきさんのことを広めるためのアプリです。台湾の非公式ファンクラブによって開発・運営されています。掲示板の利用、ライブやアルバムなどの情報を調べることができます。'
+                        ? '${APPNAME_JP}(miyukisamafansclub@gmail.com)は世界中の中島みゆきファンを集め、みゆきさんのことを広めるためのWebサイト(アプリ)です。(完全に無料)\n掲示板の利用、曲やライブなどの情報を調べることができます。'
                         : '${APPNAME_JP}(miyukisamafansclub@gmail.com)是用來匯聚全世界中島美雪粉絲的非官方粉絲俱樂部。每位粉絲都能夠在此平台分享對於中島美雪歌曲的想法，或是參與過演唱會的經驗。平台中也整理了許多關於中島美雪的資訊，使用者可以盡情調閱。一起來讓更多人認識中島美雪吧！',
                 style: TextStyle(fontSize: 15),
               ),
