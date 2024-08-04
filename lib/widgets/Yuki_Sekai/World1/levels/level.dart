@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/components/darkeffect.dart';
@@ -19,14 +20,22 @@ class Level extends World {
   late final DarkEffect darkEffect;
   List<CollisionBlock> collisionBlocks = [];
   List<String> otherplayers = []; //uid
+  late SpriteComponent _background;
+
   Level({required this.levelName, required this.player});
 
   @override
   FutureOr<void> onLoad() async {
     otherplayers.clear();
+    final image = await Flame.images.load('yuki_sekai/y2006/background.png');
+    _background = SpriteComponent.fromImage(
+      image,
+    );
+
     level = await TiledComponent.load('$levelName.tmx', Vector2.all(16));
 
     add(level);
+    add(_background);
     final spawnPointsLayer = level.tileMap.getLayer<ObjectGroup>('SpawnPoints');
 
     if (spawnPointsLayer != null) {
