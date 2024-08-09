@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import './concert_page.dart';
+import 'concert/concert_page.dart';
 import './setting_system/settings_page.dart';
 import 'Yuki_Sekai/yuki_sekai_list_page.dart';
 import 'yakai/yakai_page.dart';

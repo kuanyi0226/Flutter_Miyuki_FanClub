@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project5_miyuki/materials/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../class/Concert.dart';
-import './songlist_page.dart';
+import '../../class/Concert.dart';
+import 'songlist_page.dart';
 
 class ConcertPage extends StatefulWidget {
   @override

@@ -1,13 +1,13 @@
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../services/string_service.dart';
-import '../class/Song.dart';
+import '../../services/string_service.dart';
+import '../../class/Song.dart';
 
-import '../class/Concert.dart';
-import '../materials/colors.dart';
+import '../../class/Concert.dart';
+import '../../materials/colors.dart';
 
-import './song_page.dart';
-import '../class/MyDecoder.dart';
+import '../song_page.dart';
+import '../../class/MyDecoder.dart';
 
 class SonglistPage extends StatefulWidget {
   Concert? concert;

@@ -11,7 +11,7 @@ import '../services/string_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../class/Concert.dart';
 import '../services/custom_search_delegate.dart';
-import './songlist_page.dart';
+import 'concert/songlist_page.dart';
 import '../class/Song.dart';
 import '../widgets/NetworkVideoPlayer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

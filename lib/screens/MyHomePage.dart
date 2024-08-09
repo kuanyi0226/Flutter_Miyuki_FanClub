@@ -10,7 +10,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/class/Song.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
-import 'package:project5_miyuki/screens/concert_page.dart';
+import 'package:project5_miyuki/screens/concert/concert_page.dart';
 import 'package:project5_miyuki/screens/public_chat_room_page.dart';
 import 'package:project5_miyuki/screens/song_page.dart';
 import 'package:project5_miyuki/screens/yakai/yakai_page.dart';
