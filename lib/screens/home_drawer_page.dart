@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
-import 'package:project5_miyuki/screens/Yuki_Sekai/yuki_sekai_page.dart';
 import 'package:project5_miyuki/screens/ad_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import './concert_page.dart';
 import './setting_system/settings_page.dart';
+import 'Yuki_Sekai/yuki_sekai_list_page.dart';
 import 'yakai/yakai_page.dart';
 
 import '../materials/MyText.dart';
@@ -134,9 +134,8 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
               leading: Icon(Icons.meeting_room_outlined),
               title: Text('雪の世界 Yuki World'),
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => YukiSekaiPage()));
-                InitData.isInSekai = true;
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => YukiSekaiListPage()));
                 scaffoldKey.currentState!.openEndDrawer(); //close drawer
               }),
           //Websites

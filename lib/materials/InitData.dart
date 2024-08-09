@@ -7,8 +7,9 @@ class InitData {
   static MiyukiUser miyukiUser =
       MiyukiUser(name: 'No Name', email: 'No data', vip: false);
   static String todaySong = 'No Song';
-  static YukiSekai yukiSekai = YukiSekai();
-
+  //static YukiSekai yukiSekai = YukiSekai();
+  static String curr_worldName = 'y2006';
+  static String curr_costume = 'Yakai_14_pink_dress';
   static bool isInSekai = false;
   static List<PlayerInfo> playersInfo = [];
   static bool turnOnEffect = true;

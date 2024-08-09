@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
@@ -11,23 +12,27 @@ import 'package:project5_miyuki/widgets/Yuki_Sekai/players/other_player.dart';
 
 import '../../components/spotlight.dart';
 
-class Level extends World {
+class Level_2007_0 extends World {
   late TiledComponent level;
   final String levelName;
   final Player player;
-  late final Spotlight spotlight1;
-  late final Spotlight spotlight2;
+  late final FixedSpotlight spotlight1;
+  late final FixedSpotlight spotlight2;
+  late final FixedSpotlight spotlight3;
+  late final FixedSpotlight spotlight4;
+  late final FixedSpotlight spotlight5;
   late final DarkEffect darkEffect;
   List<CollisionBlock> collisionBlocks = [];
   List<String> otherplayers = []; //uid
   late SpriteComponent _background;
 
-  Level({required this.levelName, required this.player});
+  Level_2007_0({required this.levelName, required this.player});
 
   @override
   FutureOr<void> onLoad() async {
     otherplayers.clear();
-    final image = await Flame.images.load('yuki_sekai/y2006/background.png');
+    final image =
+        await Flame.images.load('yuki_sekai/$levelName/background.png');
     _background = SpriteComponent.fromImage(
       image,
     );
@@ -82,18 +87,9 @@ class Level extends World {
     darkEffect.priority = 6;
 
     //spotlights
-    spotlight1 = Spotlight(
-        playerSize: player.size, source: Vector2(50, -150), following: true)
-      ..size = Vector2(100, 100) // Set size to match the shadow size
-      ..position = Vector2.zero();
-    add(spotlight1);
-    spotlight1.priority = 100;
-    spotlight2 = Spotlight(
-        playerSize: player.size, source: Vector2(650, -150), following: true)
-      ..size = Vector2(100, 100) // Set size to match the shadow size
-      ..position = Vector2.zero();
-    add(spotlight2);
-    spotlight2.priority = 100;
+    initSpotlights();
+
+    addAll([spotlight1, spotlight2, spotlight3, spotlight4, spotlight5]);
 
     return super.onLoad();
   }
@@ -129,9 +125,6 @@ class Level extends World {
         }
       }
     }
-    //lights following player
-    spotlight1.updateCharacterPosition(player.position, player.faceRight);
-    spotlight2.updateCharacterPosition(player.position, player.faceRight);
     //turn on/off the effect
     if (InitData.turnOnEffect)
       turnOnEffect();
@@ -140,15 +133,78 @@ class Level extends World {
     super.update(dt);
   }
 
+  void initSpotlights() {
+    //L1(middle)
+    spotlight1 = FixedSpotlight(
+        source: Vector2(405, 0),
+        target: Vector2(405, 392),
+        lightColor: Color.fromARGB(255, 255, 249, 236).withOpacity(0.4),
+        ovalWidth: 90)
+      ..size = Vector2(100, 100) // Set size to match the shadow size
+      ..position = Vector2.zero();
+    //L2
+    spotlight2 = FixedSpotlight(
+      source: Vector2(245, 0),
+      target: Vector2(405, 392),
+      lightColor: Color.fromARGB(255, 248, 215, 144).withOpacity(0.3),
+      ovalHeight: 15,
+      ovalWidth: 130,
+    )
+      ..size = Vector2(100, 100) // Set size to match the shadow size
+      ..position = Vector2.zero();
+    //L3
+    spotlight3 = FixedSpotlight(
+      source: Vector2(85, 0),
+      target: Vector2(405, 392),
+      lightColor: Color.fromARGB(255, 248, 215, 144).withOpacity(0.3),
+      ovalHeight: 15,
+      ovalWidth: 130,
+    )
+      ..size = Vector2(100, 100) // Set size to match the shadow size
+      ..position = Vector2.zero();
+    //L4
+    spotlight4 = FixedSpotlight(
+      source: Vector2(565, 0),
+      target: Vector2(405, 392),
+      lightColor: Color.fromARGB(255, 248, 215, 144).withOpacity(0.3),
+      ovalHeight: 15,
+      ovalWidth: 130,
+    )
+      ..size = Vector2(100, 100) // Set size to match the shadow size
+      ..position = Vector2.zero();
+    //L5
+    spotlight5 = FixedSpotlight(
+      source: Vector2(725, 0),
+      target: Vector2(405, 392),
+      lightColor: Color.fromARGB(255, 248, 215, 144).withOpacity(0.3),
+      ovalHeight: 15,
+      ovalWidth: 130,
+    )
+      ..size = Vector2(100, 100) // Set size to match the shadow size
+      ..position = Vector2.zero();
+
+    spotlight1.priority = 99;
+    spotlight2.priority = 6;
+    spotlight3.priority = 6;
+    spotlight4.priority = 6;
+    spotlight5.priority = 6;
+  }
+
   void turnOnEffect() {
     spotlight1.enable = true;
     spotlight2.enable = true;
+    spotlight3.enable = true;
+    spotlight4.enable = true;
+    spotlight5.enable = true;
     darkEffect.enable = true;
   }
 
   void turnOffEffect() {
     spotlight1.enable = false;
     spotlight2.enable = false;
+    spotlight3.enable = false;
+    spotlight4.enable = false;
+    spotlight5.enable = false;
     darkEffect.enable = false;
   }
 }

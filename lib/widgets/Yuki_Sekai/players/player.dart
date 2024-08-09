@@ -45,6 +45,9 @@ class Player extends SpriteAnimationGroupComponent
   @override
   FutureOr<void> onLoad() {
     isIdle = false;
+    if (costume == null) {
+      costume = 'Yakai_14_pink_dress';
+    }
     _loadAllAnimations();
     add(RectangleHitbox(
       position: Vector2(hitbox.offsetX, hitbox.offsetY),

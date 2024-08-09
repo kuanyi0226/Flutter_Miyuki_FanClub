@@ -10,7 +10,6 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/class/Song.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
-import 'package:project5_miyuki/screens/Yuki_Sekai/yuki_sekai_page.dart';
 import 'package:project5_miyuki/screens/concert_page.dart';
 import 'package:project5_miyuki/screens/public_chat_room_page.dart';
 import 'package:project5_miyuki/screens/song_page.dart';
@@ -28,6 +27,7 @@ import '../class/Message.dart';
 import '../materials/colors.dart';
 
 import '../services/message_service.dart';
+import 'Yuki_Sekai/yuki_sekai_list_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -371,8 +371,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 Text(AppLocalizations.of(context)!.yuki_world),
                             onPressed: () async {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => YukiSekaiPage()));
-                              InitData.isInSekai = true;
+                                  builder: (context) => YukiSekaiListPage()));
                             },
                           ),
                         ],

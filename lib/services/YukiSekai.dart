@@ -11,15 +11,16 @@ import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/class/Yuki_Sekai/PlayerInfo.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
-import 'package:project5_miyuki/widgets/Yuki_Sekai/World1/levels/level.dart';
+import 'package:project5_miyuki/services/Yuki_Sekai/yuki_sekai_service.dart';
+import 'package:project5_miyuki/widgets/Yuki_Sekai/levels/levels/level_y2006.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/players/player.dart';
+import 'package:flame/experimental.dart'; // Gives you the Rectangle
 
 enum PlayerState { idle, running, jumping, falling }
 
 class YukiSekai extends FlameGame
     with HasKeyboardHandlerComponents, DragCallbacks {
-  final DatabaseReference fireBaseDB =
-      FirebaseDatabase.instance.ref('Yuki_Sekai/World1');
+  late final DatabaseReference fireBaseDB;
 
   Player player = Player();
 
@@ -31,22 +32,20 @@ class YukiSekai extends FlameGame
 
   @override
   FutureOr<void> onLoad() async {
+    fireBaseDB = await FirebaseDatabase.instance
+        .ref('Yuki_Sekai/${InitData.curr_worldName}');
     InitData.playersInfo.clear();
-    player.costume = (Random().nextInt(100) > 40)
-        ? 'Yakai_14_black_dress'
-        : 'Yakai_14_pink_dress';
+    player.costume = InitData.curr_costume;
     //load all images into cache
     await images.loadAllImages();
 
-    final world = Level(levelName: 'world1_level1', player: player);
+    final world =
+        YukiSekaiService().generateLevel(InitData.curr_worldName, player);
     await PlayerInfo.createPlayer(player: player, costume: player.costume);
     //create other players
     readPlayerInfo();
-    cam = CameraComponent.withFixedResolution(
-        world: world, width: 640, height: 300);
-    cam.viewfinder.anchor = Anchor.centerLeft;
-    cam.follow(player, verticalOnly: true);
-    cam.priority = 0;
+    cam = YukiSekaiService()
+        .generateCamera(world, InitData.curr_worldName, player);
     addAll([cam, world]);
 
     if (showControl) {

@@ -62,7 +62,7 @@ class PlayerInfo {
     final DatabaseReference fireBaseDB = FirebaseDatabase.instance.ref();
     fireBaseDB
         .child("Yuki_Sekai")
-        .child("World1")
+        .child(InitData.curr_worldName)
         .child(userInfo.uid)
         .set(data)
         .whenComplete(() {
@@ -93,7 +93,7 @@ class PlayerInfo {
     final DatabaseReference fireBaseDB = FirebaseDatabase.instance.ref();
     fireBaseDB
         .child("Yuki_Sekai")
-        .child("World1/${InitData.miyukiUser.uid}")
+        .child("${InitData.curr_worldName}/${InitData.miyukiUser.uid}")
         .update(data)
         .whenComplete(() {})
         .catchError((err) => print(err));
@@ -104,7 +104,7 @@ class PlayerInfo {
     final DatabaseReference fireBaseDB = FirebaseDatabase.instance.ref();
     fireBaseDB
         .child("Yuki_Sekai")
-        .child("World1")
+        .child(InitData.curr_worldName)
         .child(playerUid)
         .remove()
         .whenComplete(() {
@@ -114,7 +114,11 @@ class PlayerInfo {
 
   static Future deleteAllPlayers() async {
     final DatabaseReference fireBaseDB = FirebaseDatabase.instance.ref();
-    fireBaseDB.child("Yuki_Sekai").child("World1").remove().whenComplete(() {
+    fireBaseDB
+        .child("Yuki_Sekai")
+        .child(InitData.curr_worldName)
+        .remove()
+        .whenComplete(() {
       print('A Player Exit Yuki Sekai');
     }).catchError((err) => print(err));
   }

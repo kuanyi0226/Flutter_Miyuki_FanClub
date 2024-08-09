@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flame/extensions.dart';
 import 'dart:math';
 
-class Spotlight extends PositionComponent {
+class FollowingSpotlight extends PositionComponent {
   late Paint _shadowPaint;
   late Paint _lightPaint;
   late Vector2 _characterPosition;
@@ -11,17 +11,16 @@ class Spotlight extends PositionComponent {
   late Vector2 _source;
   bool _playerFaceRight = true;
   bool enable = true;
-  bool following;
 
-  Spotlight(
+  FollowingSpotlight(
       {required Vector2 playerSize,
       required Vector2 source,
-      this.following = false}) {
+      required Color lightColor}) {
     _shadowPaint = Paint()
       ..color = Color.fromARGB(255, 251, 251, 251).withOpacity(0.3)
       ..style = PaintingStyle.fill;
     _lightPaint = Paint()
-      ..color = Color.fromARGB(255, 104, 187, 255).withOpacity(0.4)
+      ..color = lightColor
       ..style = PaintingStyle.fill;
     _characterPosition = Vector2.zero();
     this._playerSize = playerSize;
@@ -79,6 +78,67 @@ class Spotlight extends PositionComponent {
           height: 12.5,
         );
       }
+
+      canvas.drawOval(shadowRect, _shadowPaint);
+    }
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+  }
+}
+
+class FixedSpotlight extends PositionComponent {
+  late Paint _shadowPaint;
+  late Paint _lightPaint;
+  late Vector2 _source;
+  late Vector2 _target;
+  bool enable = true;
+  late double _ovalWidth;
+  late double _ovalHeight;
+
+  FixedSpotlight({
+    required Vector2 source,
+    required Vector2 target,
+    required Color lightColor,
+    double ovalHeight = 12.5,
+    double ovalWidth = 100,
+  }) {
+    _shadowPaint = Paint()
+      ..color = Color.fromARGB(255, 251, 251, 251).withOpacity(0.3)
+      ..style = PaintingStyle.fill;
+    _lightPaint = Paint()
+      ..color = lightColor
+      ..style = PaintingStyle.fill;
+    this._source = source;
+    this._target = target;
+    this._ovalHeight = ovalHeight;
+    this._ovalWidth = ovalWidth;
+  }
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+
+    if (enable) {
+      // Draw the cone-shaped spotlight first
+      final path = Path();
+      path.moveTo(_source.x, _source.y);
+
+      path.lineTo(_target.x - _ovalWidth / 2, _target.y);
+      path.lineTo(_target.x + _ovalWidth / 2, _target.y);
+      path.close();
+
+      canvas.drawPath(path, _lightPaint);
+
+      // Draw the shadow (an ellipse) at the bottom of the character on top of the light
+      final shadowRect;
+      shadowRect = Rect.fromCenter(
+        center: Offset(_target.x, _target.y),
+        width: _ovalWidth,
+        height: _ovalHeight,
+      );
 
       canvas.drawOval(shadowRect, _shadowPaint);
     }

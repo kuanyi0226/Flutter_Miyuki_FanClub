@@ -8,10 +8,11 @@ import './songlist_page.dart';
 
 class ConcertPage extends StatefulWidget {
   @override
-  State<ConcertPage> createState() => _PageState();
+  State<ConcertPage> createState() => _ConcertPageState();
 }
 
-class _PageState extends State<ConcertPage> with TickerProviderStateMixin {
+class _ConcertPageState extends State<ConcertPage>
+    with TickerProviderStateMixin {
   late final TabController _tabController;
   int _currentTab = 0;
   @override

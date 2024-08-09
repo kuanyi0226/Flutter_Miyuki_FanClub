@@ -8,7 +8,7 @@ class DarkEffect extends PositionComponent {
   DarkEffect() {
     _darkPaint = Paint()
       ..color = Color.fromARGB(255, 25, 26, 31)
-          .withOpacity(0.6) // Adjust opacity as needed
+          .withOpacity(0.35) // Adjust opacity as needed
       ..style = PaintingStyle.fill;
   }
 
