@@ -53,5 +53,17 @@
     "yuki_coin": "ユキコイン",
     "sign_out": "サインアウト",
     "sign_out_confirm": "サインアウトしますか？",
-    "mirage_hotel": "ミラージュ・ホテル"
+    "mirage_hotel": "ミラージュ・ホテル",
+    "yuki_store": "雪の店",
+    "garment": "衣装",
+    "garment_info": "「衣装」なんて、「雪の世界」で着ることができます。この店で、購入した衣装に着替えることができます。(支払いは「ユキコイン」のみ可能です)",
+    "garment_change": "衣装変え:",
+    "garment_put_on_already": "もうこの衣装を着ました。",
+    "garment_changed": "衣装変えました!",
+    "purchased": "購入した",
+    "purchase_confirm": "購入しますか?",
+    "price": "価格(ユキコイン)",
+    "remaining_yukicoin": "ユキコインの残高",
+    "yes": "はい",
+    "current_garment": "現在の衣装"
 }

@@ -35,7 +35,7 @@ class YukiSekai extends FlameGame
     fireBaseDB = await FirebaseDatabase.instance
         .ref('Yuki_Sekai/${InitData.curr_worldName}');
     InitData.playersInfo.clear();
-    player.costume = InitData.curr_costume;
+    player.costume = InitData.curr_garment;
     //load all images into cache
     await images.loadAllImages();
 

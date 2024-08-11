@@ -56,5 +56,17 @@
     "yuki_coin": "Yuki Coin",
     "sign_out": "Sign Out",
     "sign_out_confirm": "Sure To Sign Out?",
-    "mirage_hotel": "Mirage Hotel"
+    "mirage_hotel": "Mirage Hotel",
+    "yuki_store": "Yuki Store",
+    "garment": "Garment",
+    "garment_info": "You can put on a garment in \"Yuki World\", changing your current garment to another if you have already purchased it.(You can only pay by \"Yuki Coin\")",
+    "garment_change": "Change the current garment to:",
+    "garment_put_on_already": "You have already put on this garment.",
+    "garment_changed": "Successfully changed your current garment!",
+    "purchased": "purchased",
+    "purchase_confirm": "Sure to purchase?",
+    "price": "Price(Yuki Coin)",
+    "remaining_yukicoin": "Remaining Yuki Coin",
+    "yes": "Yes",
+    "current_garment": "Current Garment"
 }

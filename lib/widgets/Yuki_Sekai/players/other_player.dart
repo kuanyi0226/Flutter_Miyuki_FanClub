@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/services/YukiSekai.dart';
+import 'package:project5_miyuki/services/Yuki_Sekai/yuki_sekai_service.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/components/collision_block.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/components/player_hitbox.dart';
 
@@ -16,7 +17,6 @@ class OtherPlayer extends SpriteAnimationGroupComponent
   late final SpriteAnimation runningAnimation;
   late final SpriteAnimation jumpingAnimation;
   late final SpriteAnimation fallingAnimation;
-  final double stepTime = 0.05;
 
   String name;
   TextComponent nameTag = TextBoxComponent();
@@ -43,7 +43,7 @@ class OtherPlayer extends SpriteAnimationGroupComponent
   OtherPlayer(
       {super.position,
       required this.uid,
-      this.costume = 'Yakai_14_pink_dress',
+      this.costume = 'y2006_pink_dress',
       this.name = 'No Name'});
 
   @override
@@ -77,10 +77,11 @@ class OtherPlayer extends SpriteAnimationGroupComponent
   }
 
   void _loadAllAnimations() {
-    idleAnimation = _spriteAnimation('Idle', 11);
-    runningAnimation = _spriteAnimation('Run', 4);
-    jumpingAnimation = _spriteAnimation('Jump', 1);
-    fallingAnimation = _spriteAnimation('Fall', 1);
+    List<int> amountInfo = YukiSekaiService.getGarmentAnimationAmount(costume);
+    idleAnimation = _spriteAnimation('Idle', amountInfo[0]);
+    runningAnimation = _spriteAnimation('Run', amountInfo[1]);
+    jumpingAnimation = _spriteAnimation('Jump', amountInfo[2]);
+    fallingAnimation = _spriteAnimation('Fall', amountInfo[3]);
 
     //List of all animations
     animations = {
@@ -94,15 +95,30 @@ class OtherPlayer extends SpriteAnimationGroupComponent
   }
 
   SpriteAnimation _spriteAnimation(String state, int amount) {
-    return SpriteAnimation.fromFrameData(
-      game.images
-          .fromCache('yuki_sekai/Main Characters/$costume/$state (32x32).png'),
-      SpriteAnimationData.sequenced(
-        amount: amount, //amount of pictures in the animation
-        stepTime: stepTime,
-        textureSize: Vector2.all(64),
-      ),
-    );
+    try {
+      return SpriteAnimation.fromFrameData(
+        game.images.fromCache(
+            'yuki_sekai/Main Characters/$costume/$state (32x32).png'),
+        SpriteAnimationData.sequenced(
+          amount: amount, //amount of pictures in the animation
+          stepTime:
+              YukiSekaiService.getGarmentAnimationStepTime(costume, state),
+          textureSize: YukiSekaiService.getGarmentAnimationTextureSize(costume),
+        ),
+      );
+    } catch (e) {
+      //error handling
+      return SpriteAnimation.fromFrameData(
+        game.images.fromCache(
+            'yuki_sekai/Main Characters/y2006_pink_dress/$state (32x32).png'),
+        SpriteAnimationData.sequenced(
+          amount: amount, //amount of pictures in the animation
+          stepTime:
+              YukiSekaiService.getGarmentAnimationStepTime(costume, state),
+          textureSize: YukiSekaiService.getGarmentAnimationTextureSize(costume),
+        ),
+      );
+    }
   }
 
   void _updatePlayerState() {

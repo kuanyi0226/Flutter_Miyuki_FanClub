@@ -9,7 +9,7 @@ class InitData {
   static String todaySong = 'No Song';
   //static YukiSekai yukiSekai = YukiSekai();
   static String curr_worldName = 'y2006';
-  static String curr_costume = 'Yakai_14_pink_dress';
+  static String curr_garment = 'y2006_pink_dress';
   static bool isInSekai = false;
   static List<PlayerInfo> playersInfo = [];
   static bool turnOnEffect = true;

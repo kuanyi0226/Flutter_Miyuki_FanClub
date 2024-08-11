@@ -1,3 +1,5 @@
+import 'package:project5_miyuki/class/Garment.dart';
+
 class MyDecoder {
   // Year_Index to Concert Year
   static String yearToConcertYear(String year_index) {
@@ -35,6 +37,30 @@ class MyDecoder {
       result = sub;
     }
     return result;
+  }
+
+  static Garment getGarmentInfo(String name) {
+    if (name == '2007_0_red_dress')
+      return Garment(
+          name: '歌旅 赤いドレス',
+          price: 200,
+          year: '2007',
+          live_name: 'TOUR 2007',
+          file: '2007_0_red_dress');
+    else if (name == 'y2006_black_dress')
+      return Garment(
+          name: '夜会VOL.14 黒いドレス',
+          price: 100,
+          year: '2006',
+          live_name: '夜会VOL.14 黒いドレス',
+          file: 'y2006_black_dress');
+    else
+      return Garment(
+          name: '夜会VOL.14 ピンクのドレス',
+          price: 0,
+          year: '2006',
+          live_name: '夜会VOL.14',
+          file: 'y2006_pink_dress');
   }
 
   // Year_Index to Concert Name

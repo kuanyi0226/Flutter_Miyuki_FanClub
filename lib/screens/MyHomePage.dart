@@ -93,6 +93,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       InitData.miyukiUser.uid = user!.uid;
       InitData.miyukiUser.imgUrl = user!.photoURL;
       print('welcome ${InitData.miyukiUser.name} ${user!.uid}');
+
+      //init current garment
+      for (String collection in InitData.miyukiUser.collections!) {
+        if (collection.startsWith('[garment]')) {
+          if (collection.contains('[current]')) {
+            InitData.curr_garment =
+                collection.replaceFirst('[garment][current]', '');
+          }
+        }
+      }
     });
 
     return InitData.miyukiUser;

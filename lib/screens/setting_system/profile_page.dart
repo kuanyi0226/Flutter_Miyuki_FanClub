@@ -20,7 +20,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   Uint8List? _image;
-  final UPDATE_IMG_COST = 200;
+  final UPDATE_IMG_COST = 50;
 
   Future _editUserName(String originalName) {
     final nameController = TextEditingController();
@@ -93,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 InternetConnectionStatus.connected) {
                           //check money
                           if (InitData.miyukiUser.coin! >= UPDATE_IMG_COST) {
-                            YukicoinService.addCoins(-200);
+                            YukicoinService.addCoins(0 - UPDATE_IMG_COST);
                             snackBarText =
                                 'Successfully updated photo! You still have Yuki Coin \$${InitData.miyukiUser.coin}';
                             var snackBar =

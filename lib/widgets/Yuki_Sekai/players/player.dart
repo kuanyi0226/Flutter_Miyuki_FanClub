@@ -16,7 +16,6 @@ class Player extends SpriteAnimationGroupComponent
   late final SpriteAnimation runningAnimation;
   late final SpriteAnimation jumpingAnimation;
   late final SpriteAnimation fallingAnimation;
-  final double stepTime = 0.05;
 
   String costume;
   double horizontalMovement = 0;
@@ -40,13 +39,13 @@ class Player extends SpriteAnimationGroupComponent
   double accumulatedTime = 0;
   bool isIdle = false;
 
-  Player({super.position, this.costume = 'Yakai_14_pink_dress'});
+  Player({super.position, this.costume = 'y2006_pink_dress'});
 
   @override
   FutureOr<void> onLoad() {
     isIdle = false;
     if (costume == null) {
-      costume = 'Yakai_14_pink_dress';
+      costume = 'y2006_pink_dress';
     }
     _loadAllAnimations();
     add(RectangleHitbox(
@@ -92,10 +91,11 @@ class Player extends SpriteAnimationGroupComponent
   // }
 
   void _loadAllAnimations() {
-    idleAnimation = _spriteAnimation('Idle', 11);
-    runningAnimation = _spriteAnimation('Run', 4);
-    jumpingAnimation = _spriteAnimation('Jump', 1);
-    fallingAnimation = _spriteAnimation('Fall', 1);
+    List<int> amountInfo = YukiSekaiService.getGarmentAnimationAmount(costume);
+    idleAnimation = _spriteAnimation('Idle', amountInfo[0]);
+    runningAnimation = _spriteAnimation('Run', amountInfo[1]);
+    jumpingAnimation = _spriteAnimation('Jump', amountInfo[2]);
+    fallingAnimation = _spriteAnimation('Fall', amountInfo[3]);
 
     //List of all animations
     animations = {
@@ -114,8 +114,8 @@ class Player extends SpriteAnimationGroupComponent
           .fromCache('yuki_sekai/Main Characters/$costume/$state (32x32).png'),
       SpriteAnimationData.sequenced(
         amount: amount, //amount of pictures in the animation
-        stepTime: (state == 'Run') ? stepTime * 2 : stepTime,
-        textureSize: Vector2.all(64),
+        stepTime: YukiSekaiService.getGarmentAnimationStepTime(costume, state),
+        textureSize: YukiSekaiService.getGarmentAnimationTextureSize(costume),
       ),
     );
   }

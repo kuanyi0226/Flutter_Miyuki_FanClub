@@ -53,5 +53,17 @@
     "yuki_coin": "Yuki幣",
     "sign_out": "登出",
     "sign_out_confirm": "確定要登出嗎?",
-    "mirage_hotel": "幻景酒店"
+    "mirage_hotel": "幻景酒店",
+    "yuki_store": "雪的商店",
+    "garment": "衣裝",
+    "garment_info": "衣裝可於「雪的世界」中顯示，點擊已購入的衣裝，可以更換目前的衣裝樣式。(只能使用Yuki幣付費，不接受其他方式)",
+    "garment_change": "更換目前衣裝:",
+    "garment_put_on_already": "您已穿上此衣裝。",
+    "garment_changed": "成功更換您的衣裝!",
+    "purchased": "已購入",
+    "purchase_confirm": "確定購買嗎?",
+    "price": "價格(Yuki幣)",
+    "remaining_yukicoin": "剩餘Yuki幣",
+    "yes": "是",
+    "current_garment": "目前的衣裝"
 }

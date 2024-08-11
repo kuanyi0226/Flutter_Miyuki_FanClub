@@ -56,4 +56,65 @@ class YukiSekaiService {
     }
     return cam;
   }
+
+  //GarmentAnimationInfo
+  static List<int> getGarmentAnimationAmount(String costume) {
+    //idle, running, jumping, falling
+    switch (costume) {
+      case 'y2006_pink_dress':
+        return [11, 4, 1, 1];
+      case 'y2006_black_dress':
+        return [11, 4, 1, 1];
+      case '2007_0_red_dress':
+        return [8, 4, 1, 1];
+      default:
+        return [11, 4, 1, 1];
+    }
+  }
+
+  static double getGarmentAnimationStepTime(String costume, String state) {
+    //idle, running, jumping, falling
+    int index = 0;
+    List<double> stepTime = [];
+    switch (state) {
+      case 'Idle':
+        index = 0;
+        break;
+      case 'Run':
+        index = 1;
+        break;
+      case 'Jump':
+        index = 2;
+        break;
+      default:
+        index = 3;
+        break;
+    }
+    switch (costume) {
+      case 'y2006_pink_dress':
+        stepTime = [0.05, 0.1, 0.05, 0.05];
+        break;
+      case 'y2006_black_dress':
+        stepTime = [0.05, 0.1, 0.05, 0.05];
+        break;
+      case '2007_0_red_dress':
+        stepTime = [1.5, 0.2, 0.05, 0.05];
+        break;
+      default:
+        stepTime = [0.05, 0.1, 0.05, 0.05];
+        break;
+    }
+
+    return stepTime[index];
+  }
+
+  static Vector2 getGarmentAnimationTextureSize(String costume) {
+    //idle, running, jumping, falling
+    switch (costume) {
+      case 'y2006_pink_dress':
+        return Vector2.all(64);
+      default:
+        return Vector2.all(64);
+    }
+  }
 }
