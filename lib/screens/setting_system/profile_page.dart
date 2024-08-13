@@ -228,6 +228,21 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
+              //Check-in Days
+              ListTile(
+                title: Text(
+                  AppLocalizations.of(context)!.check_in_days,
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  title: Text(
+                    '${InitData.miyukiUser.checkInDays}',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ),
               //Vip Type
               ListTile(
                 title: Text(

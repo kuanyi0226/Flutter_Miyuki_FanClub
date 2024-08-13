@@ -78,5 +78,6 @@
     "password_reset": "重設密碼",
     "password_reset_info": "輸入您的電子信箱\n我們會將重設密碼的連結寄給您",
     "password_reset_sent": "已經將重設密碼的連結傳至您的信箱，請您確認",
-    "password_reset_fail": "請輸入正確的電子信箱"
+    "password_reset_fail": "請輸入正確的電子信箱",
+    "check_in_days": "簽到日數"
 }

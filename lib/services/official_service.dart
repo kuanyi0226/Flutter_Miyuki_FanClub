@@ -35,6 +35,12 @@ class OfficialService {
             .collection('official')
             .doc('daily_check_in')
             .update({formattedDate: todaysUsers});
+        //update check-in days
+        InitData.miyukiUser.checkInDays = InitData.miyukiUser.checkInDays! + 1;
+        await FirebaseFirestore.instance
+            .collection('miyukiusers')
+            .doc(InitData.miyukiUser.email)
+            .update({'checkInDays': InitData.miyukiUser.checkInDays});
         successful = true;
       }
     } catch (e) {
@@ -45,6 +51,12 @@ class OfficialService {
           .collection('official')
           .doc('daily_check_in')
           .update({formattedDate: todaysUsers});
+      //update check-in days
+      InitData.miyukiUser.checkInDays = InitData.miyukiUser.checkInDays! + 1;
+      await FirebaseFirestore.instance
+          .collection('miyukiusers')
+          .doc(InitData.miyukiUser.email)
+          .update({'checkInDays': InitData.miyukiUser.checkInDays});
       successful = true;
     }
     InitData.checkinDate = formattedDate;

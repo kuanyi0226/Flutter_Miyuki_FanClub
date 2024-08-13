@@ -10,13 +10,15 @@ class MiyukiUser {
   int? coin = 0;
   String? imgUrl;
   List? collections;
+  int? checkInDays = 0;
 
   MiyukiUser(
       {required this.name,
       required this.email,
       this.vip,
       this.coin,
-      this.collections}) {
+      this.collections,
+      this.checkInDays}) {
     initCollections(this);
   }
 
@@ -26,6 +28,7 @@ class MiyukiUser {
         'vip': vip,
         'coin': coin,
         'collections': collections,
+        'checkInDays': checkInDays,
       };
 
   static MiyukiUser fromJson(Map<String, dynamic> json) => MiyukiUser(
@@ -34,12 +37,13 @@ class MiyukiUser {
         vip: json['vip'],
         coin: json['coin'],
         collections: json['collections'],
+        checkInDays: json['checkInDays'],
       );
   //create user(only create once)
   static Future createUser(
       {required String name, required String email}) async {
-    MiyukiUser user =
-        MiyukiUser(name: name, email: email, vip: false, coin: 1023);
+    MiyukiUser user = MiyukiUser(
+        name: name, email: email, vip: false, coin: 1023, checkInDays: 0);
     initCollections(user);
     Map<String, dynamic> userData = user.toJson();
     await FirebaseFirestore.instance
@@ -58,6 +62,7 @@ class MiyukiUser {
       Map<String, dynamic>? data = document.data();
       MiyukiUser curr_user = MiyukiUser.fromJson(data!);
       initCollections(curr_user);
+      initCheckInDays(curr_user);
       return curr_user;
     } else {
       User? user = await FirebaseAuth.instance.currentUser;
@@ -88,6 +93,13 @@ class MiyukiUser {
   static void initCollections(MiyukiUser user) {
     if (user.collections == null) {
       user.collections = ['[garment][current]y2006_pink_dress'];
+    }
+  }
+
+  //make sure the checkInDays are not null
+  static void initCheckInDays(MiyukiUser user) {
+    if (user.checkInDays == null) {
+      user.checkInDays = 0;
     }
   }
 }

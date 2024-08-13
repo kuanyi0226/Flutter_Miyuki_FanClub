@@ -78,5 +78,6 @@
     "password_reset": "パスワードのリセット",
     "password_reset_info": "メールアドレスを入力してください\nパスワードのリセットのリンクを送信します",
     "password_reset_sent": "パスワードのリセットのリンクを送信しました!\nメールを確認してください。",
-    "password_reset_fail": "正しい電子メールを入力してください"
+    "password_reset_fail": "正しい電子メールを入力してください",
+    "check_in_days": "チェックイン日数"
 }

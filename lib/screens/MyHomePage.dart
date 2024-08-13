@@ -133,7 +133,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                     '$currentMessage',
                 style: TextStyle(color: theme_purple, fontSize: 20),
               ),
-              content: Text('It will cost you \$1 Yuki Coin.\nYou have \$' +
+              content: Text('It will cost you \$1 Yuki Coin.\n' +
+                  AppLocalizations.of(context)!.remaining_yukicoin +
+                  ': \$' +
                   InitData.miyukiUser.coin.toString()),
               actions: [
                 TextButton(
