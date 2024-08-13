@@ -330,7 +330,8 @@ Widget buildMessage(ChatMessage message, BuildContext context) {
 
   String messageName;
   if (message.senderName!.length > 20) {
-    messageName = message.senderName!.substring(0, 20) + '...';
+    //messageName = message.senderName!.substring(0, 20) + '...';
+    messageName = message.senderName!;
   } else {
     messageName = message.senderName!;
   }
@@ -348,17 +349,20 @@ Widget buildMessage(ChatMessage message, BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 if (!isMe) SizedBox(width: 53),
-                Text(
-                  messageName,
-                  style: (message.senderName![0] == '❆')
-                      ? TextStyle(
-                          fontSize: 22,
-                          color: theme_light_blue,
-                          overflow: TextOverflow.ellipsis)
-                      : TextStyle(
-                          fontSize: 22,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                SizedBox(
+                  width: 200,
+                  child: Text(
+                    messageName,
+                    style: (message.senderName![0] == '❆')
+                        ? TextStyle(
+                            fontSize: 18,
+                            color: theme_light_blue,
+                            overflow: TextOverflow.ellipsis)
+                        : TextStyle(
+                            fontSize: 18,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                  ),
                 ),
               ],
             ),

@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../materials/colors.dart';
-
 import '../../widgets/MyTextField.dart';
-import '../../widgets/MyButton.dart';
 
 class ForGotPasswordPage extends StatefulWidget {
   ForGotPasswordPage({super.key});
@@ -29,7 +27,7 @@ class _ForGotPasswordPageState extends State<ForGotPasswordPage> {
         context: context,
         builder: (context) => AlertDialog(
           backgroundColor: theme_dark_purple,
-          title: Text('Password Reset Link Sent!\nPlease Check Your Email'),
+          title: Text(AppLocalizations.of(context)!.password_reset_sent),
         ),
       );
     } on FirebaseAuthException catch (err) {
@@ -37,8 +35,8 @@ class _ForGotPasswordPageState extends State<ForGotPasswordPage> {
         context: context,
         builder: (context) => AlertDialog(
           backgroundColor: theme_dark_purple,
-          title: Text(
-              '${err.message.toString()}\n\nPlease type the correct Email'),
+          title: Text('${err.message.toString()}\n\n' +
+              AppLocalizations.of(context)!.password_reset_fail),
         ),
       );
     }
@@ -47,20 +45,16 @@ class _ForGotPasswordPageState extends State<ForGotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: theme_light_gray,
       appBar: AppBar(
-        backgroundColor: theme_dark_purple,
-        title: Text('Reset Password'),
+        title: Text(AppLocalizations.of(context)!.password_reset),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Enter Your Email\nwe will sent you a password reset link',
+            AppLocalizations.of(context)!.password_reset_info,
             style: TextStyle(
-                fontSize: 20,
-                color: theme_dark_purple,
-                fontWeight: FontWeight.bold),
+                fontSize: 20, color: theme_purple, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           //email textfield
@@ -68,12 +62,32 @@ class _ForGotPasswordPageState extends State<ForGotPasswordPage> {
             padding: const EdgeInsets.all(8.0),
             child: MyTextField(
               controller: _emailController,
-              hintText: 'Email',
+              hintText: AppLocalizations.of(context)!.email,
               obscureText: false,
             ),
           ),
           const SizedBox(height: 10),
-          MyButton(onTap: _resetPassword, text: 'Reset Password'),
+          TextButton(
+            onPressed: _resetPassword,
+            child: Container(
+              padding: const EdgeInsets.all(15.0),
+              margin: EdgeInsets.symmetric(horizontal: 15.0),
+              decoration: BoxDecoration(
+                color: theme_purple,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: Center(
+                child: Text(
+                  AppLocalizations.of(context)!.password_reset,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

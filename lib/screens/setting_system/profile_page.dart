@@ -29,39 +29,43 @@ class _ProfilePageState extends State<ProfilePage> {
         context: context,
         builder: (context) => AlertDialog(
               title: Text(
-                'Edit User Name',
+                AppLocalizations.of(context)!.username_edit,
                 style: TextStyle(color: theme_purple, fontSize: 20),
               ),
               content: TextField(
                 controller: nameController,
-                decoration: InputDecoration(hintText: 'New User Name'),
+                decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.new_username),
               ),
               actions: [
                 TextButton(
                     onPressed: () {
+                      String snackBarText = '';
                       if (kIsWeb ||
                           Provider.of<InternetConnectionStatus>(context,
                                   listen: false) ==
                               InternetConnectionStatus.connected) {
-                        if (nameController.text != '') {
+                        if (nameController.text != '' &&
+                            nameController.text.length < 18) {
                           setState(() {
                             MiyukiUser.editUserName(nameController.text);
                             InitData.miyukiUser.name = nameController.text;
                           });
                         } else {
-                          const snackBar =
-                              SnackBar(content: Text('Please type your name'));
+                          snackBarText =
+                              AppLocalizations.of(context)!.username_edit_error;
+                          var snackBar = SnackBar(content: Text(snackBarText));
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
                       } else {
-                        const snackBar =
-                            SnackBar(content: Text('No Wifi Connection'));
+                        snackBarText = AppLocalizations.of(context)!.no_wifi;
+                        var snackBar = SnackBar(content: Text(snackBarText));
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      'Edit',
+                      AppLocalizations.of(context)!.edit,
                       style: TextStyle(color: theme_purple, fontSize: 20),
                     )),
               ],
@@ -94,8 +98,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           //check money
                           if (InitData.miyukiUser.coin! >= UPDATE_IMG_COST) {
                             YukicoinService.addCoins(0 - UPDATE_IMG_COST);
-                            snackBarText =
-                                'Successfully updated photo! You still have Yuki Coin \$${InitData.miyukiUser.coin}';
+                            snackBarText = 'Successfully updated photo!' +
+                                AppLocalizations.of(context)!
+                                    .remaining_yukicoin +
+                                ': \$${InitData.miyukiUser.coin}';
                             var snackBar =
                                 SnackBar(content: Text(snackBarText));
                             ScaffoldMessenger.of(context)
@@ -107,7 +113,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             print(uploadResponse);
                             setState(() {});
                           } else {
-                            snackBarText = 'You don\'t have enough Yuki Coin';
+                            snackBarText =
+                                AppLocalizations.of(context)!.money_not_enough;
                             var snackBar =
                                 SnackBar(content: Text(snackBarText));
                             ScaffoldMessenger.of(context)
@@ -115,7 +122,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.of(context).pop();
                           }
                         } else {
-                          snackBarText = 'Update failed! No Wifi Connection';
+                          snackBarText = 'Update failed!' +
+                              AppLocalizations.of(context)!.no_wifi;
                           var snackBar = SnackBar(content: Text(snackBarText));
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           Navigator.of(context).pop();
@@ -173,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ListTile(
                 title: Text(
                   AppLocalizations.of(context)!.user_name,
-                  style: TextStyle(fontSize: 23),
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
               Card(
@@ -194,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ListTile(
                 title: Text(
                   AppLocalizations.of(context)!.email,
-                  style: TextStyle(fontSize: 23),
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
               Card(
@@ -208,8 +216,8 @@ class _ProfilePageState extends State<ProfilePage> {
               //Yuki Coin
               ListTile(
                 title: Text(
-                  'Yuki Coin',
-                  style: TextStyle(fontSize: 23),
+                  AppLocalizations.of(context)!.yuki_coin,
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
               Card(
@@ -223,8 +231,8 @@ class _ProfilePageState extends State<ProfilePage> {
               //Vip Type
               ListTile(
                 title: Text(
-                  'User Type',
-                  style: TextStyle(fontSize: 23),
+                  AppLocalizations.of(context)!.user_type,
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
               Card(

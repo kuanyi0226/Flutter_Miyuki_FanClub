@@ -72,5 +72,14 @@
     "daily_check_in": "Daily Check-in",
     "daily_check_in_success": "Successfully checked in today!",
     "daily_check_in_fail": "You have already checked in today",
-    "daily_check_in_tomorrow": "You can check in again tomorrow and get yuki coin."
+    "daily_check_in_tomorrow": "You can check in again tomorrow and get yuki coin.",
+    "username_edit": "Edit Username",
+    "username_edit_error": "Please type your name, and it should be 1~17 letters.",
+    "new_username": "New Username",
+    "edit": "Edit",
+    "user_type": "User Type",
+    "password_reset": "Reset Password",
+    "password_reset_info": "Enter Your Email\nwe will sent you a password reset link",
+    "password_reset_sent": "Password Reset Link Sent!\nPlease Check Your Email.",
+    "password_reset_fail": "Please type the correct Email"
 }

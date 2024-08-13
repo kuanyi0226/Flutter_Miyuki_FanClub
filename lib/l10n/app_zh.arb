@@ -69,5 +69,14 @@
     "daily_check_in": "每日簽到",
     "daily_check_in_success": "每日簽到成功!",
     "daily_check_in_fail": "您今天已簽到過了",
-    "daily_check_in_tomorrow": "您可以於明天再次簽到獲得Yuki幣。"
+    "daily_check_in_tomorrow": "您可以於明天再次簽到獲得Yuki幣。",
+    "username_edit": "編輯用戶名稱(綽號)",
+    "username_edit_error": "請輸入1~17字的用戶名稱",
+    "new_username": "新的用戶名稱",
+    "edit": "編輯",
+    "user_type": "用戶類別",
+    "password_reset": "重設密碼",
+    "password_reset_info": "輸入您的電子信箱\n我們會將重設密碼的連結寄給您",
+    "password_reset_sent": "已經將重設密碼的連結傳至您的信箱，請您確認",
+    "password_reset_fail": "請輸入正確的電子信箱"
 }
