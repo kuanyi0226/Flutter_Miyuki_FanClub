@@ -1,13 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/screens/ad_page.dart';
 import 'package:project5_miyuki/screens/yuki_store_page.dart';
+import 'package:project5_miyuki/services/yukicoin_service.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import '../services/official_service.dart';
 import 'concert/concert_page.dart';
 import './setting_system/settings_page.dart';
 import 'Yuki_Sekai/yuki_sekai_list_page.dart';
@@ -31,6 +36,8 @@ class HomeDrawerPage extends StatefulWidget {
 class _HomeDrawerPageState extends State<HomeDrawerPage> {
   User? user;
   GlobalKey<ScaffoldState> scaffoldKey;
+  bool _checked = false;
+  final int CHECK_IN_COIN = 5;
 
   _HomeDrawerPageState({required this.user, required this.scaffoldKey});
 
@@ -41,7 +48,7 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
         builder: (context) => AlertDialog(
               title: Text(
                 AppLocalizations.of(context)!.sign_out_confirm,
-                style: TextStyle(color: theme_purple, fontSize: 25),
+                style: TextStyle(fontSize: 25),
               ),
               actions: [
                 TextButton(
@@ -61,6 +68,38 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
   void _signOut() {
     FirebaseAuth.instance.signOut();
     GoogleSignIn().signOut();
+  }
+
+  void _showCheckinDialog(bool checkinStatus) {
+    String title = '';
+    String content = '';
+    if (kIsWeb ||
+        Provider.of<InternetConnectionStatus>(context, listen: false) ==
+            InternetConnectionStatus.connected) {
+      if (checkinStatus) {
+        title = AppLocalizations.of(context)!.daily_check_in_success;
+        content = AppLocalizations.of(context)!.yuki_coin + ' + $CHECK_IN_COIN';
+        try {
+          setState(() {
+            YukicoinService.addCoins(CHECK_IN_COIN); //5
+          });
+        } catch (e) {
+          print(e.toString());
+        }
+      } else {
+        title = AppLocalizations.of(context)!.daily_check_in_fail;
+        content = AppLocalizations.of(context)!.daily_check_in_tomorrow;
+      }
+    } else {
+      title = AppLocalizations.of(context)!.no_wifi;
+    }
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(content, style: TextStyle(color: theme_purple)),
+      ),
+    );
   }
 
   @override
@@ -109,6 +148,32 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
             padding: const EdgeInsets.only(left: 16, top: 5),
             child: Text('中島みゆき非公式ファンクラブ $CURR_VERSION'),
           ),
+          //Daily Check-in
+          (DateFormat('yyyyMMdd').format(DateTime.now()) ==
+                      InitData.checkinDate ||
+                  _checked)
+              ? Container()
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: OutlinedButton(
+                    onPressed: () async {
+                      _showCheckinDialog(await OfficialService.dailyCheckIn());
+                      setState(() {
+                        _checked = true;
+                      });
+                    },
+                    child: Text(
+                      AppLocalizations.of(context)!.daily_check_in,
+                      style: TextStyle(color: theme_purple),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      side: BorderSide(width: 2.0, color: theme_purple),
+                    ),
+                  ),
+                ),
           ListTile(
             leading: Icon(Icons.disc_full),
             title: Text('作品 Discography'),

@@ -65,5 +65,9 @@
     "price": "価格(ユキコイン)",
     "remaining_yukicoin": "ユキコインの残高",
     "yes": "はい",
-    "current_garment": "現在の衣装"
+    "current_garment": "現在の衣装",
+    "daily_check_in": "毎日のチェックイン",
+    "daily_check_in_success": "チェックインしました！",
+    "daily_check_in_fail": "本日はすでにチェックインされています",
+    "daily_check_in_tomorrow": "明日再度チェックインするとユキコインがもらえます。"
 }

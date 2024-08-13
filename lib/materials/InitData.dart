@@ -13,6 +13,7 @@ class InitData {
   static bool isInSekai = false;
   static List<PlayerInfo> playersInfo = [];
   static bool turnOnEffect = true;
+  static String checkinDate = '';
 
   //const
   static List<String> YAKAIS = [

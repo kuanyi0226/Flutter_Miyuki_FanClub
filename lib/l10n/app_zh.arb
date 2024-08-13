@@ -65,5 +65,9 @@
     "price": "價格(Yuki幣)",
     "remaining_yukicoin": "剩餘Yuki幣",
     "yes": "是",
-    "current_garment": "目前的衣裝"
+    "current_garment": "目前的衣裝",
+    "daily_check_in": "每日簽到",
+    "daily_check_in_success": "每日簽到成功!",
+    "daily_check_in_fail": "您今天已簽到過了",
+    "daily_check_in_tomorrow": "您可以於明天再次簽到獲得Yuki幣。"
 }

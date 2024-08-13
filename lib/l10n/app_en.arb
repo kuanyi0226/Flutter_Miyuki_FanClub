@@ -68,5 +68,9 @@
     "price": "Price(Yuki Coin)",
     "remaining_yukicoin": "Remaining Yuki Coin",
     "yes": "Yes",
-    "current_garment": "Current Garment"
+    "current_garment": "Current Garment",
+    "daily_check_in": "Daily Check-in",
+    "daily_check_in_success": "Successfully checked in today!",
+    "daily_check_in_fail": "You have already checked in today",
+    "daily_check_in_tomorrow": "You can check in again tomorrow and get yuki coin."
 }
