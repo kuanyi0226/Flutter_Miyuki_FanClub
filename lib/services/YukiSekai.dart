@@ -20,7 +20,7 @@ enum PlayerState { idle, running, jumping, falling }
 
 class YukiSekai extends FlameGame
     with HasKeyboardHandlerComponents, DragCallbacks {
-  late final DatabaseReference fireBaseDB;
+  late final DatabaseReference? fireBaseDB;
 
   Player player = Player();
 
@@ -53,6 +53,12 @@ class YukiSekai extends FlameGame
     }
 
     return super.onLoad();
+  }
+
+  @override
+  void onRemove() {
+    fireBaseDB!.onDisconnect();
+    super.onRemove();
   }
 
   @override
@@ -109,7 +115,7 @@ class YukiSekai extends FlameGame
   void readPlayerInfo() {
     //read other players' info
     //delete
-    fireBaseDB.onChildRemoved.listen((event) {
+    fireBaseDB!.onChildRemoved.listen((event) {
       final data = event.snapshot;
       if (InitData.playersInfo.isNotEmpty) {
         for (int i = 0; i < InitData.playersInfo.length; i++) {
@@ -124,7 +130,7 @@ class YukiSekai extends FlameGame
       }
     });
     //add
-    fireBaseDB.onChildAdded.listen((event) {
+    fireBaseDB!.onChildAdded.listen((event) {
       final data = event.snapshot;
       PlayerInfo new_info = PlayerInfo(
           costume: data.child('costume').value.toString(),
@@ -148,7 +154,7 @@ class YukiSekai extends FlameGame
       }
     });
     //onchanged
-    final snapshot = fireBaseDB.onChildChanged.listen((event) {
+    final snapshot = fireBaseDB!.onChildChanged.listen((event) {
       final data = event.snapshot;
       PlayerInfo new_info = PlayerInfo(
           costume: data.child('costume').value.toString(),

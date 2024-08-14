@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,6 +24,36 @@ class _ProfilePageState extends State<ProfilePage> {
   Uint8List? _image;
   final UPDATE_IMG_COST = 50;
 
+  bool isCountdownActive = false;
+  int countdownSeconds = 10;
+  Timer? countdownTimer;
+
+  @override
+  void dispose() {
+    countdownTimer!.cancel();
+    super.dispose();
+  }
+
+  void _startCountdown() {
+    setState(() {
+      isCountdownActive = true;
+      countdownSeconds = 10;
+    });
+
+    countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        countdownSeconds--;
+      });
+
+      if (countdownSeconds == 0) {
+        timer.cancel();
+        setState(() {
+          isCountdownActive = false;
+        });
+      }
+    });
+  }
+
   Future _editUserName(String originalName) {
     final nameController = TextEditingController();
     nameController.text = originalName;
@@ -40,6 +72,18 @@ class _ProfilePageState extends State<ProfilePage> {
               actions: [
                 TextButton(
                     onPressed: () {
+                      //check cool-down
+                      if (isCountdownActive) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                Text('Please wait $countdownSeconds seconds.'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                        return;
+                      }
+
                       String snackBarText = '';
                       if (kIsWeb ||
                           Provider.of<InternetConnectionStatus>(context,
@@ -47,10 +91,13 @@ class _ProfilePageState extends State<ProfilePage> {
                               InternetConnectionStatus.connected) {
                         if (nameController.text != '' &&
                             nameController.text.length < 18) {
-                          setState(() {
-                            MiyukiUser.editUserName(nameController.text);
-                            InitData.miyukiUser.name = nameController.text;
-                          });
+                          if (InitData.miyukiUser.name != nameController.text) {
+                            setState(() {
+                              MiyukiUser.editUserName(nameController.text);
+                              InitData.miyukiUser.name = nameController.text;
+                            });
+                          }
+                          _startCountdown();
                         } else {
                           snackBarText =
                               AppLocalizations.of(context)!.username_edit_error;

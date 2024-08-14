@@ -42,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   String currentMessage = '1';
   final controller1 = TextEditingController();
+  late Stream<List<Message>> _messageStream;
 
   User? user;
   String? userEmail;
@@ -56,7 +57,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _readMiyukiUser();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _readMiyukiUser();
+      setState(() {});
+    });
+
+    _messageStream =
+        MessageService().readMessages(target_to_read: 'message-board');
 
     if (!kIsWeb) {
       checkForUpdate();
@@ -398,7 +405,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           IconButton(
                             onPressed: () {
                               int tempInt = int.parse(currentMessage) + 1;
-                              if (tempInt >= 7) tempInt = 1;
+                              if (tempInt >= 6) tempInt = 1;
                               currentMessage = tempInt.toString();
                               setState(() {});
                             },
@@ -413,11 +420,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                         : (currentMessage == '4')
                                             ? Icon(Icons.looks_4,
                                                 color: Colors.orange)
-                                            : (currentMessage == '5')
-                                                ? Icon(Icons.looks_5,
-                                                    color: Colors.orange)
-                                                : Icon(Icons.looks_6,
-                                                    color: Colors.orange),
+                                            : Icon(Icons.looks_5,
+                                                color: Colors.orange),
                           ),
                           Expanded(
                             child: TextField(
@@ -458,8 +462,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             );
                           }
                         },
-                        stream: MessageService()
-                            .readMessages(target_to_read: 'message-board'),
+                        stream: _messageStream,
                       ),
                     ),
                   ],

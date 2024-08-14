@@ -23,11 +23,6 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _bannerAdLoaded = false;
   BannerAd? _bannerAd;
 
-  UpdateInfo? updateInfo;
-  _SettingsPageState() {
-    _getInfo();
-  }
-
   @override
   void initState() {
     super.initState();
@@ -47,11 +42,6 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _bannerAdLoaded = true;
     });
-  }
-
-  Future _getInfo() async {
-    updateInfo = await OfficialService.getUpdateInfo();
-    print('latest version is: ${updateInfo!.version}');
   }
 
   @override
@@ -123,8 +113,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
 
                 GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => UpdatePage(info: updateInfo))),
+                  onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => UpdatePage())),
                   child: ListTile(
                     title: Text(
                       AppLocalizations.of(context)!.check_update,

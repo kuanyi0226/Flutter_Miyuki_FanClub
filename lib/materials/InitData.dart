@@ -1,6 +1,6 @@
 import 'package:project5_miyuki/class/Yuki_Sekai/PlayerInfo.dart';
-import 'package:project5_miyuki/services/YukiSekai.dart';
 
+import '../class/Concert.dart';
 import '../class/MiyukiUser.dart';
 
 class InitData {
@@ -14,6 +14,7 @@ class InitData {
   static List<PlayerInfo> playersInfo = [];
   static bool turnOnEffect = true;
   static String checkinDate = '';
+  static List<Concert> concertList = [];
 
   //const
   static List<String> YAKAIS = [
@@ -139,7 +140,6 @@ class InitData {
     'この世に二人だけ',
     'この思いに偽りはなく',
     'この空を飛べたら',
-    'これが僕らの道なのか',
     'こんばんわ',
     'ごまめの歯ぎしり',
     'さぐり(詩篇)',
@@ -511,7 +511,6 @@ class InitData {
     '朱色の花を抱きしめて',
     '朱色の花を抱きしめて(詩篇)',
     '杏村から',
-    '来ませ救い主',
     '根雪（ねゆき）',
     '桜らららら',
     '梅が枝',

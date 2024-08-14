@@ -1,6 +1,7 @@
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/materials/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../class/Concert.dart';
@@ -15,9 +16,16 @@ class _ConcertPageState extends State<ConcertPage>
     with TickerProviderStateMixin {
   late final TabController _tabController;
   int _currentTab = 0;
+
   @override
   void initState() {
     super.initState();
+    if (InitData.concertList.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        InitData.concertList = await readConcerts();
+        setState(() {});
+      });
+    }
     _tabController = TabController(length: 5, vsync: this);
   }
 
@@ -28,74 +36,75 @@ class _ConcertPageState extends State<ConcertPage>
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Text('コンサート Concert'),
-          ]),
-          bottom: TabBar(
-            onTap: (index) {
-              setState(() {
-                _currentTab = index;
-              });
-            },
-            controller: _tabController,
-            indicatorColor: theme_purple,
-            tabs: [
-              Tab(
-                text: AppLocalizations.of(context)!.all,
-              ),
-              Tab(
-                text: '1970s',
-              ),
-              Tab(
-                text: '1980s',
-              ),
-              Tab(
-                text: '1990s',
-              ),
-              Tab(
-                text: '2000s',
-              ),
-            ],
-          ),
-        ),
-        body: StreamBuilder<List<Concert>>(
-          builder: (context, snapshot) {
-            print("tab : ${_tabController.index}");
-            if (snapshot.hasError) {
-              return Text('Something went wrong!');
-            } else if (snapshot.hasData) {
-              final concerts = snapshot.data!;
-
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      children: concerts
-                          .map((concert) =>
-                              buildConcert(concert, context, _currentTab))
-                          .toList(),
-                    ),
-                  ),
-                ],
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+  Widget build(BuildContext context) {
+    //initConcertList();
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Text('コンサート Concert'),
+        ]),
+        bottom: TabBar(
+          onTap: (index) {
+            setState(() {
+              _currentTab = index;
+            });
           },
-          stream: readConcerts(),
+          controller: _tabController,
+          indicatorColor: theme_purple,
+          tabs: [
+            Tab(
+              text: AppLocalizations.of(context)!.all,
+            ),
+            Tab(
+              text: '1970s',
+            ),
+            Tab(
+              text: '1980s',
+            ),
+            Tab(
+              text: '1990s',
+            ),
+            Tab(
+              text: '2000s',
+            ),
+          ],
         ),
-      );
+      ),
+      body: (InitData.concertList.isNotEmpty)
+          ? Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    children: InitData.concertList
+                        .map((concert) =>
+                            buildConcert(concert, context, _currentTab))
+                        .toList(),
+                  ),
+                ),
+              ],
+            )
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
+    );
+  }
 }
 
-Stream<List<Concert>> readConcerts() => FirebaseFirestore.instance
-    .collection('concerts')
-    .snapshots()
-    .map((snapshot) =>
-        snapshot.docs.map((doc) => Concert.fromJson(doc.data())).toList());
+Future<List<Concert>> readConcerts() async {
+  List<Concert> concerts = [];
+  try {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('concerts').get();
+    concerts = querySnapshot.docs.map((doc) {
+      return Concert.fromJson(doc.data() as Map<String, dynamic>);
+    }).toList();
+  } catch (e) {
+    print('Error fetching concerts: $e');
+  }
+
+  return concerts;
+}
+
 //ListTile Widget
 Widget buildConcert(Concert concert, BuildContext context, int currentTab) =>
     (yearDisplayCheck(concert.year, currentTab))

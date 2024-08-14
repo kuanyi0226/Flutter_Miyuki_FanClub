@@ -9,9 +9,12 @@ class RandomSongService {
     int day = now.day;
     int weekday = now.weekday;
     if (InitData.allSongs.length > 0) {
-      int mapping = (((year + month) * day + weekday + 7 + day) %
-              InitData.allSongs.length)
-          .round();
+      // print('Song Number(Random Song Service): ' +
+      //     InitData.allSongs.length.toString());
+      int mapping =
+          (((year + month) * day * 13 + weekday * 23 + (7 - weekday)) %
+                  InitData.allSongs.length)
+              .round();
       InitData.todaySong = InitData.allSongs[mapping];
     } else {
       InitData.todaySong = 'No Song';

@@ -1,8 +1,9 @@
-const CURR_VERSION = 'V1.3.1';
+const CURR_VERSION = 'V1.3.2';
 const APPNAME_EN = 'YUKI CLUB';
 const APPNAME_JP = '雪クラブ';
 
 const UPDATE_CONTENT = [
+  '--V1.3.2-- 2024/08/15\nfix: optimization, lower the usage from DB',
   '--V1.3.1-- 2024/08/13\nnew: daily check-in system, check-in days;fix: optimization',
   '--V1.3.0-- 2024/08/12\nnew: New Yuki World(2007年歌旅), Garment system(New Costumes-2007), Yuki Store;fix: optimization, yuki world(Mirage Hotel) rebuild',
   '--V1.2.6-- 2024/07/31\nnew: light effects in yuki world, concert list; fix: optimization, song list, yakai list',

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,20 +32,46 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
   String _chosenSong = '';
   bool _isBottom = false;
 
-  // @override
-  // void initState() {
-  //   super.initState();
+  bool isCountdownActive = false;
+  int countdownSeconds = 10;
+  Timer? countdownTimer;
 
-  //   // Setup the listener.
-  //   _scrollController.addListener(() {
-  //     if (_scrollController.position ==
-  //         _scrollController.position.maxScrollExtent) {
-  //       _isBottom = true;
-  //     } else {
-  //       _isBottom = false;
-  //     }
-  //   });
-  // }
+  late Stream<List<ChatMessage>> _firebaseStream;
+
+  @override
+  void initState() {
+    _firebaseStream = ChatroomService().readMessages();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+    _text_controller1.dispose();
+    countdownTimer!.cancel();
+  }
+
+  void _startCountdown() {
+    setState(() {
+      isCountdownActive = true;
+      countdownSeconds = 10;
+    });
+
+    countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        countdownSeconds--;
+      });
+
+      if (countdownSeconds == 0) {
+        timer.cancel();
+        setState(() {
+          isCountdownActive = false;
+        });
+      }
+    });
+  }
+
   //go to bottom
   Future<void> _jumpToBottom() async {
     // await Future.delayed(const Duration(milliseconds: 150));
@@ -52,13 +80,24 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
     //     _scrollController.position.maxScrollExtent + 180,
     //   );
     // });
-    setState(() {
-      _firstTimeLoad = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _scrollToBottom();
     });
   }
 
   //sent message by add button
   Future<void> _sentMessage() async {
+    //check cool-down
+    if (isCountdownActive) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please wait $countdownSeconds seconds.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+    //message handling
     String snackBarString = '';
     if (kIsWeb ||
         Provider.of<InternetConnectionStatus>(context, listen: false) ==
@@ -66,7 +105,7 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
       try {
         //send message
         final text = _text_controller1.text;
-        ChatroomService().createMessage(
+        await ChatroomService().createMessage(
           sender_email: InitData.miyukiUser.email!,
           text: text,
           senderImgUrl: (InitData.miyukiUser.imgUrl != null)
@@ -77,8 +116,10 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
               : '❆ ${InitData.miyukiUser.name}',
         );
         _text_controller1.text = '';
-        _jumpToBottom();
+        await _jumpToBottom();
+
         if (!kIsWeb) FocusScope.of(context).unfocus();
+        _startCountdown();
       } catch (e) {
         print(e.toString());
       }
@@ -127,12 +168,23 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                     //Share Button
                     TextButton(
                         onPressed: () async {
+                          //check cool-down
+                          if (isCountdownActive) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Please wait $countdownSeconds seconds.'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                            return;
+                          }
                           if (_chosenSong.isNotEmpty && _chosenSong != '') {
                             if (kIsWeb ||
                                 Provider.of<InternetConnectionStatus>(context,
                                         listen: false) ==
                                     InternetConnectionStatus.connected) {
-                              ChatroomService().createMessage(
+                              await ChatroomService().createMessage(
                                 sender_email: InitData.miyukiUser.email!,
                                 text: '###song_name###' + _chosenSong,
                                 senderImgUrl:
@@ -143,7 +195,8 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                                     ? InitData.miyukiUser.name!
                                     : '❆ ${InitData.miyukiUser.name}',
                               );
-                              _jumpToBottom();
+                              await _jumpToBottom();
+                              _startCountdown();
                             } else {
                               snackBarString =
                                   AppLocalizations.of(context)!.no_wifi;
@@ -192,11 +245,7 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                       if (_firstTimeLoad == true) {
                         _firstTimeLoad = false;
                         //jump to bottom
-                        SchedulerBinding.instance.addPostFrameCallback((_) {
-                          _scrollController.jumpTo(
-                            _scrollController.position.maxScrollExtent + 180,
-                          );
-                        });
+                        _scrollToBottom();
                       }
 
                       return NotificationListener<ScrollNotification>(
@@ -226,7 +275,7 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                       );
                     }
                   },
-                  stream: ChatroomService().readMessages(),
+                  stream: _firebaseStream,
                 ),
               ),
               //textfield
@@ -308,17 +357,23 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
               size: 20,
             ),
             onPressed: () {
-              SchedulerBinding.instance.addPostFrameCallback((_) {
-                _scrollController.jumpTo(
-                  _scrollController.position.maxScrollExtent + 180,
-                );
-              });
+              _scrollToBottom();
             },
           ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        _scrollController.jumpTo(
+          _scrollController.position.maxScrollExtent + 180,
+        );
+      });
+    });
   }
 }
 

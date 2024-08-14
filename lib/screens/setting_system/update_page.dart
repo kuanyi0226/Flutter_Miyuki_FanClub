@@ -1,18 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/class/official/updateInfo.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../../materials/MyText.dart';
+import '../../services/official_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class UpdatePage extends StatelessWidget {
-  UpdateInfo? info;
-  UpdatePage({required this.info});
+class UpdatePage extends StatefulWidget {
+  const UpdatePage({super.key});
+
+  @override
+  State<UpdatePage> createState() => _UpdatePageState();
+}
+
+class _UpdatePageState extends State<UpdatePage> {
+  late UpdateInfo updateInfo = UpdateInfo(version: '', link: '');
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      updateInfo = await OfficialService.getUpdateInfo();
+      setState(() {});
+    });
+    print('latest version is: ${updateInfo.version}');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Check Update'),
+        title: Text(AppLocalizations.of(context)!.check_update),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -29,21 +45,10 @@ class UpdatePage extends StatelessWidget {
             ),
             SizedBox(height: 50),
             Text(
-              'Latest Version: ${info!.version}',
+              'Latest Version: ${updateInfo.version}',
               style: TextStyle(fontSize: 25),
             ),
             SizedBox(height: 20),
-            // MyButton(
-            //     onTap: () async {
-            //       if (CURR_VERSION != info!.version) {
-            //         _launchURL('https', 'drive.google.com', info!.link!);
-            //       } else {
-            //         var snackBar = SnackBar(
-            //             content: Text('The current version is up to date'));
-            //         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            //       }
-            //     },
-            //     text: 'Download Latest Version'),
             SizedBox(height: 30),
             Text(
               'Update History',
@@ -69,14 +74,14 @@ class UpdatePage extends StatelessWidget {
   }
 }
 
-Future<void> _launchURL(String scheme, String url, String path) async {
-  final Uri uri = (path != "")
-      ? Uri(scheme: scheme, host: url, path: path)
-      : Uri(scheme: scheme, host: url);
-  if (!await launchUrl(
-    uri,
-    mode: LaunchMode.externalNonBrowserApplication,
-  )) {
-    throw "Can not launch the url";
-  }
-}
+// Future<void> _launchURL(String scheme, String url, String path) async {
+//   final Uri uri = (path != "")
+//       ? Uri(scheme: scheme, host: url, path: path)
+//       : Uri(scheme: scheme, host: url);
+//   if (!await launchUrl(
+//     uri,
+//     mode: LaunchMode.externalNonBrowserApplication,
+//   )) {
+//     throw "Can not launch the url";
+//   }
+// }
