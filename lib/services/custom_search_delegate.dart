@@ -32,11 +32,7 @@ class CustomSearchDelegate extends SearchDelegate {
     // show the match
     List<String> matchQuery = [];
     for (var song in InitData.allSongs) {
-      if (StringService.fullwidthToHalfwidth(StringService.katakanaToHiragana(
-              StringService.dashToSpace(song.toLowerCase())))
-          .contains(StringService.katakanaToHiragana(
-              StringService.fullwidthToHalfwidth(
-                  query.trim().toLowerCase())))) {
+      if (StringService.judgeSearchSongMatched(query, song)) {
         matchQuery.add(song);
       }
     }
@@ -65,11 +61,7 @@ class CustomSearchDelegate extends SearchDelegate {
     // show the match
     List<String> matchQuery = [];
     for (var song in InitData.allSongs) {
-      if (StringService.fullwidthToHalfwidth(StringService.katakanaToHiragana(
-              StringService.dashToSpace(song.toLowerCase())))
-          .contains(StringService.katakanaToHiragana(
-              StringService.fullwidthToHalfwidth(
-                  query.trim().toLowerCase())))) {
+      if (StringService.judgeSearchSongMatched(query, song)) {
         matchQuery.add(song);
       }
     }

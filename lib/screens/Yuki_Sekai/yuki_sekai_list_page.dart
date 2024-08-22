@@ -32,7 +32,7 @@ class _YukiSekaiListPageState extends State<YukiSekaiListPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.yuki_world),
+        title: Text('雪の世界 Yuki World'),
         bottom: TabBar(
           onTap: (index) {
             setState(() {

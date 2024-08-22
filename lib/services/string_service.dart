@@ -1,4 +1,37 @@
 class StringService {
+  //judge the matched song in searching system
+  static bool judgeSearchSongMatched(String query, String song) {
+    bool matched = false;
+    String queryString = StringService.katakanaToHiragana(
+        StringService.fullwidthToHalfwidth(query.trim().toLowerCase()));
+    String songString = StringService.fullwidthToHalfwidth(
+        StringService.katakanaToHiragana(
+            StringService.dashToSpace(song.toLowerCase())));
+    List<String> queryList = queryString.split(' ');
+
+    for (var query in queryList) {
+      if (songString.contains(query)) {
+        if (isLowercaseAZ(query)) {
+          List<int> indices = findAllOccurrences(songString, query);
+          print('indices: ' + indices.toString() + songString);
+          for (int index in indices) {
+            //dont search the case like, query: is, song: this...
+            if (index == 0 || !isLowercaseAZ(songString[index - 1])) {
+              matched = true;
+              return matched;
+            }
+          }
+        } else {
+          //query is not english
+          matched = true;
+          return matched;
+        }
+      }
+    }
+
+    return matched;
+  }
+
   //Song Name
   static String dashToSpace(String originalString) {
     String result = 'Transform Error';
@@ -71,5 +104,28 @@ class StringService {
       throw RangeError("Index out of bounds");
     }
     return input.substring(0, index) + char + input.substring(index);
+  }
+
+  static bool isLowercaseAZ(String input) {
+    final regex = RegExp(r'^[a-z]+$');
+    return regex.hasMatch(input);
+  }
+
+  //substring index
+  static List<int> findAllOccurrences(String str, String substr) {
+    List<int> indices = [];
+    int startIndex = 0;
+
+    while (true) {
+      int index = str.indexOf(substr, startIndex);
+      if (index == -1) {
+        break; // No more occurrences
+      }
+      indices.add(index);
+      startIndex =
+          index + 1; // Move to the next character after the current match
+    }
+
+    return indices;
   }
 }

@@ -69,12 +69,14 @@ class AboutAppPage extends StatelessWidget {
                 (AppLocalizations.of(context)!.language == 'English')
                     ? 'administrator: Kevin\n' +
                         'Founder & Main Developer: Kevin\n' +
-                        'Translator： リンゴ\n'
+                        'Special Thanks:'
                     : (AppLocalizations.of(context)!.language == '日本語')
-                        ? '管理者: Kevin\n' +
-                            '創設者 & メイン開発者： Kevin\n' +
-                            '翻訳者： リンゴ\n'
-                        : '管理員: Kevin\n' + '創辦人 & 主要開發者： Kevin\n' + '翻譯： リンゴ\n',
+                        ? '管理者: Kevin\n' + '創設者 & メイン開発者： Kevin\n' + '協力者：'
+                        : '管理員： Kevin\n' + '創辦人 & 主要開發者： Kevin\n' + '協力者：',
+                style: TextStyle(fontSize: 15),
+              ),
+              Text(
+                'リンゴ さん\n',
                 style: TextStyle(fontSize: 15),
               ),
             ],
