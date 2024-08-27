@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/class/official/updateInfo.dart';
 import '../../materials/MyText.dart';
-import '../../services/official_service.dart';
+import '../../services/firebase/official_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UpdatePage extends StatefulWidget {

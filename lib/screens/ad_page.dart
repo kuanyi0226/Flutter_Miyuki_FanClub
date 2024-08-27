@@ -4,7 +4,7 @@ import 'package:project5_miyuki/materials/colors.dart';
 
 import '../materials/InitData.dart';
 import '../services/ad_mob_service.dart';
-import '../services/yukicoin_service.dart';
+import '../services/firebase/yukicoin_service.dart';
 
 class AdPage extends StatefulWidget {
   const AdPage({super.key});

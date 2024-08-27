@@ -8,7 +8,7 @@ import 'package:project5_miyuki/screens/setting_system/privacy_policy_page.dart'
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../screens/auth_system/forgot_password_page.dart';
 import '../../services/ad_mob_service.dart';
-import '../../services/official_service.dart';
+import '../../services/firebase/official_service.dart';
 import './update_page.dart';
 import './profile_page.dart';
 

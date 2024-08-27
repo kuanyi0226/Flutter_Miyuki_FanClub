@@ -6,7 +6,7 @@ import 'package:project5_miyuki/class/Garment.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/services/yuki_store_service.dart';
-import 'package:project5_miyuki/services/yukicoin_service.dart';
+import 'package:project5_miyuki/services/firebase/yukicoin_service.dart';
 import 'package:provider/provider.dart';
 import '../class/MyDecoder.dart';
 import '../materials/colors.dart';

@@ -10,7 +10,7 @@ import 'package:project5_miyuki/class/ChatMessage.dart';
 import 'package:project5_miyuki/class/Song.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/screens/song_page.dart';
-import 'package:project5_miyuki/services/chatroom_service.dart';
+import 'package:project5_miyuki/services/firebase/chatroom_service.dart';
 import 'package:provider/provider.dart';
 import '../materials/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

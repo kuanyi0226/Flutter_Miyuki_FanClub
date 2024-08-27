@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
-import 'package:project5_miyuki/services/yukicoin_service.dart';
+import 'package:project5_miyuki/services/firebase/yukicoin_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../materials/colors.dart';

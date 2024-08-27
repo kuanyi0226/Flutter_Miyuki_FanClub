@@ -1,4 +1,4 @@
-import '../class/Message.dart';
+import '../../class/Message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MessageService {

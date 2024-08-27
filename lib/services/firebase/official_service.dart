@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 
-import '../class/official/updateInfo.dart';
+import '../../class/official/updateInfo.dart';
 
 class OfficialService {
   //Update

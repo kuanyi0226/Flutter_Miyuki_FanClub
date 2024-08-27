@@ -4,7 +4,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
-import 'package:project5_miyuki/services/YukiSekai.dart';
+import 'package:project5_miyuki/services/Yuki_Sekai/YukiSekai.dart';
 import 'package:project5_miyuki/services/Yuki_Sekai/yuki_sekai_service.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/components/collision_block.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/components/player_hitbox.dart';

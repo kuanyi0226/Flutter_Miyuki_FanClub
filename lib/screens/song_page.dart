@@ -5,7 +5,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../class/MiyukiUser.dart';
 import '../materials/InitData.dart';
 import '../screens/yakai/yakai_songlist_page.dart';
-import '../services/report_service.dart';
+import '../services/firebase/report_service.dart';
 import 'package:provider/provider.dart';
 import '../services/string_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

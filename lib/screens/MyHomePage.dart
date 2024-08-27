@@ -17,7 +17,7 @@ import 'package:project5_miyuki/screens/yakai/yakai_page.dart';
 import 'package:project5_miyuki/services/ad_mob_service.dart';
 import 'package:project5_miyuki/services/custom_search_delegate.dart';
 import 'package:project5_miyuki/services/random_song_service.dart';
-import 'package:project5_miyuki/services/yukicoin_service.dart';
+import 'package:project5_miyuki/services/firebase/yukicoin_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -26,7 +26,7 @@ import './home_drawer_page.dart';
 import '../class/Message.dart';
 import '../materials/colors.dart';
 
-import '../services/message_service.dart';
+import '../services/firebase/message_service.dart';
 import 'Yuki_Sekai/yuki_sekai_list_page.dart';
 
 class MyHomePage extends StatefulWidget {

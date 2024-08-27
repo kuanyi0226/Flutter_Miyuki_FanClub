@@ -5,7 +5,7 @@ import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../class/MiyukiUser.dart';
 import '../../materials/colors.dart';
-import '../../services/auth_service.dart';
+import '../../services/firebase/auth_service.dart';
 
 import '../../widgets/MyTextField.dart';
 import '../../widgets/MyButton.dart';

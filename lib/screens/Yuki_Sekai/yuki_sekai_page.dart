@@ -3,7 +3,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/class/Yuki_Sekai/PlayerInfo.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
-import 'package:project5_miyuki/services/YukiSekai.dart';
+import 'package:project5_miyuki/services/Yuki_Sekai/YukiSekai.dart';
 
 class YukiSekaiPage extends StatefulWidget {
   late final String title;
