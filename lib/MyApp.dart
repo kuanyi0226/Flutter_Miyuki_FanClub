@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         themeMode: ThemeMode.dark,
-        home: const AuthPage(),
+        home: AuthPage(),
         supportedLocales: L10n.all,
         //locale: const Locale("ja"),
         localizationsDelegates: const [

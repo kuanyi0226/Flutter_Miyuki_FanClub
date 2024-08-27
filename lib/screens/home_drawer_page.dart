@@ -22,24 +22,21 @@ import '../materials/MyText.dart';
 import '../materials/colors.dart';
 
 class HomeDrawerPage extends StatefulWidget {
-  User? user;
   GlobalKey<ScaffoldState> scaffoldKey;
-  HomeDrawerPage({super.key, required this.scaffoldKey, required this.user});
+  HomeDrawerPage({super.key, required this.scaffoldKey});
 
   @override
   State<HomeDrawerPage> createState() => _HomeDrawerPageState(
         scaffoldKey: scaffoldKey,
-        user: user,
       );
 }
 
 class _HomeDrawerPageState extends State<HomeDrawerPage> {
-  User? user;
   GlobalKey<ScaffoldState> scaffoldKey;
   bool _checked = false;
   final int CHECK_IN_COIN = 5;
 
-  _HomeDrawerPageState({required this.user, required this.scaffoldKey});
+  _HomeDrawerPageState({required this.scaffoldKey});
 
   //check to sign out
   Future _signOutCheck() {

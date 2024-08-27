@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
@@ -16,6 +17,9 @@ import 'package:project5_miyuki/screens/song_page.dart';
 import 'package:project5_miyuki/screens/yakai/yakai_page.dart';
 import 'package:project5_miyuki/services/ad_mob_service.dart';
 import 'package:project5_miyuki/services/custom_search_delegate.dart';
+import 'package:project5_miyuki/services/firebase/analytics_service.dart';
+import 'package:project5_miyuki/services/firebase/remote_config_service.dart';
+import 'package:project5_miyuki/services/init_data_service.dart';
 import 'package:project5_miyuki/services/random_song_service.dart';
 import 'package:project5_miyuki/services/firebase/yukicoin_service.dart';
 import 'package:provider/provider.dart';
@@ -44,24 +48,22 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   final controller1 = TextEditingController();
   late Stream<List<Message>> _messageStream;
 
-  User? user;
-  String? userEmail;
-
   BannerAd? _bannerAd;
   bool _bannerAdLoaded = false;
 
   final audioPlayer = AudioPlayer();
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
   //init all data needed
   @override
   void initState() {
     super.initState();
+    AnalyticsService.turnOnAnalytics(_analytics);
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _readMiyukiUser();
-      setState(() {});
+      bool needSetState = await InitDataService.checkInit();
+      if (needSetState) setState(() {});
     });
-
     _messageStream =
         MessageService().readMessages(target_to_read: 'message-board');
 
@@ -90,29 +92,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     if (isBackground) {
       audioPlayer.setVolume(0);
     }
-  }
-
-  Future<MiyukiUser> _readMiyukiUser() async {
-    setState(() async {
-      user = await FirebaseAuth.instance.currentUser;
-      userEmail = user!.email;
-      InitData.miyukiUser = await MiyukiUser.readUser(userEmail!);
-      InitData.miyukiUser.uid = user!.uid;
-      InitData.miyukiUser.imgUrl = user!.photoURL;
-      print('welcome ${InitData.miyukiUser.name} ${user!.uid}');
-
-      //init current garment
-      for (String collection in InitData.miyukiUser.collections!) {
-        if (collection.startsWith('[garment]')) {
-          if (collection.contains('[current]')) {
-            InitData.curr_garment =
-                collection.replaceFirst('[garment][current]', '');
-          }
-        }
-      }
-    });
-
-    return InitData.miyukiUser;
   }
 
   void _createBannerAd() {
@@ -480,7 +459,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         //       ),
         //Drawer
         drawer: HomeDrawerPage(
-          user: user,
           scaffoldKey: _scaffoldKey,
         ));
   }

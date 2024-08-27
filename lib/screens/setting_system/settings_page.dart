@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:project5_miyuki/class/official/updateInfo.dart';
 import 'package:project5_miyuki/screens/setting_system/about_app_page.dart';
 import 'package:project5_miyuki/screens/setting_system/copyright_page.dart';
 import 'package:project5_miyuki/screens/setting_system/privacy_policy_page.dart';

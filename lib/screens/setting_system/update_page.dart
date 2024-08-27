@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project5_miyuki/class/official/updateInfo.dart';
+import 'package:project5_miyuki/services/firebase/remote_config_service.dart';
 import '../../materials/MyText.dart';
 import '../../services/firebase/official_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,16 +12,20 @@ class UpdatePage extends StatefulWidget {
 }
 
 class _UpdatePageState extends State<UpdatePage> {
-  late UpdateInfo updateInfo = UpdateInfo(version: '', link: '');
+  String _latestVersion = "Wait for fetching data...";
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      updateInfo = await OfficialService.getUpdateInfo();
-      setState(() {});
-    });
-    print('latest version is: ${updateInfo.version}');
+    fetchAppVersion();
+    //print('latest version is: ${updateInfo.version}');
     super.initState();
+  }
+
+  void fetchAppVersion() async {
+    String version = await RemoteConfigService().fetchAppVersion();
+    setState(() {
+      _latestVersion = version;
+    });
   }
 
   @override
@@ -45,7 +49,7 @@ class _UpdatePageState extends State<UpdatePage> {
             ),
             SizedBox(height: 50),
             Text(
-              'Latest Version: ${updateInfo.version}',
+              'Latest Version: $_latestVersion',
               style: TextStyle(fontSize: 25),
             ),
             SizedBox(height: 20),

@@ -65,6 +65,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
 
   <script type="module">
@@ -74,6 +75,7 @@
     import { getFirestore } from "firebase/firestore";
     import { getAuth } from "firebase/auth";
     import { getDatabase } from "firebase/database";
+    import { getAnalytics } from "firebase/analytics";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
   
@@ -85,7 +87,8 @@
       storageBucket: "miyuki-b1c80.appspot.com",
       messagingSenderId: "825033090624",
       appId: "1:825033090624:web:f6e8b382c9bf74760e61a5",
-      databaseURL: 'https://miyuki-b1c80.firebaseio.com'
+      databaseURL: 'https://miyuki-b1c80.firebaseio.com',
+      measurementId: "G-70HQFNVTSB"
     };
   
     // Initialize Firebase
@@ -95,6 +98,7 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
     const database = getDatabase(app);
+    const analytics = getAnalytics(app);
   </script>
 
 </body></html>

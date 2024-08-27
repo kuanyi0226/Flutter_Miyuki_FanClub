@@ -1,7 +1,9 @@
 import 'package:animated_background/animated_background.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:project5_miyuki/services/firebase/analytics_service.dart';
 import '../class/MiyukiUser.dart';
 import '../materials/InitData.dart';
 import '../screens/yakai/yakai_songlist_page.dart';
@@ -43,6 +45,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   int? song_index;
   List<String> lyricsList = [' '];
   List<Widget> lyricsTexts = [];
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
   _SongPageState({
     this.song,
@@ -53,6 +56,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    AnalyticsService.turnOnAnalytics(_analytics);
     lyricsList = song!.lyrics_jp!.split('%');
     if (lyricsList.elementAt(0) == '') {
       lyricsTexts.add(Text(
@@ -75,6 +79,13 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
         ));
       }
     }
+  }
+
+  //analytics
+  Future<void> _commentAnalytics(String action) async {
+    await _analytics.logEvent(
+        name: 'comment',
+        parameters: {"song_name": song!.name, "action": action});
   }
 
   //bottom navigation
@@ -140,6 +151,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                               song!.comment!.clear();
                             }
                             song!.comment!.add(newComment);
+                            _commentAnalytics("add");
 
                             Navigator.of(context).pop();
                             snackBarString =
@@ -201,6 +213,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                           if (song!.comment!.isEmpty) {
                             song!.comment!.add('');
                           }
+                          _commentAnalytics("delete");
                         } else {
                           snackBarString =
                               AppLocalizations.of(context)!.no_wifi;
@@ -256,6 +269,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                 sender: InitData.miyukiUser.uid!,
                                 type: 'Comment',
                                 text: reportString);
+                            _commentAnalytics("report");
                             Navigator.of(context).pop();
                             snackBarString =
                                 AppLocalizations.of(context)!.comment_received;
