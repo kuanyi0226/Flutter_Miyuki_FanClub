@@ -1,20 +1,45 @@
 {
   "project_info": {
     "project_number": "825033090624",
+    "firebase_url": "https://miyuki-b1c80-default-rtdb.firebaseio.com",
     "project_id": "miyuki-b1c80",
     "storage_bucket": "miyuki-b1c80.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:825033090624:android:3dbc8d705554737f0e61a5",
+        "mobilesdk_app_id": "1:825033090624:android:1dd211ce1582f4bc0e61a5",
         "android_client_info": {
           "package_name": "com.yukiclub.yukiclub"
         }
       },
       "oauth_client": [
         {
-          "client_id": "825033090624-ha6peugrcidc82q4g1gs4iaei9ujsaer.apps.googleusercontent.com",
+          "client_id": "825033090624-8i7er6cmhoa922o4qddrkqq00t3mgo3e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yukiclub.yukiclub",
+            "certificate_hash": "6ba056d8d9191cad49efb6af1eb769f0cacf6238"
+          }
+        },
+        {
+          "client_id": "825033090624-dt0cvs7eo62ba7e8lq3cj4nu118n9nq9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yukiclub.yukiclub",
+            "certificate_hash": "993ef5bd398cf4490d07b0db856bc05b9c3660ba"
+          }
+        },
+        {
+          "client_id": "825033090624-ef4ol0jnsogrtpko48s3ngi8gnvd7ebm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yukiclub.yukiclub",
+            "certificate_hash": "b9dbd0a7097dddd16a94f5e25393a9bb50d047d3"
+          }
+        },
+        {
+          "client_id": "825033090624-0rhauj5r8lmplnctto5egqeeu4v7820s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,12 +52,13 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "825033090624-ha6peugrcidc82q4g1gs4iaei9ujsaer.apps.googleusercontent.com",
+              "client_id": "825033090624-0rhauj5r8lmplnctto5egqeeu4v7820s.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-7079414090734216~8239974449"
     }
   ],
   "configuration_version": "1"

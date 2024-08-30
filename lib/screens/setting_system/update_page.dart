@@ -1,3 +1,4 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/services/firebase/remote_config_service.dart';
 import '../../materials/MyText.dart';
@@ -13,6 +14,7 @@ class UpdatePage extends StatefulWidget {
 
 class _UpdatePageState extends State<UpdatePage> {
   String _latestVersion = "Wait for fetching data...";
+  late FirebaseRemoteConfig _remoteConfig;
 
   @override
   void initState() {
@@ -21,11 +23,28 @@ class _UpdatePageState extends State<UpdatePage> {
     super.initState();
   }
 
-  void fetchAppVersion() async {
-    String version = await RemoteConfigService().fetchAppVersion();
-    setState(() {
-      _latestVersion = version;
-    });
+  Future<void> fetchAppVersion() async {
+    _remoteConfig = FirebaseRemoteConfig.instance;
+    try {
+      // Fetch and activate the config
+      await _remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: Duration(minutes: 1),
+        minimumFetchInterval: Duration(minutes: 0),
+      ));
+
+      await _remoteConfig.fetchAndActivate();
+
+      // Get the value from the remote config
+      setState(() {
+        _latestVersion = _remoteConfig.getString('app_version');
+      });
+    } catch (e) {
+      _latestVersion = 'Fetching version failed: $e';
+    }
+    // String version = await RemoteConfigService().fetchAppVersion();
+    // setState(() {
+    //   _latestVersion = version;
+    // });
   }
 
   @override

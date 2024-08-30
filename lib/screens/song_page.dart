@@ -56,7 +56,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    AnalyticsService.turnOnAnalytics(_analytics);
+    setAnalytics();
     lyricsList = song!.lyrics_jp!.split('%');
     if (lyricsList.elementAt(0) == '') {
       lyricsTexts.add(Text(
@@ -79,6 +79,11 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
         ));
       }
     }
+  }
+
+  Future<void> setAnalytics() async {
+    if (_analytics == null) print('Analytics is null: Song page');
+    await AnalyticsService.turnOnAnalytics(_analytics);
   }
 
   //analytics

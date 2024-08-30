@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    AnalyticsService.turnOnAnalytics(_analytics);
+    setAnalytics();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       bool needSetState = await InitDataService.checkInit();
@@ -92,6 +92,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     if (isBackground) {
       audioPlayer.setVolume(0);
     }
+  }
+
+  Future<void> setAnalytics() async {
+    await AnalyticsService.turnOnAnalytics(_analytics);
   }
 
   void _createBannerAd() {

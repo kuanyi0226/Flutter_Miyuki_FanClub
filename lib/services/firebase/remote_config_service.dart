@@ -12,7 +12,7 @@ class RemoteConfigService {
 
   RemoteConfigService() : _remoteConfig = FirebaseRemoteConfig.instance;
 
-  void _initRemoteConfig(
+  Future<void> _initRemoteConfig(
       {int fetchTimeoutSecond = 10, int minimumFetchIntervalSecond = 0}) async {
     try {
       // Set a low fetch interval to force fetching fresh data\
@@ -27,23 +27,24 @@ class RemoteConfigService {
     } catch (e) {
       // Handle any errors, such as network issues
       //return 'Failed to init remote config';
+      print(e.toString());
     }
   }
 
   Future<String> fetchAppVersion() async {
     try {
-      _initRemoteConfig();
+      await _initRemoteConfig();
       String appVersion = await _remoteConfig.getString('app_version');
       return appVersion;
     } catch (e) {
       // Handle any errors, such as network issues
-      return 'Failed to fetch app version';
+      return 'Failed to fetch app version: ' + e.toString();
     }
   }
 
   Future<List<String>> fetchAllSongs() async {
     try {
-      _initRemoteConfig();
+      await _initRemoteConfig();
       String allSongsJson = await _remoteConfig.getString('allSongs');
       final allSongsMap = json.decode(allSongsJson);
       final List<String> allSongs = List<String>.from(allSongsMap['allSongs']);
@@ -53,10 +54,9 @@ class RemoteConfigService {
       } else {
         return allSongs;
       }
-      return allSongs;
     } catch (e) {
       // Handle any errors, such as network issues
-      //print(e.toString());
+      print(e.toString());
       return defaultSongList();
     }
   }

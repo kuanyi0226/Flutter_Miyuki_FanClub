@@ -62,11 +62,12 @@
       });
     });
   </script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-remote-config.js"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -76,6 +77,7 @@
     import { getAuth } from "firebase/auth";
     import { getDatabase } from "firebase/database";
     import { getAnalytics } from "firebase/analytics";
+    import { getRemoteConfig, fetchAndActivate } from "firebase/remote-config";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
   
@@ -99,6 +101,7 @@
     const storage = getStorage(app);
     const database = getDatabase(app);
     const analytics = getAnalytics(app);
+    const remoteConfig = getRemoteConfig(app);
   </script>
 
 </body></html>
