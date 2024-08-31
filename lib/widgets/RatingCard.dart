@@ -6,6 +6,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/Song.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:project5_miyuki/materials/colors.dart';
 import 'package:provider/provider.dart';
 
 class RatingCard extends StatefulWidget {
@@ -153,7 +154,7 @@ class _RatingCardState extends State<RatingCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       child: Card(
         elevation: 5,
         child: Padding(
@@ -200,9 +201,16 @@ class _RatingCardState extends State<RatingCard> {
               ),
               SizedBox(height: 16),
               // Add Rating Button
-              ElevatedButton(
+              OutlinedButton(
                 onPressed: _addRating,
-                child: Text(AppLocalizations.of(context)!.rate),
+                child: Text(AppLocalizations.of(context)!.rate,
+                    style: TextStyle(color: theme_pink)),
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  side: BorderSide(width: 2.0, color: theme_pink),
+                ),
               ),
             ],
           ),

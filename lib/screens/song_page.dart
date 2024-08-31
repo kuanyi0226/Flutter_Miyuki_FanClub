@@ -405,6 +405,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                           index: song_index,
                         ),
                       ),
+            SizedBox(height: 5),
             (_curr_index == 1) //bottom bar
                 ? //Live List
                 (song!.live != null && song!.live![0] != '')
@@ -514,113 +515,121 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                         ),
                       )
                     : // Comment
-                    (song!.comment != null && song!.comment!.elementAt(0) != '')
-                        ? Expanded(
-                            child: CustomScrollView(
-                              slivers: <Widget>[
-                                SliverToBoxAdapter(
-                                  child: RatingCard(
-                                      ratingList: song!.ratings!,
-                                      songName: song!.name),
-                                ),
-                                SliverList(
-                                  delegate: SliverChildBuilderDelegate(
-                                    childCount: song!.comment!.length,
-                                    ((context, index) {
-                                      //0:uid,1:userName,2:sent time,3:comment
-                                      List<String> commentSplit = song!.comment!
-                                          .elementAt(index)
-                                          .split('%%');
-                                      return Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(1.0),
-                                            child: ListTile(
-                                              title: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  //User Name
-                                                  Flexible(
-                                                    child: Text(
-                                                      commentSplit.elementAt(1),
-                                                      style: (commentSplit
-                                                                  .elementAt(
-                                                                      1)[0] ==
-                                                              '❆')
-                                                          ? TextStyle(
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              fontSize: 18,
-                                                              color:
-                                                                  theme_light_blue)
-                                                          : TextStyle(
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              fontSize: 18),
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 5),
-                                                  //Sent Time
-                                                  Container(
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 5),
-                                                      child: Text(
-                                                          StringService
-                                                              .commentTimeFix(
-                                                                  commentSplit
-                                                                      .elementAt(
-                                                                          2)),
-                                                          style: TextStyle(
-                                                              fontSize: 10)),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              //Message Text
-                                              subtitle: Text(
-                                                commentSplit.elementAt(3),
-                                                style: TextStyle(
-                                                    fontSize: 17,
-                                                    color: Colors.white),
-                                              ),
-                                              trailing: (InitData
-                                                          .miyukiUser.uid ==
-                                                      commentSplit[0])
-                                                  ? IconButton(
-                                                      onPressed: () async =>
-                                                          _deleteComment(song!
-                                                              .comment!
-                                                              .elementAt(
-                                                                  index)),
-                                                      icon: Icon(Icons.delete))
-                                                  : IconButton(
-                                                      onPressed: () async =>
-                                                          _reportComment(song!
-                                                              .comment!
-                                                              .elementAt(
-                                                                  index)),
-                                                      icon: Icon(Icons.report)),
-                                            ),
-                                          ),
-                                          Divider(),
-                                        ],
-                                      );
-                                    }),
-                                  ),
-                                ),
-                                SliverToBoxAdapter(child: SizedBox(height: 30)),
-                              ],
+                    Expanded(
+                        child: CustomScrollView(
+                          slivers: <Widget>[
+                            SliverToBoxAdapter(
+                              child: RatingCard(
+                                  ratingList: song!.ratings!,
+                                  songName: song!.name),
                             ),
-                          )
-                        : Text(
-                            'コメント無し No Comment',
-                            style: TextStyle(fontSize: 18),
-                          ),
+                            (song!.comment!.elementAt(0) != '')
+                                ? SliverList(
+                                    delegate: SliverChildBuilderDelegate(
+                                      childCount: song!.comment!.length,
+                                      ((context, index) {
+                                        //0:uid,1:userName,2:sent time,3:comment
+                                        List<String> commentSplit = song!
+                                            .comment!
+                                            .elementAt(index)
+                                            .split('%%');
+                                        return Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(1.0),
+                                              child: ListTile(
+                                                title: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    //User Name
+                                                    Flexible(
+                                                      child: Text(
+                                                        commentSplit
+                                                            .elementAt(1),
+                                                        style: (commentSplit
+                                                                    .elementAt(
+                                                                        1)[0] ==
+                                                                '❆')
+                                                            ? TextStyle(
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                fontSize: 18,
+                                                                color:
+                                                                    theme_light_blue)
+                                                            : TextStyle(
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                fontSize: 18),
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 5),
+                                                    //Sent Time
+                                                    Container(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 5),
+                                                        child: Text(
+                                                            StringService
+                                                                .commentTimeFix(
+                                                                    commentSplit
+                                                                        .elementAt(
+                                                                            2)),
+                                                            style: TextStyle(
+                                                                fontSize: 10)),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                //Message Text
+                                                subtitle: Text(
+                                                  commentSplit.elementAt(3),
+                                                  style: TextStyle(
+                                                      fontSize: 17,
+                                                      color: Colors.white),
+                                                ),
+                                                trailing: (InitData
+                                                            .miyukiUser.uid ==
+                                                        commentSplit[0])
+                                                    ? IconButton(
+                                                        onPressed: () async =>
+                                                            _deleteComment(song!
+                                                                .comment!
+                                                                .elementAt(
+                                                                    index)),
+                                                        icon:
+                                                            Icon(Icons.delete))
+                                                    : IconButton(
+                                                        onPressed: () async =>
+                                                            _reportComment(song!
+                                                                .comment!
+                                                                .elementAt(
+                                                                    index)),
+                                                        icon: Icon(Icons.report)),
+                                              ),
+                                            ),
+                                            Divider(),
+                                          ],
+                                        );
+                                      }),
+                                    ),
+                                  )
+                                : SliverToBoxAdapter(
+                                    child: Center(
+                                      child: Text(
+                                        'コメント無し No Comment',
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ),
+                                  ),
+                            SliverToBoxAdapter(child: SizedBox(height: 30)),
+                          ],
+                        ),
+                      ),
           ]),
         ],
       ),
