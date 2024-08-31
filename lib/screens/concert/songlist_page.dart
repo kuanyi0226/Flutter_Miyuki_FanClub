@@ -135,6 +135,7 @@ class _PageState extends State<SonglistPage> {
                                           comment: curr_song.comment,
                                           review_cn: curr_song.review_cn,
                                           review_en: curr_song.review_en,
+                                          ratings: curr_song.ratings,
                                         ),
                                       )));
                             },

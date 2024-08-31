@@ -313,6 +313,7 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                                 controller: _text_controller1,
                                 style: TextStyle(color: theme_dark),
                                 maxLines: null,
+                                maxLength: 500,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText:

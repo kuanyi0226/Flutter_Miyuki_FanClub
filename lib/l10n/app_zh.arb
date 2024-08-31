@@ -79,5 +79,12 @@
     "password_reset_info": "輸入您的電子信箱\n我們會將重設密碼的連結寄給您",
     "password_reset_sent": "已經將重設密碼的連結傳至您的信箱，請您確認",
     "password_reset_fail": "請輸入正確的電子信箱",
-    "check_in_days": "簽到日數"
+    "check_in_days": "簽到日數",
+    "user_not_found": "用戶不存在",
+    "invalid_email": "錯誤的電子郵件格式",
+    "channel_error": "發生錯誤",
+    "wrong_password": "密碼錯誤",
+    "email_already_in_use": "電子郵件已被註冊",
+    "rate": "評分",
+    "rated": "您已評分"
 }

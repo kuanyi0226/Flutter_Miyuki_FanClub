@@ -79,5 +79,12 @@
     "password_reset_info": "メールアドレスを入力してください\nパスワードのリセットのリンクを送信します",
     "password_reset_sent": "パスワードのリセットのリンクを送信しました!\nメールを確認してください。",
     "password_reset_fail": "正しい電子メールを入力してください",
-    "check_in_days": "チェックイン日数"
+    "check_in_days": "チェックイン日数",
+    "user_not_found": "ユーザーが見つかりません",
+    "invalid_email": "間違った電子メール形式",
+    "channel_error": "何か間違ったことが起こった",
+    "wrong_password": "間違ったパスワード",
+    "email_already_in_use": "メールが使用されました",
+    "rate": "レート",
+    "rated": "レートしました"
 }

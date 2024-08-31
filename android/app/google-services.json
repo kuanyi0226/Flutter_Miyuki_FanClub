@@ -54,6 +54,13 @@
             {
               "client_id": "825033090624-0rhauj5r8lmplnctto5egqeeu4v7820s.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "825033090624-o2bit2lb3bflome1s2839qfsbvs3mvgu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.project5Miyuki"
+              }
             }
           ]
         }

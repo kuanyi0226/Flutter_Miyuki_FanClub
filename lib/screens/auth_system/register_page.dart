@@ -72,6 +72,9 @@ class _RegisterPageState extends State<RegisterPage> {
         _showErrorMessage(AppLocalizations.of(context)!.password_not_match);
       }
     } on FirebaseAuthException catch (err) {
+      String errMessage = err.code.toString();
+      if (errMessage == 'email-already-in-use')
+        errMessage = AppLocalizations.of(context)!.email_already_in_use;
       //pop the loading circle: failed to sign up
       Navigator.pop(context);
       //show error to user
@@ -108,6 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
               controller: _userNameController,
               hintText: AppLocalizations.of(context)!.user_name,
               obscureText: false,
+              maxLength: 17,
             ),
             const SizedBox(height: 5),
             //email textfield

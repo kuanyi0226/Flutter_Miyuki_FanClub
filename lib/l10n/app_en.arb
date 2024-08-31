@@ -82,5 +82,12 @@
     "password_reset_info": "Enter Your Email\nwe will sent you a password reset link",
     "password_reset_sent": "Password Reset Link Sent!\nPlease Check Your Email.",
     "password_reset_fail": "Please type the correct Email",
-    "check_in_days": "Check-in Days"
+    "check_in_days": "Check-in Days",
+    "user_not_found": "User Not Found",
+    "invalid_email": "Invalid Email",
+    "channel_error": "Something wrong happened",
+    "wrong_password": "Wrong Password",
+    "email_already_in_use": "Email Already In Use",
+    "rate": "Rate",
+    "rated": "You have rated"
 }

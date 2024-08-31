@@ -1,14 +1,11 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_bg_null_safety/flutter_weather_bg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/class/Song.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/screens/concert/concert_page.dart';
@@ -58,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    setAnalytics();
+    //setAnalytics();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       bool needSetState = await InitDataService.checkInit();
@@ -382,7 +379,15 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                     SizedBox(height: 10),
                     //Message Board
                     Container(
-                      color: theme_dark_grey,
+                      decoration: BoxDecoration(
+                        //color: theme_dark,
+                        border: Border.all(
+                          color: theme_pink,
+                          width: 2.0, // Set the border width
+                        ),
+                        borderRadius: BorderRadius.circular(
+                            30.0), // Set the border radius for curvy edges
+                      ),
                       child: Row(
                         children: [
                           IconButton(
@@ -393,24 +398,25 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               setState(() {});
                             },
                             icon: (currentMessage == '1')
-                                ? Icon(Icons.looks_one, color: Colors.orange)
+                                ? Icon(Icons.looks_one, color: theme_pink)
                                 : (currentMessage == '2')
-                                    ? Icon(Icons.looks_two,
-                                        color: Colors.orange)
+                                    ? Icon(Icons.looks_two, color: theme_pink)
                                     : (currentMessage == '3')
-                                        ? Icon(Icons.looks_3,
-                                            color: Colors.orange)
+                                        ? Icon(Icons.looks_3, color: theme_pink)
                                         : (currentMessage == '4')
                                             ? Icon(Icons.looks_4,
-                                                color: Colors.orange)
+                                                color: theme_pink)
                                             : Icon(Icons.looks_5,
-                                                color: Colors.orange),
+                                                color: theme_pink),
                           ),
                           Expanded(
                             child: TextField(
                               maxLines: null,
+                              maxLength: 100,
                               controller: controller1,
-                              decoration: InputDecoration.collapsed(
+                              decoration: InputDecoration(
+                                  counterText: "",
+                                  border: InputBorder.none,
                                   hintText: AppLocalizations.of(context)!
                                       .message_board),
                             ),
@@ -418,7 +424,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           //sent message
                           IconButton(
                             onPressed: () => _sentMessage(),
-                            icon: Icon(Icons.send),
+                            icon: Icon(Icons.send, color: theme_pink),
                           ),
                         ],
                       ),
@@ -499,9 +505,7 @@ Widget buildMessage(Message message) {
           child: Text(
             message.id.toString(),
             style: TextStyle(
-                fontSize: 25,
-                color: Colors.orange,
-                fontWeight: FontWeight.bold),
+                fontSize: 25, color: theme_pink, fontWeight: FontWeight.bold),
           ),
           bottom: -5,
           left: -1,

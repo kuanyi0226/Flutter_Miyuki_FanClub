@@ -44,10 +44,21 @@ class _LoginPageState extends State<LoginPage> {
       //pop the loading circle: successfully login
       Navigator.pop(context);
     } on FirebaseAuthException catch (err) {
+      String errMessage = err.code;
+      if (err.code.toString() == 'user-not-found')
+        errMessage = AppLocalizations.of(context)!.user_not_found;
+      else if (err.code.toString() == 'wrong-password')
+        errMessage = AppLocalizations.of(context)!.wrong_password;
+      else if (err.code.toString() == 'invalid-email')
+        errMessage = AppLocalizations.of(context)!.invalid_email;
+      else if (err.code.toString() == 'channel-error')
+        errMessage = AppLocalizations.of(context)!.channel_error;
+      else if (err.code.toString() == 'wrong_password')
+        errMessage = AppLocalizations.of(context)!.wrong_password;
       //pop the loading circle: failed to login
       Navigator.pop(context);
       //show error to user
-      _showErrorMessage(err.code);
+      _showErrorMessage(errMessage);
     }
   }
 
@@ -85,7 +96,6 @@ class _LoginPageState extends State<LoginPage> {
             MyTextField(
               controller: _emailController,
               hintText: AppLocalizations.of(context)!.email,
-              obscureText: false,
             ),
             const SizedBox(height: 10),
             //password textfield

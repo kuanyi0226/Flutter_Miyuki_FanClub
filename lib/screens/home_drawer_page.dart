@@ -161,13 +161,13 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
                     },
                     child: Text(
                       AppLocalizations.of(context)!.daily_check_in,
-                      style: TextStyle(color: theme_purple),
+                      style: TextStyle(color: theme_pink),
                     ),
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
                       ),
-                      side: BorderSide(width: 2.0, color: theme_purple),
+                      side: BorderSide(width: 2.0, color: theme_pink),
                     ),
                   ),
                 ),
@@ -212,7 +212,7 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
           //Websites
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 20),
-            child: Text('Websites'),
+            child: Text('Websites', style: TextStyle(color: theme_purple)),
           ),
           ListTile(
             leading: Icon(Icons.assignment),
@@ -234,7 +234,7 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
           //Others
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 20),
-            child: Text('Others'),
+            child: Text('Others', style: TextStyle(color: theme_purple)),
           ),
           (kIsWeb)
               ? ListTile(

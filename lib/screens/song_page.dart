@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/services/firebase/analytics_service.dart';
+import 'package:project5_miyuki/widgets/RatingCard.dart';
 import '../class/MiyukiUser.dart';
 import '../materials/InitData.dart';
 import '../screens/yakai/yakai_songlist_page.dart';
@@ -56,7 +57,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    setAnalytics();
+    //setAnalytics();
     lyricsList = song!.lyrics_jp!.split('%');
     if (lyricsList.elementAt(0) == '') {
       lyricsTexts.add(Text(
@@ -515,88 +516,106 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                     : // Comment
                     (song!.comment != null && song!.comment!.elementAt(0) != '')
                         ? Expanded(
-                            child: ListView.builder(
-                                itemCount: song!.comment!.length,
-                                itemBuilder: ((context, index) {
-                                  //0:uid,1:userName,2:sent time,3:comment
-                                  List<String> commentSplit = song!.comment!
-                                      .elementAt(index)
-                                      .split('%%');
-                                  return Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(1.0),
-                                        child: ListTile(
-                                          title: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              //User Name
-                                              Flexible(
-                                                child: Text(
-                                                  commentSplit.elementAt(1),
-                                                  style: (commentSplit
-                                                              .elementAt(
-                                                                  1)[0] ==
-                                                          '❆')
-                                                      ? TextStyle(
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          fontSize: 18,
-                                                          color:
-                                                              theme_light_blue)
-                                                      : TextStyle(
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          fontSize: 18),
-                                                ),
-                                              ),
-                                              SizedBox(width: 5),
-                                              //Sent Time
-                                              Container(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 5),
-                                                  child: Text(
-                                                      StringService
-                                                          .commentTimeFix(
-                                                              commentSplit
+                            child: CustomScrollView(
+                              slivers: <Widget>[
+                                SliverToBoxAdapter(
+                                  child: RatingCard(
+                                      ratingList: song!.ratings!,
+                                      songName: song!.name),
+                                ),
+                                SliverList(
+                                  delegate: SliverChildBuilderDelegate(
+                                    childCount: song!.comment!.length,
+                                    ((context, index) {
+                                      //0:uid,1:userName,2:sent time,3:comment
+                                      List<String> commentSplit = song!.comment!
+                                          .elementAt(index)
+                                          .split('%%');
+                                      return Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(1.0),
+                                            child: ListTile(
+                                              title: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  //User Name
+                                                  Flexible(
+                                                    child: Text(
+                                                      commentSplit.elementAt(1),
+                                                      style: (commentSplit
                                                                   .elementAt(
-                                                                      2)),
-                                                      style: TextStyle(
-                                                          fontSize: 10)),
-                                                ),
+                                                                      1)[0] ==
+                                                              '❆')
+                                                          ? TextStyle(
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              fontSize: 18,
+                                                              color:
+                                                                  theme_light_blue)
+                                                          : TextStyle(
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              fontSize: 18),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  //Sent Time
+                                                  Container(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 5),
+                                                      child: Text(
+                                                          StringService
+                                                              .commentTimeFix(
+                                                                  commentSplit
+                                                                      .elementAt(
+                                                                          2)),
+                                                          style: TextStyle(
+                                                              fontSize: 10)),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
+                                              //Message Text
+                                              subtitle: Text(
+                                                commentSplit.elementAt(3),
+                                                style: TextStyle(
+                                                    fontSize: 17,
+                                                    color: Colors.white),
+                                              ),
+                                              trailing: (InitData
+                                                          .miyukiUser.uid ==
+                                                      commentSplit[0])
+                                                  ? IconButton(
+                                                      onPressed: () async =>
+                                                          _deleteComment(song!
+                                                              .comment!
+                                                              .elementAt(
+                                                                  index)),
+                                                      icon: Icon(Icons.delete))
+                                                  : IconButton(
+                                                      onPressed: () async =>
+                                                          _reportComment(song!
+                                                              .comment!
+                                                              .elementAt(
+                                                                  index)),
+                                                      icon: Icon(Icons.report)),
+                                            ),
                                           ),
-                                          //Message Text
-                                          subtitle: Text(
-                                            commentSplit.elementAt(3),
-                                            style: TextStyle(
-                                                fontSize: 17,
-                                                color: Colors.white),
-                                          ),
-                                          trailing: (InitData.miyukiUser.uid ==
-                                                  commentSplit[0])
-                                              ? IconButton(
-                                                  onPressed: () async =>
-                                                      _deleteComment(song!
-                                                          .comment!
-                                                          .elementAt(index)),
-                                                  icon: Icon(Icons.delete))
-                                              : IconButton(
-                                                  onPressed: () async =>
-                                                      _reportComment(song!
-                                                          .comment!
-                                                          .elementAt(index)),
-                                                  icon: Icon(Icons.report)),
-                                        ),
-                                      ),
-                                      Divider(),
-                                    ],
-                                  );
-                                })),
+                                          Divider(),
+                                        ],
+                                      );
+                                    }),
+                                  ),
+                                ),
+                                SliverToBoxAdapter(child: SizedBox(height: 30)),
+                              ],
+                            ),
                           )
                         : Text(
                             'コメント無し No Comment',
@@ -618,7 +637,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
       //Bottom Bar
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        fixedColor: theme_purple,
+        fixedColor: theme_pink,
         currentIndex: _curr_index,
         items: [
           BottomNavigationBarItem(

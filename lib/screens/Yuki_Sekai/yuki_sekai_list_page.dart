@@ -40,7 +40,7 @@ class _YukiSekaiListPageState extends State<YukiSekaiListPage>
             });
           },
           controller: _tabController,
-          indicatorColor: theme_purple,
+          indicatorColor: theme_pink,
           tabs: [
             Tab(
               text: AppLocalizations.of(context)!.concert,

@@ -50,7 +50,7 @@ class _ConcertPageState extends State<ConcertPage>
             });
           },
           controller: _tabController,
-          indicatorColor: theme_purple,
+          indicatorColor: theme_pink,
           tabs: [
             Tab(
               text: AppLocalizations.of(context)!.all,

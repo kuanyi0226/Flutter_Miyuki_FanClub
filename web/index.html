@@ -29,13 +29,9 @@
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-  <title>雪クラブ</title>
+  <title>雪クラブ Yuki Club</title>
   <link rel="manifest" href="manifest.json">
 
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = null;
-  </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer=""></script>
   <link rel="stylesheet" type="text/css" href="splash/style.css">
@@ -43,19 +39,24 @@
   <script src="splash/splash.js"></script>
 </head>
 <body>  
+  <script src="flutter_bootstrap.js" async></script>
   <script>
     //flame package needs to be rendered with canvaskit for web
     window.flutterWebRenderer = 'canvaskit';
   </script>
   <script>
     window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
+      {{flutter_js}}
+      {{flutter_build_config}}
+      
+      _flutter.loader.load({
         serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
+          serviceWorkerVersion: {{flutter_service_worker_version}},
         },
         onEntrypointLoaded: function(engineInitializer) {
           engineInitializer.initializeEngine().then(function(appRunner) {
+            if(document.getElementById('splash'))
+              document.getElementById('splash').remove();
             appRunner.runApp();
           });
         }
@@ -95,6 +96,7 @@
   
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
+    firebase.analytics();
 
     const auth = getAuth(app);
     const db = getFirestore(app);

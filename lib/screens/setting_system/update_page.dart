@@ -64,12 +64,12 @@ class _UpdatePageState extends State<UpdatePage> {
             ),
             Text(
               'Current Version: $CURR_VERSION',
-              style: TextStyle(fontSize: 25),
+              style: TextStyle(fontSize: 20),
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 40),
             Text(
               'Latest Version: $_latestVersion',
-              style: TextStyle(fontSize: 25),
+              style: TextStyle(fontSize: 20),
             ),
             SizedBox(height: 20),
             SizedBox(height: 30),
