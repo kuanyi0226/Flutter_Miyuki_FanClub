@@ -185,6 +185,24 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  void _checkInHint() async {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () =>
+                          Navigator.of(context).pop() // Close the dialog
+                      ),
+                ],
+              ),
+              content: Image.asset('assets/images/check_in_hint.jpg'),
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -288,6 +306,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     '${InitData.miyukiUser.checkInDays}',
                     style: TextStyle(fontSize: 20),
                   ),
+                  trailing: IconButton(
+                      onPressed: _checkInHint, icon: Icon(Icons.info)),
                 ),
               ),
               //Vip Type
