@@ -315,6 +315,7 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                                 maxLines: null,
                                 maxLength: 500,
                                 decoration: InputDecoration(
+                                  counterText: "",
                                   border: InputBorder.none,
                                   hintText:
                                       AppLocalizations.of(context)!.type_here,
