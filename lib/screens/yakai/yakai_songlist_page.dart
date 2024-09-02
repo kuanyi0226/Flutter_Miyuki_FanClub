@@ -136,6 +136,7 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
                                           comment: curr_song.comment,
                                           review_cn: curr_song.review_cn,
                                           review_en: curr_song.review_en,
+                                          ratings: curr_song.ratings,
                                         ),
                                         song_index: index + 1,
                                         concert: Concert(
