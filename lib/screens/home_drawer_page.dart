@@ -77,9 +77,7 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
         title = AppLocalizations.of(context)!.daily_check_in_success;
         content = AppLocalizations.of(context)!.yuki_coin + ' + $CHECK_IN_COIN';
         try {
-          setState(() {
-            YukicoinService.addCoins(CHECK_IN_COIN); //5
-          });
+          YukicoinService.addCoins(CHECK_IN_COIN); //5
         } catch (e) {
           print(e.toString());
         }
@@ -154,10 +152,12 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: OutlinedButton(
                     onPressed: () async {
-                      _showCheckinDialog(await OfficialService.dailyCheckIn());
-                      setState(() {
+                      if (_checked == false) {
                         _checked = true;
-                      });
+                        _showCheckinDialog(
+                            await OfficialService.dailyCheckIn());
+                      }
+                      setState(() {});
                     },
                     child: Text(
                       AppLocalizations.of(context)!.daily_check_in,
