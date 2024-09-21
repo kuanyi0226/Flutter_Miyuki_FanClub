@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class SquareTile extends StatelessWidget {
   double? imageSize;
+  double? squareSize;
   Function()? onTap;
   final String imagePath;
 
   SquareTile(
       {super.key,
       this.imageSize,
+      this.squareSize,
       required this.imagePath,
       required this.onTap});
 
@@ -16,7 +18,7 @@ class SquareTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all((squareSize == null) ? 20 : squareSize!),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.white),
           borderRadius: BorderRadius.circular(16),

@@ -7,6 +7,7 @@ import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/screens/ad_page.dart';
 import 'package:project5_miyuki/screens/yuki_store_page.dart';
 import 'package:project5_miyuki/services/firebase/yukicoin_service.dart';
+import 'package:project5_miyuki/widgets/SquareTile.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -35,6 +36,8 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
   GlobalKey<ScaffoldState> scaffoldKey;
   bool _checked = false;
   final int CHECK_IN_COIN = 5;
+  final double ICON_SIZE = 20;
+  final double ICON_PADDING = 10;
 
   _HomeDrawerPageState({required this.scaffoldKey});
 
@@ -275,6 +278,43 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
                     MaterialPageRoute(builder: (context) => SettingsPage()));
                 scaffoldKey.currentState!.openEndDrawer(); //close drawer
               }),
+          SizedBox(height: 30),
+          Row(
+            children: [
+              //Instagram
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: SquareTile(
+                  imagePath: 'assets/images/instagram_icon.png',
+                  imageSize: ICON_SIZE,
+                  squareSize: ICON_PADDING,
+                  onTap: () => _launchURL(
+                      'https', 'www.instagram.com', 'miyuki.yukiclub'),
+                ),
+              ),
+              //Youtube
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: SquareTile(
+                  imagePath: 'assets/images/youtube_icon.png',
+                  imageSize: ICON_SIZE,
+                  squareSize: ICON_PADDING,
+                  onTap: () =>
+                      _launchURL('https', 'www.youtube.com', '@YUkiClub-'),
+                ),
+              ),
+              //X
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: SquareTile(
+                  imagePath: 'assets/images/x_icon.png',
+                  imageSize: ICON_SIZE,
+                  squareSize: ICON_PADDING,
+                  onTap: () => _launchURL('https', 'x.com', 'miyuki_yukiclub'),
+                ),
+              ),
+            ],
+          ),
           SizedBox(height: 50),
           ListTile(
             leading: Icon(Icons.exit_to_app),
