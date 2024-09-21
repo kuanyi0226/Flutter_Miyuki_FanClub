@@ -1,8 +1,9 @@
-const CURR_VERSION = 'V1.3.3';
+const CURR_VERSION = 'V1.3.4';
 const APPNAME_EN = 'YUKI CLUB';
 const APPNAME_JP = '雪クラブ';
 
 const UPDATE_CONTENT = [
+  '--V1.3.4-- 2024/09/22\nnew: social media icon buttons added; fix: optimization, UI/UX, bug of check-in multiple clicks',
   '--V1.3.3-- 2024/08/31\nnew: song rating, remote config, analytics(temporary abandoned); fix: optimization, UI/UX',
   '--V1.3.2-- 2024/08/15\nfix: optimization, lower the usage from DB',
   '--V1.3.1-- 2024/08/13\nnew: daily check-in system, check-in days;fix: optimization',
