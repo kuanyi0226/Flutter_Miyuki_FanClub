@@ -70,7 +70,7 @@ dependencies:
 
   #image
   image_picker: ^1.1.2
-  image: ^3.2.2
+  image: ^4.2.0
   exif: ^3.1.4
   fast_cached_network_image: ^1.2.0
 
@@ -92,8 +92,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.9.2
-  flutter_native_splash: ^2.2.7
+  flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.1
   #flutter pub run flutter_native_splash:create
   #flutter pub run flutter_launcher_icons:main
 

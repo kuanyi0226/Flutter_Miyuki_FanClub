@@ -30,7 +30,7 @@ class ImageService {
     IMG.Image? img = IMG.decodeImage(file);
     if (exif['Image Orientation'].toString() == 'Rotated 90 CW' ||
         exif['Image Orientation'].toString() == 'Rotated 90 CCW') {
-      img = IMG.copyRotate(img!, 90);
+      img = IMG.copyRotate(img!, angle: 90);
     }
     IMG.Image resized = IMG.copyResize(img!, height: 200);
     Uint8List resizedImg = Uint8List.fromList(IMG.encodeJpg(resized));
