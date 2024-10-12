@@ -1,1 +1,22 @@
-{"hosting":[{"site":"miyuki-yukiclub","public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"],"rewrites":[{"source":"**","destination":"/index.html"}]},{"site":"miyuki-b1c80","public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"],"rewrites":[{"source":"**","destination":"/index.html"}]}],"flutter":{"platforms":{"android":{"default":{"projectId":"miyuki-b1c80","appId":"1:825033090624:android:1dd211ce1582f4bc0e61a5","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"miyuki-b1c80","configurations":{"android":"1:825033090624:android:1dd211ce1582f4bc0e61a5","ios":"1:825033090624:ios:2c292960e64285ca0e61a5","macos":"1:825033090624:ios:2c292960e64285ca0e61a5","web":"1:825033090624:web:f6e8b382c9bf74760e61a5","windows":"1:825033090624:web:19ae9f05869524740e61a5"}}}}}}
+{
+    "hosting":[
+        {
+            "site":"miyuki-yukiclub",
+            "public":"build/web",
+            "ignore":["firebase.json","**/.*","**/node_modules/**"],
+            "rewrites":[{"source":"**","destination":"/index.html"}]
+        },  
+        {
+            "site":"miyuki-b1c80",
+            "public":"build/web",
+            "ignore":["firebase.json","**/.*","**/node_modules/**"],
+            "rewrites":[{"source":"**","destination":"/index.html"}]}],
+    "flutter":
+    {
+        "platforms":
+        {
+            "android":{"default":{"projectId":"miyuki-b1c80","appId":"1:825033090624:android:1dd211ce1582f4bc0e61a5","fileOutput":"android/app/google-services.json"}},
+            "dart":{"lib/firebase_options.dart":{"projectId":"miyuki-b1c80","configurations":{"android":"1:825033090624:android:1dd211ce1582f4bc0e61a5","ios":"1:825033090624:ios:2c292960e64285ca0e61a5","macos":"1:825033090624:ios:2c292960e64285ca0e61a5","web":"1:825033090624:web:f6e8b382c9bf74760e61a5","windows":"1:825033090624:web:19ae9f05869524740e61a5"}}}
+        }
+    }
+}
