@@ -19,21 +19,19 @@ class _SimpleWebView extends State<SimpleWebView> {
   String initialUrl;
   String? webTitle = '';
 
-  late WebViewController controller;
+  late WebViewController _controller;
 
-  _SimpleWebView({required this.initialUrl, this.webTitle});
+  _SimpleWebView({required this.initialUrl, this.webTitle}) {
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(initialUrl));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(webTitle!)),
-      body: WebView(
-        javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: initialUrl,
-        onWebViewCreated: (controller) {
-          this.controller = controller;
-        },
-      ),
+      body: WebViewWidget(controller: _controller),
     );
   }
 }
