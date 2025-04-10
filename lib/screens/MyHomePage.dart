@@ -173,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                     },
                     child: Text(
                       AppLocalizations.of(context)!.send,
-                      style: TextStyle(color: Colors.red, fontSize: 20),
+                      style: const TextStyle(color: Colors.red, fontSize: 20),
                     )),
               ],
             ));
@@ -446,7 +446,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               ],
                             );
                           } else {
-                            return Center(
+                            return const Center(
                               child: CircularProgressIndicator(),
                             );
                           }

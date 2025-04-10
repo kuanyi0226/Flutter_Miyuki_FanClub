@@ -70,7 +70,7 @@ dependencies:
 
   #image
   image_picker: ^1.1.2
-  image: ^3.2.2
+  image: ^4.2.0
   exif: ^3.1.4
   fast_cached_network_image: 1.2.2
 
@@ -124,8 +124,8 @@ flutter_icons: #change the app logo
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
-dependency_overrides:
-  win32: ^5.5.4
+# dependency_overrides:
+#   win32: ^5.5.4
 
 # The following section is specific to Flutter packages.
 flutter:

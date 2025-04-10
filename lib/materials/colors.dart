@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 var theme_dark_grey = const Color.fromARGB(255, 113, 113, 113);
 var theme_light_gray = const Color.fromARGB(255, 198, 196, 196);
 
-var theme_dark = Color.fromARGB(255, 43, 42, 42);
+var theme_dark = const Color.fromARGB(255, 43, 42, 42);
 
 var theme_purple = const Color.fromARGB(255, 206, 117, 197);
 var theme_pink = const Color.fromARGB(255, 255, 207, 228);

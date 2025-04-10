@@ -18,9 +18,9 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="中島みゆき 非公式のファンクラブ A Non-official Miyuki Fan Club.">
   <meta name="google-signin-client_id" content="825033090624-0rhauj5r8lmplnctto5egqeeu4v7820s.apps.googleusercontent.com">
-  <meta name="google-site-verification" content="18ZT-V3OnLMKzDthlUpxw4yrRQ623n8jzgfPrTI0PSA" />
+  <meta name="google-site-verification" content="Ce1wAj_pFjIQRF3k11M4h_9Qe67JyjkbMSUf9DlBn34" />
   <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="yuki_club_web">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
@@ -29,7 +29,7 @@
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-  <title>雪クラブ Yuki Club</title>
+  <title>Yuki Club</title>
   <link rel="manifest" href="manifest.json">
 
   <!-- This script adds the flutter initialization JS code -->
@@ -42,14 +42,17 @@
   <script src="flutter_bootstrap.js" async></script>
   <script>
     //flame package needs to be rendered with canvaskit for web
-    window.flutterWebRenderer = 'canvaskit';
+    //window.flutterWebRenderer = 'canvaskit';
   </script>
   <script>
     window.addEventListener('load', function(ev) {
       {{flutter_js}}
       {{flutter_build_config}}
+
+      //const config = {renderer: "canvaskit",};
       
       _flutter.loader.load({
+        //config: config,
         serviceWorker: {
           serviceWorkerVersion: {{flutter_service_worker_version}},
         },
@@ -63,22 +66,25 @@
       });
     });
   </script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-analytics.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-remote-config.js"></script>
+  <!--
+  <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-remote-config.js"></script>
+  -->
 
   <script type="module">
     // Import the functions you need from the SDKs you need
-    import { initializeApp } from "firebase/app";
-    import { getStorage } from "firebase/storage";
-    import { getFirestore } from "firebase/firestore";
-    import { getAuth } from "firebase/auth";
-    import { getDatabase } from "firebase/database";
-    import { getAnalytics } from "firebase/analytics";
-    import { getRemoteConfig, fetchAndActivate } from "firebase/remote-config";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"
+    //import { initializeApp } from "firebase/app";
+    import { getStorage } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+    //import { getDatabase } from "https://www.gstatic.com/firebasejs/10.0.0/database.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-analytics.js";
+    import { getRemoteConfig, fetchAndActivate } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-remote-config.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
   
@@ -96,14 +102,14 @@
   
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    firebase.analytics();
+    //firebase.analytics();
 
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-    const database = getDatabase(app);
-    const analytics = getAnalytics(app);
-    const remoteConfig = getRemoteConfig(app);
+    //const auth = getAuth(app);
+    //const db = getFirestore(app);
+    //const storage = getStorage(app);
+    //const database = getDatabase(app);
+    //const analytics = getAnalytics(app);
+    //const remoteConfig = getRemoteConfig(app);
   </script>
 
 </body></html>

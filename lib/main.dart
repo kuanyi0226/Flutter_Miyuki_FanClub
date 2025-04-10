@@ -14,16 +14,19 @@ Future main() async {
   if (kIsWeb) {
     //Web
     await Firebase.initializeApp(
-      options: FirebaseOptions(
-        apiKey: 'AIzaSyCcDle3v-4nfMDR-pRtrueKhL5KE5xY1pI',
-        appId: '1:825033090624:web:f6e8b382c9bf74760e61a5',
-        messagingSenderId: '825033090624',
-        projectId: 'miyuki-b1c80',
-        storageBucket: 'miyuki-b1c80.appspot.com',
-        databaseURL: 'https://miyuki-b1c80-default-rtdb.firebaseio.com',
-        measurementId: "G-70HQFNVTSB",
-      ),
+      options: DefaultFirebaseOptions.currentPlatform,
     );
+    // await Firebase.initializeApp(
+    //   options: FirebaseOptions(
+    //     apiKey: 'AIzaSyCcDle3v-4nfMDR-pRtrueKhL5KE5xY1pI',
+    //     appId: '1:825033090624:web:f6e8b382c9bf74760e61a5',
+    //     messagingSenderId: '825033090624',
+    //     projectId: 'miyuki-b1c80',
+    //     storageBucket: 'miyuki-b1c80.appspot.com',
+    //     databaseURL: 'https://miyuki-b1c80-default-rtdb.firebaseio.com',
+    //     measurementId: "G-70HQFNVTSB",
+    //   ),
+    // );
   } else {
     //Mobile
     Platform.isAndroid
