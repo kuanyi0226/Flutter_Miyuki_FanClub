@@ -6,6 +6,7 @@ class ChatMessage {
   String text = '';
   final DateTime sentTime;
   String? senderImgUrl;
+  String? docId;
 
   ChatMessage({
     required this.sender_email,
@@ -13,6 +14,7 @@ class ChatMessage {
     this.senderName,
     required this.sentTime,
     required this.senderImgUrl,
+    this.docId,
   });
 
   Map<String, dynamic> toJson() => {

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/ChatMessage.dart';
@@ -28,9 +27,9 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
 
   final _text_controller1 = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  bool _firstTimeLoad = true;
   String _chosenSong = '';
-  bool _isBottom = false;
+  bool _isBottom = true;
+  int _messageLimit = 20;
 
   bool isCountdownActive = false;
   int countdownSeconds = 10;
@@ -40,8 +39,8 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
 
   @override
   void initState() {
-    _firebaseStream = ChatroomService().readMessages();
     super.initState();
+    _loadStream();
   }
 
   @override
@@ -50,6 +49,17 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
     _scrollController.dispose();
     _text_controller1.dispose();
     countdownTimer!.cancel();
+  }
+
+  void _loadStream() {
+    _firebaseStream = ChatroomService().readMessages(_messageLimit);
+  }
+
+  void _loadMoreMessages() {
+    setState(() {
+      _messageLimit += 20;
+      _loadStream();
+    });
   }
 
   void _startCountdown() {
@@ -69,19 +79,6 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
           isCountdownActive = false;
         });
       }
-    });
-  }
-
-  //go to bottom
-  Future<void> _jumpToBottom() async {
-    // await Future.delayed(const Duration(milliseconds: 150));
-    // SchedulerBinding.instance.addPostFrameCallback((_) {
-    //   _scrollController.jumpTo(
-    //     _scrollController.position.maxScrollExtent + 180,
-    //   );
-    // });
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _scrollToBottom();
     });
   }
 
@@ -116,10 +113,17 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
               : '❆ ${InitData.miyukiUser.name}',
         );
         _text_controller1.text = '';
-        await _jumpToBottom();
 
         if (!kIsWeb) FocusScope.of(context).unfocus();
         _startCountdown();
+
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+            0.0,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
       } catch (e) {
         print(e.toString());
       }
@@ -195,8 +199,15 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                                     ? InitData.miyukiUser.name!
                                     : '❆ ${InitData.miyukiUser.name}',
                               );
-                              await _jumpToBottom();
                               _startCountdown();
+
+                              if (_scrollController.hasClients) {
+                                _scrollController.animateTo(
+                                  0.0,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeOut,
+                                );
+                              }
                             } else {
                               snackBarString =
                                   AppLocalizations.of(context)!.no_wifi;
@@ -236,46 +247,55 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
               SizedBox(height: 10),
               Expanded(
                 child: StreamBuilder<List<ChatMessage>>(
+                  stream: _firebaseStream,
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return Text('Something went wrong!');
+                      return const Text('Something went wrong!');
                     } else if (snapshot.hasData) {
                       final messages = snapshot.data!;
                       print("Message Amount: ${messages.length}");
-                      if (_firstTimeLoad == true) {
-                        _firstTimeLoad = false;
-                        //jump to bottom
-                        _scrollToBottom();
-                      }
 
                       return NotificationListener<ScrollNotification>(
-                        onNotification: (notification) {
-                          final metrices = notification.metrics;
+                        onNotification: (ScrollNotification notification) {
+                          final metrics = notification.metrics;
+
+                          // Update the FAB visibility state
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             setState(() {
-                              if (metrices.pixels >= metrices.maxScrollExtent) {
-                                _isBottom = true;
-                              } else {
+                              // In a reversed ListView, pixels == 0 is the bottom of the screen.
+                              // If the user scrolls up by more than 200 pixels, show the button.
+                              if (metrics.pixels > 200) {
                                 _isBottom = false;
+                              } else {
+                                _isBottom = true;
                               }
                             });
                           });
+
+                          // Trigger loading more messages when reaching the top
+                          // (which is maxScrollExtent in a reversed list)
+                          if (notification is ScrollEndNotification &&
+                              metrics.pixels >= metrics.maxScrollExtent - 50) {
+                            _loadMoreMessages();
+                          }
+
                           return false;
                         },
                         child: ListView(
                           controller: _scrollController,
+                          reverse:
+                              true, // This forces the newest message to the bottom
                           children: messages
                               .map((message) => buildMessage(message, context))
                               .toList(),
                         ),
                       );
                     } else {
-                      return Center(
+                      return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }
                   },
-                  stream: _firebaseStream,
                 ),
               ),
               //textfield
@@ -345,7 +365,7 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
       ),
       //jump to bottom button
       floatingActionButton: Visibility(
-        visible: !_isBottom && !_firstTimeLoad,
+        visible: !_isBottom,
         maintainState: true,
         maintainAnimation: true,
         child: Padding(
@@ -359,23 +379,17 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
               size: 20,
             ),
             onPressed: () {
-              _scrollToBottom();
+              _scrollController.animateTo(
+                0.0,
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+              );
             },
           ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
-  }
-
-  void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        _scrollController.jumpTo(
-          _scrollController.position.maxScrollExtent + 180,
-        );
-      });
-    });
   }
 }
 

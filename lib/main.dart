@@ -11,8 +11,10 @@ import './firebase_options.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  print("WidgetsFlutterBinding initialized");
   if (kIsWeb) {
     //Web
+    print("Initializing Firebase for Web...");
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -27,8 +29,10 @@ Future main() async {
     //     measurementId: "G-70HQFNVTSB",
     //   ),
     // );
+    print("Firebase Web Initialized");
   } else {
     //Mobile
+    print("Initializing Firebase for Mobile...");
     Platform.isAndroid
         ? await Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform,
@@ -36,15 +40,20 @@ Future main() async {
         : await Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform,
           );
+    print("Firebase Mobile Initialized");
     MobileAds.instance.initialize();
   }
-
+  print("Building app...");
   final runnableApp = _buildRunnableApp(
     isWeb: kIsWeb,
     webAppWidth: 700.0,
     app: const MyApp(),
   );
+  print("Initializing FastCachedImage...");
   await FastCachedImageConfig.init(clearCacheAfter: const Duration(days: 15));
+  print("FastCachedImage Initialized");
+
+  print("RUNNING APP");
   runApp(runnableApp);
   //runApp((InitData.inGame) ? GameWidget(game: yukiSekai) : const MyApp());
 }

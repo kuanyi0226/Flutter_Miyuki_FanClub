@@ -6,6 +6,7 @@ import 'package:flutter_weather_bg_null_safety/flutter_weather_bg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/class/Song.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/screens/concert/concert_page.dart';

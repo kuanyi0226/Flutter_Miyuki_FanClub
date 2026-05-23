@@ -292,17 +292,17 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
                       'https', 'www.instagram.com', 'miyuki.yukiclub'),
                 ),
               ),
-              //Youtube
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: SquareTile(
-                  imagePath: 'assets/images/youtube_icon.png',
-                  imageSize: ICON_SIZE,
-                  squareSize: ICON_PADDING,
-                  onTap: () =>
-                      _launchURL('https', 'www.youtube.com', '@YUkiClub-'),
-                ),
-              ),
+              // //Youtube
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 20),
+              //   child: SquareTile(
+              //     imagePath: 'assets/images/youtube_icon.png',
+              //     imageSize: ICON_SIZE,
+              //     squareSize: ICON_PADDING,
+              //     onTap: () =>
+              //         _launchURL('https', 'www.youtube.com', '@YUkiClub-'),
+              //   ),
+              // ),
               //X
               Padding(
                 padding: const EdgeInsets.only(left: 20),
