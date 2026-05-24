@@ -537,34 +537,31 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                               padding:
                                                   const EdgeInsets.all(1.0),
                                               child: ListTile(
-                                                // 1. Title: user name
-                                                title: Flexible(
-                                                  child: Text(
-                                                    commentSplit.elementAt(1),
-                                                    style: (commentSplit
-                                                                .elementAt(
-                                                                    1)[0] ==
-                                                            '❆')
-                                                        ? TextStyle(
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            fontSize: 18,
-                                                            color:
-                                                                theme_light_blue)
-                                                        : TextStyle(
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            fontSize: 18),
-                                                  ),
+                                                // 🌟 修正 1：移除 Flexible，直接放 Text
+                                                title: Text(
+                                                  commentSplit.elementAt(1),
+                                                  style: (commentSplit
+                                                              .elementAt(
+                                                                  1)[0] ==
+                                                          '❆')
+                                                      ? TextStyle(
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          fontSize: 18,
+                                                          color:
+                                                              theme_light_blue)
+                                                      : TextStyle(
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          fontSize: 18),
                                                 ),
-                                                // 2. Subtitle: time and comment
                                                 subtitle: Column(
+                                                  // 🌟 修正 2：限制 Column 的高度為內容大小，避免無限擴張崩潰
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    // time
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
@@ -582,7 +579,6 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                                                 .grey[400]),
                                                       ),
                                                     ),
-                                                    // Message Text
                                                     Text(
                                                       commentSplit.elementAt(3),
                                                       style: TextStyle(
@@ -591,7 +587,6 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                                     ),
                                                   ],
                                                 ),
-                                                // trailing: delete button if it's user's own comment, report button if it's not
                                                 trailing: (InitData
                                                             .miyukiUser.uid ==
                                                         commentSplit[0])
