@@ -6,7 +6,6 @@ import 'package:flutter_weather_bg_null_safety/flutter_weather_bg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:project5_miyuki/class/MiyukiUser.dart';
 import 'package:project5_miyuki/class/Song.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/screens/concert/concert_page.dart';
@@ -16,10 +15,10 @@ import 'package:project5_miyuki/screens/yakai/yakai_page.dart';
 import 'package:project5_miyuki/services/ad_mob_service.dart';
 import 'package:project5_miyuki/services/custom_search_delegate.dart';
 import 'package:project5_miyuki/services/firebase/analytics_service.dart';
-import 'package:project5_miyuki/services/firebase/remote_config_service.dart';
 import 'package:project5_miyuki/services/init_data_service.dart';
 import 'package:project5_miyuki/services/random_song_service.dart';
 import 'package:project5_miyuki/services/firebase/yukicoin_service.dart';
+import 'package:project5_miyuki/widgets/PromoCarouselWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -378,6 +377,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       ),
                     ),
                     SizedBox(height: 10),
+                    const PromoCarouselWidget(),
                     //Message Board
                     Container(
                       decoration: BoxDecoration(
