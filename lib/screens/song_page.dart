@@ -519,9 +519,7 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                         child: CustomScrollView(
                           slivers: <Widget>[
                             SliverToBoxAdapter(
-                              child: RatingCard(
-                                  ratingList: song!.ratings!,
-                                  songName: song!.name),
+                              child: RatingCard(song: song!),
                             ),
                             (song!.comment!.elementAt(0) != '')
                                 ? SliverList(
@@ -539,59 +537,61 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                               padding:
                                                   const EdgeInsets.all(1.0),
                                               child: ListTile(
-                                                title: Row(
+                                                // 1. Title: user name
+                                                title: Flexible(
+                                                  child: Text(
+                                                    commentSplit.elementAt(1),
+                                                    style: (commentSplit
+                                                                .elementAt(
+                                                                    1)[0] ==
+                                                            '❆')
+                                                        ? TextStyle(
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            fontSize: 18,
+                                                            color:
+                                                                theme_light_blue)
+                                                        : TextStyle(
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            fontSize: 18),
+                                                  ),
+                                                ),
+                                                // 2. Subtitle: time and comment
+                                                subtitle: Column(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    //User Name
-                                                    Flexible(
+                                                    // time
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 2,
+                                                              bottom: 4),
                                                       child: Text(
-                                                        commentSplit
-                                                            .elementAt(1),
-                                                        style: (commentSplit
+                                                        StringService
+                                                            .commentTimeFix(
+                                                                commentSplit
                                                                     .elementAt(
-                                                                        1)[0] ==
-                                                                '❆')
-                                                            ? TextStyle(
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                fontSize: 18,
-                                                                color:
-                                                                    theme_light_blue)
-                                                            : TextStyle(
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                fontSize: 18),
+                                                                        2)),
+                                                        style: TextStyle(
+                                                            fontSize: 10,
+                                                            color: Colors
+                                                                .grey[400]),
                                                       ),
                                                     ),
-                                                    SizedBox(width: 5),
-                                                    //Sent Time
-                                                    Container(
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(top: 5),
-                                                        child: Text(
-                                                            StringService
-                                                                .commentTimeFix(
-                                                                    commentSplit
-                                                                        .elementAt(
-                                                                            2)),
-                                                            style: TextStyle(
-                                                                fontSize: 10)),
-                                                      ),
+                                                    // Message Text
+                                                    Text(
+                                                      commentSplit.elementAt(3),
+                                                      style: TextStyle(
+                                                          fontSize: 17,
+                                                          color: Colors.white),
                                                     ),
                                                   ],
                                                 ),
-                                                //Message Text
-                                                subtitle: Text(
-                                                  commentSplit.elementAt(3),
-                                                  style: TextStyle(
-                                                      fontSize: 17,
-                                                      color: Colors.white),
-                                                ),
+                                                // trailing: delete button if it's user's own comment, report button if it's not
                                                 trailing: (InitData
                                                             .miyukiUser.uid ==
                                                         commentSplit[0])

@@ -1,8 +1,9 @@
-const CURR_VERSION = 'V1.4.0';
+const CURR_VERSION = 'V1.4.1';
 const APPNAME_EN = 'YUKI CLUB';
 const APPNAME_JP = '雪クラブ';
 
 const UPDATE_CONTENT = [
+  '--V1.4.1-- 2026/05/25\nfix: fix bug of rating system, comment system optimization',
   '--V1.4.0-- 2026/05/24\nnew: Announcement banner',
   '--V1.3.6-- 2026/05/24\nfix: Fix public chatroom bugs, including scrolling to bottom and storage in firebase.',
   '--V1.3.5-- 2025/05/19\nfix: fix Android adaptability. Note that this version does not work for website.',

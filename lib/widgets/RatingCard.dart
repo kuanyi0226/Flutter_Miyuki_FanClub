@@ -10,16 +10,17 @@ import 'package:project5_miyuki/materials/colors.dart';
 import 'package:provider/provider.dart';
 
 class RatingCard extends StatefulWidget {
-  List ratingList;
-  final String songName;
+  final Song song;
 
-  RatingCard({required this.ratingList, required this.songName});
+  const RatingCard({Key? key, required this.song}) : super(key: key);
 
   @override
   _RatingCardState createState() => _RatingCardState();
 }
 
 class _RatingCardState extends State<RatingCard> {
+  late List _currentRatings;
+
   double _averageScore = 0.0;
   int _ratingCount = 0;
 
@@ -30,21 +31,21 @@ class _RatingCardState extends State<RatingCard> {
   @override
   void initState() {
     super.initState();
+    _currentRatings = widget.song.ratings ?? [];
     _calculateRatingData();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    _countdownTimer!.cancel();
+    _countdownTimer?.cancel();
   }
 
   void _calculateRatingData() {
     double totalScore = 0.0;
-    int count = widget.ratingList.length;
+    int count = _currentRatings.length;
 
-    for (var entry in widget.ratingList) {
+    for (var entry in _currentRatings) {
       // Extract rating from the string
       double? score;
       final regex = RegExp(
@@ -77,7 +78,7 @@ class _RatingCardState extends State<RatingCard> {
       return;
     }
 
-    double selectedRating = Song.readRating(widget.ratingList);
+    double selectedRating = Song.readRating(_currentRatings);
     String snackBarString = '';
 
     await showDialog(
@@ -108,12 +109,16 @@ class _RatingCardState extends State<RatingCard> {
                     Provider.of<InternetConnectionStatus>(context,
                             listen: false) ==
                         InternetConnectionStatus.connected) {
-                  //Update ratings
-                  widget.ratingList =
-                      await Song.updateRatings(widget.songName, selectedRating);
+                  final updatedRatings = await Song.updateRatings(
+                      widget.song.name, selectedRating);
+
                   setState(() {
+                    _currentRatings = updatedRatings;
+                    widget.song.ratings = updatedRatings;
+
                     _calculateRatingData();
                   });
+
                   snackBarString = AppLocalizations.of(context)!.rated;
                   _startCountdown();
                 } else {
@@ -193,7 +198,7 @@ class _RatingCardState extends State<RatingCard> {
                   ),
                   SizedBox(height: 3),
                   //Rated before
-                  Song.inRatingList(widget.ratingList)
+                  Song.inRatingList(_currentRatings)
                       ? Text(' (${AppLocalizations.of(context)!.rated})',
                           style: TextStyle(fontSize: 12))
                       : Container(),
