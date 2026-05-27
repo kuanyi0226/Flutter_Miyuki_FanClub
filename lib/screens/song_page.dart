@@ -20,6 +20,7 @@ import '../widgets/NetworkVideoPlayer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../class/MyDecoder.dart';
 import '../materials/colors.dart';
+import '../services/translate_service.dart';
 
 class SongPage extends StatefulWidget {
   Song? song;
@@ -527,88 +528,20 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                                       childCount: song!.comment!.length,
                                       ((context, index) {
                                         //0:uid,1:userName,2:sent time,3:comment
-                                        List<String> commentSplit = song!
-                                            .comment!
-                                            .elementAt(index)
-                                            .split('%%');
-                                        return Column(
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(1.0),
-                                              child: ListTile(
-                                                // 🌟 修正 1：移除 Flexible，直接放 Text
-                                                title: Text(
-                                                  commentSplit.elementAt(1),
-                                                  style: (commentSplit
-                                                              .elementAt(
-                                                                  1)[0] ==
-                                                          '❆')
-                                                      ? TextStyle(
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          fontSize: 18,
-                                                          color:
-                                                              theme_light_blue)
-                                                      : TextStyle(
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          fontSize: 18),
-                                                ),
-                                                subtitle: Column(
-                                                  // 🌟 修正 2：限制 Column 的高度為內容大小，避免無限擴張崩潰
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 2,
-                                                              bottom: 4),
-                                                      child: Text(
-                                                        StringService
-                                                            .commentTimeFix(
-                                                                commentSplit
-                                                                    .elementAt(
-                                                                        2)),
-                                                        style: TextStyle(
-                                                            fontSize: 10,
-                                                            color: Colors
-                                                                .grey[400]),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      commentSplit.elementAt(3),
-                                                      style: TextStyle(
-                                                          fontSize: 17,
-                                                          color: Colors.white),
-                                                    ),
-                                                  ],
-                                                ),
-                                                trailing: (InitData
-                                                            .miyukiUser.uid ==
-                                                        commentSplit[0])
-                                                    ? IconButton(
-                                                        onPressed: () async =>
-                                                            _deleteComment(song!
-                                                                .comment!
-                                                                .elementAt(
-                                                                    index)),
-                                                        icon:
-                                                            Icon(Icons.delete))
-                                                    : IconButton(
-                                                        onPressed: () async =>
-                                                            _reportComment(song!
-                                                                .comment!
-                                                                .elementAt(
-                                                                    index)),
-                                                        icon: Icon(Icons.report)),
-                                              ),
-                                            ),
-                                            Divider(),
-                                          ],
+                                        String rawComment =
+                                            song!.comment!.elementAt(index);
+                                        List<String> commentSplit =
+                                            rawComment.split('%%');
+                                        bool isMine =
+                                            (InitData.miyukiUser.uid ==
+                                                commentSplit[0]);
+                                        return CommentTile(
+                                          commentRaw: rawComment,
+                                          isMyComment: isMine,
+                                          onDelete: () async =>
+                                              _deleteComment(rawComment),
+                                          onReport: () async =>
+                                              _reportComment(rawComment),
                                         );
                                       }),
                                     ),
@@ -659,6 +592,144 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
         ],
         onTap: (idx) => _onTap(idx),
       ),
+    );
+  }
+}
+
+class CommentTile extends StatefulWidget {
+  final String commentRaw;
+  final bool isMyComment;
+  final VoidCallback onDelete;
+  final VoidCallback onReport;
+
+  const CommentTile({
+    Key? key,
+    required this.commentRaw,
+    required this.isMyComment,
+    required this.onDelete,
+    required this.onReport,
+  }) : super(key: key);
+
+  @override
+  State<CommentTile> createState() => _CommentTileState();
+}
+
+class _CommentTileState extends State<CommentTile> {
+  bool _isTranslated = false;
+  bool _isLoading = false;
+  String? _translatedText;
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> commentSplit = widget.commentRaw.split('%%');
+    String name = commentSplit.elementAt(1);
+    String time = commentSplit.elementAt(2);
+    String originalText = commentSplit.elementAt(3);
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: ListTile(
+            title: Text(
+              name,
+              style: (name.isNotEmpty && name[0] == '❆')
+                  ? TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      fontSize: 18,
+                      color: theme_light_blue)
+                  : TextStyle(overflow: TextOverflow.ellipsis, fontSize: 18),
+            ),
+            subtitle: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Time
+                Padding(
+                  padding: const EdgeInsets.only(top: 2, bottom: 4),
+                  child: Text(
+                    StringService.commentTimeFix(time),
+                    style: TextStyle(fontSize: 10, color: Colors.grey[400]),
+                  ),
+                ),
+                // Comment Text
+                Text(
+                  _isTranslated ? (_translatedText ?? '') : originalText,
+                  style: TextStyle(fontSize: 17, color: Colors.white),
+                ),
+                // Translate Button
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero, // remove default padding
+                      minimumSize: const Size(50, 30),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    onPressed: _isLoading
+                        ? null // cannot press while loading
+                        : () async {
+                            // Status 1: currently translated -> show original and reset state
+                            if (_isTranslated) {
+                              setState(() {
+                                _isTranslated = false;
+                              });
+                            }
+                            // Status 2: currently original -> translate and show translation
+                            else {
+                              // if translation doesn't exist, translate iton
+                              if (_translatedText == null) {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+
+                                String result =
+                                    await TranslateService.translateText(
+                                        originalText);
+
+                                if (mounted) {
+                                  setState(() {
+                                    _translatedText = result;
+                                    _isTranslated = true;
+                                    _isLoading = false;
+                                  });
+                                }
+                              }
+                              // if translation already exists, just show it
+                              else {
+                                setState(() {
+                                  _isTranslated = true;
+                                });
+                              }
+                            }
+                          },
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 12,
+                            height: 12,
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2, color: Colors.grey),
+                          )
+                        : Text(
+                            _isTranslated
+                                ? "原文を表示(See original)"
+                                : "翻訳(Google Translate)",
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.grey),
+                          ),
+                  ),
+                ),
+              ],
+            ),
+            trailing: widget.isMyComment
+                ? IconButton(
+                    onPressed: widget.onDelete, icon: const Icon(Icons.delete))
+                : IconButton(
+                    onPressed: widget.onReport, icon: const Icon(Icons.report)),
+          ),
+        ),
+        const Divider(),
+      ],
     );
   }
 }
