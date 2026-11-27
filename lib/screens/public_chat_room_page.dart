@@ -12,6 +12,7 @@ import 'package:project5_miyuki/screens/song_page.dart';
 import 'package:project5_miyuki/services/firebase/chatroom_service.dart';
 import 'package:provider/provider.dart';
 import '../materials/colors.dart';
+import '../materials/web_theme.dart';
 import '../widgets/web_page_shell.dart';
 import '../widgets/ClubCachedImage.dart';
 import 'package:project5_miyuki/l10n/app_localizations.dart';
@@ -304,13 +305,25 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
               ),
               //textfield
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                color: theme_dark,
-                height: 80,
+                padding: kIsWeb
+                    ? const EdgeInsets.all(8)
+                    : const EdgeInsets.symmetric(horizontal: 20),
+                height: kIsWeb ? 72 : 80,
+                decoration: BoxDecoration(
+                  color: kIsWeb ? yukiWebSurface : theme_dark,
+                  borderRadius:
+                      kIsWeb ? BorderRadius.circular(16) : null,
+                  border: kIsWeb
+                      ? Border.all(color: yukiWebBorder)
+                      : null,
+                ),
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.library_music, color: theme_purple),
+                      icon: Icon(
+                        Icons.library_music,
+                        color: kIsWeb ? yukiWebAccent : theme_purple,
+                      ),
                       onPressed: _shareSong,
                     ),
                     SizedBox(
@@ -321,8 +334,14 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                         padding: EdgeInsets.symmetric(horizontal: 14),
                         height: 50,
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(30),
+                          color: kIsWeb
+                              ? yukiWebSurfaceHigh
+                              : Colors.grey[200],
+                          borderRadius:
+                              BorderRadius.circular(kIsWeb ? 14 : 30),
+                          border: kIsWeb
+                              ? Border.all(color: yukiWebBorder)
+                              : null,
                         ),
                         child: Row(
                           children: [
@@ -335,12 +354,19 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                                   LengthLimitingTextInputFormatter(100)
                                 ],
                                 controller: _text_controller1,
-                                style: TextStyle(color: theme_dark),
+                                style: TextStyle(
+                                  color: kIsWeb ? Colors.white : theme_dark,
+                                ),
+                                cursorColor:
+                                    kIsWeb ? yukiWebAccent : theme_purple,
                                 maxLines: null,
                                 maxLength: 500,
                                 decoration: InputDecoration(
                                   counterText: "",
+                                  filled: false,
                                   border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
                                   hintText:
                                       AppLocalizations.of(context)!.type_here,
                                   hintStyle: TextStyle(color: Colors.grey[500]),
@@ -354,7 +380,7 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                                 }
                               },
                               icon: Icon(Icons.send),
-                              color: theme_purple,
+                              color: kIsWeb ? yukiWebAccent : theme_purple,
                             )
                           ],
                         ),

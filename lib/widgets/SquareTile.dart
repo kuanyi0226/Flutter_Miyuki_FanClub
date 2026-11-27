@@ -6,13 +6,17 @@ class SquareTile extends StatelessWidget {
   double? squareSize;
   Function()? onTap;
   final String imagePath;
+  final Color? imageColor;
+  final Color? borderColor;
 
   SquareTile(
       {super.key,
       this.imageSize,
       this.squareSize,
       required this.imagePath,
-      required this.onTap});
+      required this.onTap,
+      this.imageColor,
+      this.borderColor});
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +28,10 @@ class SquareTile extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           border: Border.all(
-            color: kIsWeb
-                ? Theme.of(context).colorScheme.outline
-                : Colors.white,
+            color: borderColor ??
+                (kIsWeb
+                    ? Theme.of(context).colorScheme.outline
+                    : Colors.white),
           ),
           borderRadius: BorderRadius.circular(kIsWeb ? 14 : 16),
           color: kIsWeb
@@ -36,6 +41,9 @@ class SquareTile extends StatelessWidget {
         child: Image.asset(
           imagePath,
           height: (imageSize == null) ? 40.0 : imageSize,
+          color: imageColor,
+          colorBlendMode:
+              imageColor == null ? null : BlendMode.srcIn,
         ),
       ),
     );

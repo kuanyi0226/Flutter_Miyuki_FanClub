@@ -290,6 +290,8 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
                   imagePath: 'assets/images/instagram_icon.png',
                   imageSize: ICON_SIZE,
                   squareSize: ICON_PADDING,
+                  imageColor: Colors.white,
+                  borderColor: Colors.white54,
                   onTap: () => _launchURL(
                       'https', 'www.instagram.com', 'miyuki.yukiclub'),
                 ),
@@ -312,6 +314,8 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
                   imagePath: 'assets/images/x_icon.png',
                   imageSize: ICON_SIZE,
                   squareSize: ICON_PADDING,
+                  imageColor: Colors.white,
+                  borderColor: Colors.white54,
                   onTap: () => _launchURL('https', 'x.com', 'miyuki_yukiclub'),
                 ),
               ),

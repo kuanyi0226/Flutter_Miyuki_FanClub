@@ -9,12 +9,14 @@ class ClubCachedImage extends StatelessWidget {
     required this.fit,
     this.placeholder,
     this.errorWidget,
+    this.cacheWidth,
   });
 
   final String url;
   final BoxFit fit;
   final Widget? placeholder;
   final Widget? errorWidget;
+  final int? cacheWidth;
 
   static Future<void>? _cacheInitialization;
 
@@ -28,31 +30,40 @@ class ClubCachedImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loading = placeholder ?? const SizedBox.shrink();
     final failed = errorWidget ?? loading;
+
+    if (kIsWeb) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final logicalWidth = constraints.hasBoundedWidth
+              ? constraints.maxWidth
+              : 480.0;
+          final targetWidth = cacheWidth ??
+              (logicalWidth * MediaQuery.devicePixelRatioOf(context))
+                  .ceil()
+                  .clamp(64, 720)
+                  .toInt();
+          return Image.network(
+            url,
+            key: ValueKey(url),
+            fit: fit,
+            cacheWidth: targetWidth,
+            filterQuality: FilterQuality.low,
+            gaplessPlayback: false,
+            loadingBuilder: (_, child, progress) =>
+                progress == null ? child : loading,
+            errorBuilder: (_, __, ___) => failed,
+          );
+        },
+      );
+    }
+
     final poster = FastCachedImage(
       url: url,
       fit: fit,
       loadingBuilder: (_, __) => loading,
       errorBuilder: (_, __, ___) => failed,
     );
-    if (!kIsWeb) return poster;
-
-    return FutureBuilder<void>(
-      future: initializeCache(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Image.network(
-            url,
-            fit: fit,
-            loadingBuilder: (_, child, progress) =>
-                progress == null ? child : loading,
-            errorBuilder: (_, __, ___) => failed,
-          );
-        }
-        return snapshot.connectionState == ConnectionState.done
-            ? poster
-            : loading;
-      },
-    );
+    return poster;
   }
 }
 

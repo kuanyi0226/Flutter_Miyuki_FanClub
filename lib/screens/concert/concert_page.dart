@@ -17,6 +17,7 @@ class ConcertPage extends StatefulWidget {
 class _ConcertPageState extends State<ConcertPage>
     with TickerProviderStateMixin {
   late final TabController _tabController;
+  final ScrollController _scrollController = ScrollController();
   int _currentTab = 0;
 
   @override
@@ -25,7 +26,7 @@ class _ConcertPageState extends State<ConcertPage>
     if (InitData.concertList.isEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         InitData.concertList = await readConcerts();
-        setState(() {});
+        if (mounted) setState(() {});
       });
     }
     _tabController = TabController(length: 5, vsync: this);
@@ -34,7 +35,17 @@ class _ConcertPageState extends State<ConcertPage>
   @override
   void dispose() {
     _tabController.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _selectDecade(int index) {
+    setState(() => _currentTab = index);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(0);
+      }
+    });
   }
 
   @override
@@ -46,11 +57,7 @@ class _ConcertPageState extends State<ConcertPage>
           Text('コンサート Concert'),
         ]),
         bottom: TabBar(
-          onTap: (index) {
-            setState(() {
-              _currentTab = index;
-            });
-          },
+          onTap: _selectDecade,
           controller: _tabController,
           indicatorColor: theme_pink,
           tabs: [
@@ -82,14 +89,30 @@ class _ConcertPageState extends State<ConcertPage>
                             .where((concert) =>
                                 yearDisplayCheck(concert.year, _currentTab))
                             .toList();
+
+                        if (constraints.maxWidth < 600) {
+                          return ListView.separated(
+                            key: ValueKey('concert-list-$_currentTab'),
+                            controller: _scrollController,
+                            itemCount: concerts.length,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 10),
+                            itemBuilder: (context, index) =>
+                                _buildWebConcertListTile(
+                              concerts[index],
+                              context,
+                            ),
+                          );
+                        }
+
                         final columns = constraints.maxWidth >= 1100
                             ? 4
                             : constraints.maxWidth >= 760
                                 ? 3
-                                : constraints.maxWidth >= 480
-                                    ? 2
-                                    : 1;
+                                : 2;
                         return GridView.builder(
+                          key: ValueKey('concert-grid-$_currentTab'),
+                          controller: _scrollController,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: columns,
@@ -118,7 +141,10 @@ class _ConcertPageState extends State<ConcertPage>
 }
 
 Widget _buildWebConcertCard(Concert concert, BuildContext context) {
+  final imageUrl =
+      'https://raw.githubusercontent.com//kuanyi0226/Yuki_DataBase/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png';
   return Card(
+    key: ValueKey('concert-${concert.year}-${concert.year_index}'),
     child: InkWell(
       borderRadius: BorderRadius.circular(18),
       onTap: () => Navigator.of(context).push(
@@ -140,9 +166,10 @@ Widget _buildWebConcertCard(Concert concert, BuildContext context) {
                 child: SizedBox(
                   width: double.infinity,
                   child: ClubCachedImage(
-                    url:
-                        'https://raw.githubusercontent.com//kuanyi0226/Yuki_DataBase/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
+                    key: ValueKey(imageUrl),
+                    url: imageUrl,
                     fit: BoxFit.contain,
+                    cacheWidth: 560,
                   ),
                 ),
               ),
@@ -159,6 +186,66 @@ Widget _buildWebConcertCard(Concert concert, BuildContext context) {
               concert.year,
               style: Theme.of(context).textTheme.bodySmall,
             ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _buildWebConcertListTile(Concert concert, BuildContext context) {
+  final imageUrl =
+      'https://raw.githubusercontent.com//kuanyi0226/Yuki_DataBase/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png';
+  return Card(
+    key: ValueKey('concert-list-${concert.year}-${concert.year_index}'),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SonglistPage(
+            concert: concert,
+            concert_type: 'Concert',
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: SizedBox(
+                width: 82,
+                height: 82,
+                child: ClubCachedImage(
+                  key: ValueKey(imageUrl),
+                  url: imageUrl,
+                  fit: BoxFit.contain,
+                  cacheWidth: 180,
+                ),
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    concert.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    concert.year,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right),
           ],
         ),
       ),

@@ -8,6 +8,21 @@ const yukiWebBorder = Color(0xff343949);
 const yukiWebAccent = Color(0xffe4b7df);
 const yukiWebMuted = Color(0xffaeb4c5);
 
+class _NoWebPageTransitionsBuilder extends PageTransitionsBuilder {
+  const _NoWebPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return child;
+  }
+}
+
 ThemeData buildYukiDarkTheme() {
   if (!kIsWeb) {
     return ThemeData(brightness: Brightness.dark);
@@ -36,6 +51,16 @@ ThemeData buildYukiDarkTheme() {
   );
 
   return base.copyWith(
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: _NoWebPageTransitionsBuilder(),
+        TargetPlatform.iOS: _NoWebPageTransitionsBuilder(),
+        TargetPlatform.macOS: _NoWebPageTransitionsBuilder(),
+        TargetPlatform.windows: _NoWebPageTransitionsBuilder(),
+        TargetPlatform.linux: _NoWebPageTransitionsBuilder(),
+        TargetPlatform.fuchsia: _NoWebPageTransitionsBuilder(),
+      },
+    ),
     textTheme: base.textTheme.copyWith(
       headlineSmall: base.textTheme.headlineSmall?.copyWith(
         fontWeight: FontWeight.w700,
