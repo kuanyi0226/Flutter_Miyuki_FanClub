@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:project5_miyuki/l10n/app_localizations.dart';
 import '../widgets/web_page_shell.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/Garment.dart';

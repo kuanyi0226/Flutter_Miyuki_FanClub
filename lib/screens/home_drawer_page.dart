@@ -12,7 +12,7 @@ import 'package:project5_miyuki/widgets/ClubCachedImage.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:project5_miyuki/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../services/firebase/official_service.dart';
 import 'concert/concert_page.dart';

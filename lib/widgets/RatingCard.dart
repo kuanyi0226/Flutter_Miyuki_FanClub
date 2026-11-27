@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/Song.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:project5_miyuki/l10n/app_localizations.dart';
 import 'package:project5_miyuki/materials/colors.dart';
 import 'package:provider/provider.dart';
 

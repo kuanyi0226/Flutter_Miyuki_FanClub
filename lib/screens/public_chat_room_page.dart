@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 import '../materials/colors.dart';
 import '../widgets/web_page_shell.dart';
 import '../widgets/ClubCachedImage.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:project5_miyuki/l10n/app_localizations.dart';
 
 class PublicChatRoomPage extends StatefulWidget {
   const PublicChatRoomPage({Key? key}) : super(key: key);

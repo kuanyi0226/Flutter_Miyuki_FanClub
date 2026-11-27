@@ -9,4 +9,4 @@ class L10n {
 }
 
 //how to use: AppLocalizations.of(context)!.???
-//import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+//import 'package:project5_miyuki/l10n/app_localizations.dart';

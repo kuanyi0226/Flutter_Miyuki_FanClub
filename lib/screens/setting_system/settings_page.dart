@@ -4,7 +4,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:project5_miyuki/screens/setting_system/about_app_page.dart';
 import 'package:project5_miyuki/screens/setting_system/copyright_page.dart';
 import 'package:project5_miyuki/screens/setting_system/privacy_policy_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:project5_miyuki/l10n/app_localizations.dart';
 import '../../screens/auth_system/forgot_password_page.dart';
 import '../../services/ad_mob_service.dart';
 import '../../services/firebase/official_service.dart';

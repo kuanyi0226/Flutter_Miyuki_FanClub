@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:project5_miyuki/l10n/app_localizations.dart';
 import 'package:project5_miyuki/screens/Yuki_Sekai/yuki_sekai_page.dart';
 import '../../materials/InitData.dart';
 import '../../materials/colors.dart';

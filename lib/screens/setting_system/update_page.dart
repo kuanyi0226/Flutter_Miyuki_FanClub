@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project5_miyuki/services/firebase/remote_config_service.dart';
 import '../../materials/MyText.dart';
 import '../../services/firebase/official_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:project5_miyuki/l10n/app_localizations.dart';
 import '../../widgets/web_page_shell.dart';
 
 class UpdatePage extends StatefulWidget {

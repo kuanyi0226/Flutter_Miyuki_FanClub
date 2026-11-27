@@ -21,7 +21,7 @@ import 'package:project5_miyuki/services/firebase/yukicoin_service.dart';
 import 'package:project5_miyuki/widgets/PromoCarouselWidget.dart';
 import 'package:project5_miyuki/widgets/ClubCachedImage.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:project5_miyuki/l10n/app_localizations.dart';
 
 import './home_drawer_page.dart';
 import './web_home_dashboard.dart';

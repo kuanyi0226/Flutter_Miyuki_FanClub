@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/MyText.dart';
 import 'package:project5_miyuki/materials/colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:project5_miyuki/l10n/app_localizations.dart';
 import '../../widgets/web_page_shell.dart';
 
 class PrivacyPolicyPage extends StatelessWidget {
