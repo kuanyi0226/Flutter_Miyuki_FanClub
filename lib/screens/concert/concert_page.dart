@@ -1,4 +1,4 @@
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
+import 'package:project5_miyuki/widgets/ClubCachedImage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
@@ -117,7 +117,7 @@ Widget buildConcert(Concert concert, BuildContext context, int currentTab) =>
             leading: Container(
               width: 40,
               height: 40,
-              child: FastCachedImage(
+              child: ClubCachedImage(
                 url:
                     'https://raw.githubusercontent.com//kuanyi0226/Yuki_DataBase/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
                 // errorBuilder: (context, exception, stacktrace) {

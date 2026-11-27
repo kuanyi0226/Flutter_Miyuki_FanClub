@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_bg_null_safety/flutter_weather_bg.dart';
@@ -14,7 +15,6 @@ import 'package:project5_miyuki/screens/song_page.dart';
 import 'package:project5_miyuki/screens/yakai/yakai_page.dart';
 import 'package:project5_miyuki/services/ad_mob_service.dart';
 import 'package:project5_miyuki/services/custom_search_delegate.dart';
-import 'package:project5_miyuki/services/firebase/analytics_service.dart';
 import 'package:project5_miyuki/services/init_data_service.dart';
 import 'package:project5_miyuki/services/random_song_service.dart';
 import 'package:project5_miyuki/services/firebase/yukicoin_service.dart';
@@ -23,12 +23,16 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './home_drawer_page.dart';
+import './web_home_dashboard.dart';
+import './web_home_layout.dart';
+import './web_home_viewport.dart'
+    if (dart.library.html) './web_home_viewport_web.dart';
 
 import '../class/Message.dart';
 import '../materials/colors.dart';
 
 import '../services/firebase/message_service.dart';
-import 'Yuki_Sekai/yuki_sekai_list_page.dart';
+import 'Yuki_Sekai/yuki_world_entry.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -38,7 +42,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
+class _MyHomePageState extends State<MyHomePage>
+    with WidgetsBindingObserver, RouteAware {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String currentMessage = '1';
@@ -48,21 +53,48 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   BannerAd? _bannerAd;
   bool _bannerAdLoaded = false;
 
-  final audioPlayer = AudioPlayer();
-  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+  final AudioPlayer? _audioPlayer = kIsWeb ? null : AudioPlayer();
+  final _weatherClock = Stream<void>.periodic(const Duration(seconds: 1));
+  Timer? _dailySongTimer;
+  PageRoute<dynamic>? _homeRoute;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!kIsWeb) return;
+    final route = ModalRoute.of(context);
+    if (route is PageRoute<dynamic> && route != _homeRoute) {
+      webHomeRouteObserver.unsubscribe(this);
+      _homeRoute = route;
+      webHomeRouteObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void didPush() => setWebHomeViewport(true);
+
+  @override
+  void didPopNext() => setWebHomeViewport(true);
+
+  @override
+  void didPushNext() => setWebHomeViewport(false);
+
+  @override
+  void didPop() => setWebHomeViewport(false);
 
   //init all data needed
   @override
   void initState() {
     super.initState();
-    //setAnalytics();
     WidgetsBinding.instance.addObserver(this);
+    _updateDailySong();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      bool needSetState = await InitDataService.checkInit();
-      if (needSetState) setState(() {});
+      final needsUpdate = await InitDataService.checkInit();
+      if (needsUpdate && mounted) setState(_updateDailySong);
     });
-    _messageStream =
-        MessageService().readMessages(target_to_read: 'message-board');
+    _messageStream = MessageService().readMessages(
+      target_to_read: 'message-board',
+    );
 
     if (!kIsWeb) {
       checkForUpdate();
@@ -72,7 +104,15 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    if (kIsWeb) {
+      webHomeRouteObserver.unsubscribe(this);
+      setWebHomeViewport(false);
+    }
     WidgetsBinding.instance.removeObserver(this);
+    _dailySongTimer?.cancel();
+    controller1.dispose();
+    _audioPlayer?.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -87,12 +127,20 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
     final isBackground = (state == AppLifecycleState.paused);
     if (isBackground) {
-      audioPlayer.setVolume(0);
+      _audioPlayer?.setVolume(0);
+    } else if (state == AppLifecycleState.resumed) {
+      setState(_updateDailySong);
     }
   }
 
-  Future<void> setAnalytics() async {
-    await AnalyticsService.turnOnAnalytics(_analytics);
+  void _updateDailySong() {
+    RandomSongService.selectSong();
+    _dailySongTimer?.cancel();
+    final now = DateTime.now();
+    final tomorrow = DateTime(now.year, now.month, now.day + 1);
+    _dailySongTimer = Timer(tomorrow.difference(now), () {
+      if (mounted) setState(_updateDailySong);
+    });
   }
 
   void _createBannerAd() {
@@ -183,6 +231,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Future<void> checkForUpdate() async {
     print('checking for Update');
     InAppUpdate.checkForUpdate().then((info) {
+      if (!mounted) return;
       setState(() {
         if (info.updateAvailability == UpdateAvailability.updateAvailable) {
           print('update available');
@@ -202,8 +251,50 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     });
   }
 
+  void _changeChannel() {
+    setState(() {
+      currentMessage = (int.parse(currentMessage) % 5 + 1).toString();
+    });
+  }
+
+  Future<void> _openTodaySong() async {
+    if (InitData.todaySong == 'No Song') return;
+    final song = await Song.readSong(InitData.todaySong);
+    if (!mounted) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => SongPage(song: song)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) {
+      return WebHomeDashboard(
+        scaffoldKey: _scaffoldKey,
+        drawer: HomeDrawerPage(scaffoldKey: _scaffoldKey),
+        todaySong: InitData.todaySong,
+        openSong: _openTodaySong,
+        openSearch: () =>
+            showSearch(context: context, delegate: CustomSearchDelegate()),
+        openChat: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => PublicChatRoomPage()),
+        ),
+        openConcert: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => ConcertPage()),
+        ),
+        openYakai: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => YakaiPage()),
+        ),
+        openWorld: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const YukiWorldEntry()),
+        ),
+        messages: _messageStream,
+        messageController: controller1,
+        messageChannel: currentMessage,
+        changeChannel: _changeChannel,
+        sendMessage: _sentMessage,
+      );
+    }
     return Scaffold(
         key: _scaffoldKey,
         //App Bar
@@ -213,6 +304,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             child: Image.asset(
               'assets/images/yuki_club.png',
               width: 170,
+              cacheWidth: kIsWeb ? 340 : null,
             ),
           ),
           leading: IconButton(
@@ -242,87 +334,51 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
             children: [
-              //background
-              StreamBuilder(
-                stream: Stream.periodic(Duration(seconds: 1)),
+              StreamBuilder<void>(
+                stream: _weatherClock,
                 builder: (context, snapshot) {
-                  final curr_time = DateTime.now();
-                  //decide music(mobile)
-                  if (!kIsWeb) {
-                    if (curr_time.minute % 30 == 0 && curr_time.second == 0) {
-                      //start
-                      if (ModalRoute.of(context)?.isCurrent ?? false) {
-                        //top stack page
-                        audioPlayer.play(AssetSource('jidai_music.mp3'),
-                            volume: 0.10);
-                      } else {
-                        audioPlayer.play(AssetSource('jidai_music.mp3'),
-                            volume: 0);
-                      }
-                    } else if (curr_time.minute % 30 == 0 &&
-                        curr_time.second < 50) {
-                      //playing
-                      if (ModalRoute.of(context)?.isCurrent ?? false) {
-                        //top stack page
-                        audioPlayer.setVolume(0.10);
-                      } else {
-                        audioPlayer.setVolume(0);
-                      }
-                    } else {
-                      //not playing
-                      audioPlayer.setVolume(0);
-                    }
+                  final now = DateTime.now();
+                  final snow = now.minute % 30 == 0;
+                  final isCurrent = ModalRoute.of(context)?.isCurrent ?? false;
+                  final volume =
+                      snow && now.second < 50 && isCurrent ? 0.1 : 0.0;
+                  if (snow && now.second == 0) {
+                    _audioPlayer!.play(
+                      AssetSource('jidai_music.mp3'),
+                      volume: volume,
+                    );
+                  } else {
+                    _audioPlayer!.setVolume(volume);
                   }
-                  //decide background effect
-                  return (curr_time.minute % 30 == 0)
-                      ? WeatherBg(
-                          weatherType: WeatherType.heavySnow,
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.height,
-                        )
-                      : WeatherBg(
-                          weatherType: (kIsWeb)
-                              ? WeatherType.sunnyNight
-                              : WeatherType.cloudyNight,
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.height,
-                        );
+                  final size = MediaQuery.of(context).size;
+                  return WeatherBg(
+                    weatherType:
+                        snow ? WeatherType.heavySnow : WeatherType.cloudyNight,
+                    height: size.height,
+                    width: size.height,
+                  );
                 },
               ),
               Container(
                 padding: EdgeInsets.all(10),
                 child: Column(
                   children: [
-                    //Today's song
-                    StreamBuilder(
-                      stream: Stream.periodic(Duration(seconds: 1)),
-                      builder: (context, snapshot) {
-                        RandomSongService.selectSong();
-                        return Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: GestureDetector(
-                              onTap: () async {
-                                if (InitData.todaySong != 'No Song') {
-                                  Song currSong =
-                                      await Song.readSong(InitData.todaySong);
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => SongPage(
-                                            song: currSong,
-                                          )));
-                                }
-                              },
-                              child: Text(
-                                '今日の曲：${InitData.todaySong.replaceAll('_', ' ')}',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    decoration: TextDecoration.underline),
-                              ),
+                    // Today's song
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: GestureDetector(
+                          onTap: _openTodaySong,
+                          child: Text(
+                            '今日の曲：${InitData.todaySong.replaceAll('_', ' ')}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
 
                     SizedBox(height: 10),
@@ -370,7 +426,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 Text(AppLocalizations.of(context)!.yuki_world),
                             onPressed: () async {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => YukiSekaiListPage()));
+                                  builder: (context) => const YukiWorldEntry()));
                             },
                           ),
                         ],
@@ -392,12 +448,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       child: Row(
                         children: [
                           IconButton(
-                            onPressed: () {
-                              int tempInt = int.parse(currentMessage) + 1;
-                              if (tempInt >= 6) tempInt = 1;
-                              currentMessage = tempInt.toString();
-                              setState(() {});
-                            },
+                            onPressed: _changeChannel,
                             icon: (currentMessage == '1')
                                 ? Icon(Icons.looks_one, color: theme_pink)
                                 : (currentMessage == '2')
@@ -500,7 +551,12 @@ Widget buildMessage(Message message) {
                   backgroundImage: NetworkImage(message.senderImgUrl!))
               : CircleAvatar(
                   radius: 20,
-                  backgroundImage: AssetImage('assets/images/logo.png')),
+                  backgroundImage: ResizeImage.resizeIfNeeded(
+                    kIsWeb ? 80 : null,
+                    null,
+                    const AssetImage('assets/images/logo.png'),
+                  ),
+                ),
         ),
         Positioned(
           child: Text(

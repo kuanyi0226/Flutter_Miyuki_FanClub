@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project5_miyuki/class/MyDecoder.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/screens/yakai/yakai_songlist_page.dart';
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
+import 'package:project5_miyuki/widgets/ClubCachedImage.dart';
 
 class YakaiPage extends StatefulWidget {
   @override
@@ -30,7 +30,7 @@ class _PageState extends State<YakaiPage> {
               leading: Container(
                 width: 40,
                 height: 40,
-                child: FastCachedImage(
+                child: ClubCachedImage(
                   url:
                       'https://raw.githubusercontent.com//kuanyi0226/Yuki_DataBase/main/Image/Yakai/${curr_yakai_year.substring(1)}_0/poster.jpg',
                   // errorBuilder: (context, exception, stacktrace) {

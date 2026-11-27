@@ -1,7 +1,7 @@
 import 'package:project5_miyuki/materials/InitData.dart';
 
 class RandomSongService {
-  static void selectSong() async {
+  static void selectSong() {
     //print('Random Song Service_song list length: ' + InitData.allSongs.length.toString());
     final now = DateTime.now();
     int year = now.year;

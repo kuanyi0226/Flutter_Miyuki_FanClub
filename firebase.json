@@ -3,12 +3,22 @@
         {
             "site":"miyuki-yukiclub",
             "public":"build/web",
+            "headers":[
+                {"source":"/","headers":[{"key":"Cache-Control","value":"no-cache"}]},
+                {"source":"**/*.html","headers":[{"key":"Cache-Control","value":"no-cache"}]},
+                {"source":"**/*.js","headers":[{"key":"Cache-Control","value":"no-cache"}]}
+            ],
             "ignore":["firebase.json","**/.*","**/node_modules/**"],
             "rewrites":[{"source":"**","destination":"/index.html"}]
         },  
         {
             "site":"miyuki-b1c80",
             "public":"build/web",
+            "headers":[
+                {"source":"/","headers":[{"key":"Cache-Control","value":"no-cache"}]},
+                {"source":"**/*.html","headers":[{"key":"Cache-Control","value":"no-cache"}]},
+                {"source":"**/*.js","headers":[{"key":"Cache-Control","value":"no-cache"}]}
+            ],
             "ignore":["firebase.json","**/.*","**/node_modules/**"],
             "rewrites":[{"source":"**","destination":"/index.html"}]}],
     "flutter":

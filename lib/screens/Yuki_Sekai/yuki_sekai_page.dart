@@ -17,6 +17,8 @@ class _YukiSekaiPageState extends State<YukiSekaiPage> {
   late final String title;
   _YukiSekaiPageState({required this.title});
 
+  late final YukiSekai _game = YukiSekai();
+
   @override
   void initState() {
     Flame.device.fullScreen();
@@ -50,7 +52,7 @@ class _YukiSekaiPageState extends State<YukiSekaiPage> {
       ),
       body: Stack(
         children: [
-          GameWidget(game: YukiSekai()),
+          GameWidget(game: _game),
         ],
       ),
     );

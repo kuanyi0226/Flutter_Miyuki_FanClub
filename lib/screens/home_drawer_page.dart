@@ -16,7 +16,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../services/firebase/official_service.dart';
 import 'concert/concert_page.dart';
 import './setting_system/settings_page.dart';
-import 'Yuki_Sekai/yuki_sekai_list_page.dart';
+import 'Yuki_Sekai/yuki_world_entry.dart';
 import 'yakai/yakai_page.dart';
 
 import '../materials/MyText.dart';
@@ -201,7 +201,7 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
               title: Text('雪の世界 Yuki World'),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => YukiSekaiListPage()));
+                    builder: (context) => const YukiWorldEntry()));
                 scaffoldKey.currentState!.openEndDrawer(); //close drawer
               }),
           ListTile(

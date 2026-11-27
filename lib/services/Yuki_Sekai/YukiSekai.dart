@@ -21,6 +21,8 @@ enum PlayerState { idle, running, jumping, falling }
 class YukiSekai extends FlameGame
     with HasKeyboardHandlerComponents, DragCallbacks {
   late final DatabaseReference? fireBaseDB;
+  final _playerSubscriptions = <StreamSubscription<DatabaseEvent>>[];
+  bool _disposed = false;
 
   Player player = Player();
 
@@ -38,10 +40,12 @@ class YukiSekai extends FlameGame
     player.costume = InitData.curr_garment;
     //load all images into cache
     await images.loadAllImages();
+    if (_disposed) return;
 
     final world =
         YukiSekaiService().generateLevel(InitData.curr_worldName, player);
     await PlayerInfo.createPlayer(player: player, costume: player.costume);
+    if (_disposed) return;
     //create other players
     readPlayerInfo();
     cam = YukiSekaiService()
@@ -56,9 +60,13 @@ class YukiSekai extends FlameGame
   }
 
   @override
-  void onRemove() {
-    fireBaseDB!.onDisconnect();
-    super.onRemove();
+  void onDispose() {
+    _disposed = true;
+    for (final subscription in _playerSubscriptions) {
+      unawaited(subscription.cancel());
+    }
+    _playerSubscriptions.clear();
+    super.onDispose();
   }
 
   @override
@@ -115,7 +123,7 @@ class YukiSekai extends FlameGame
   void readPlayerInfo() {
     //read other players' info
     //delete
-    fireBaseDB!.onChildRemoved.listen((event) {
+    _playerSubscriptions.add(fireBaseDB!.onChildRemoved.listen((event) {
       final data = event.snapshot;
       if (InitData.playersInfo.isNotEmpty) {
         for (int i = 0; i < InitData.playersInfo.length; i++) {
@@ -128,9 +136,9 @@ class YukiSekai extends FlameGame
           }
         }
       }
-    });
+    }));
     //add
-    fireBaseDB!.onChildAdded.listen((event) {
+    _playerSubscriptions.add(fireBaseDB!.onChildAdded.listen((event) {
       final data = event.snapshot;
       PlayerInfo new_info = PlayerInfo(
           costume: data.child('costume').value.toString(),
@@ -152,9 +160,9 @@ class YukiSekai extends FlameGame
               'player info added: there are ${InitData.playersInfo.length} otherPlayers');
         }
       }
-    });
+    }));
     //onchanged
-    final snapshot = fireBaseDB!.onChildChanged.listen((event) {
+    _playerSubscriptions.add(fireBaseDB!.onChildChanged.listen((event) {
       final data = event.snapshot;
       PlayerInfo new_info = PlayerInfo(
           costume: data.child('costume').value.toString(),
@@ -188,6 +196,6 @@ class YukiSekai extends FlameGame
       // InitData.playersInfo.forEach((element) {
       //   print('player list: ${element.velocityX}');
       // });
-    });
+    }));
   }
 }

@@ -1,4 +1,4 @@
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
+import 'package:project5_miyuki/widgets/ClubCachedImage.dart';
 import 'package:flutter/material.dart';
 import '../../services/string_service.dart';
 import '../../class/Concert.dart';
@@ -55,7 +55,7 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
                         Container(
                           width: 85,
                           height: 85,
-                          child: FastCachedImage(
+                          child: ClubCachedImage(
                             url:
                                 'https://raw.githubusercontent.com//kuanyi0226/Yuki_DataBase/main/Image/Yakai/${yakai_year.substring(1)}_0/poster.jpg',
                             // errorBuilder: (context, exception, stacktrace) {

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -5,6 +6,7 @@ import 'package:project5_miyuki/screens/auth_system/auth_page.dart';
 import 'package:provider/provider.dart';
 
 import './l10n/l10n.dart';
+import './screens/web_home_layout.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -31,6 +33,7 @@ class MyApp extends StatelessWidget {
         ),
         themeMode: ThemeMode.dark,
         home: AuthPage(),
+        navigatorObservers: [if (kIsWeb) webHomeRouteObserver],
         supportedLocales: L10n.all,
         //locale: const Locale("ja"),
         localizationsDelegates: const [

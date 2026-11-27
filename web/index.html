@@ -17,57 +17,81 @@
 
   <title>雪クラブ Yuki Club</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
   <link rel="stylesheet" type="text/css" href="splash/style.css">
   <script src="splash/splash.js"></script>
 
-  <!-- ✅ Firebase compat 版本（支援普通 script 載入） -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-remote-config-compat.js"></script>
-
-  <script>
-    // ✅ Firebase 初始化（compat 版用 firebase.initializeApp）
-    const firebaseConfig = {
-      apiKey: "AIzaSyAVsqbyQt7F2eaPAFHbM4d80JTfZJnVFP4",
-      authDomain: "miyuki-b1c80.firebaseapp.com",
-      projectId: "miyuki-b1c80",
-      storageBucket: "miyuki-b1c80.appspot.com",
-      messagingSenderId: "825033090624",
-      appId: "1:825033090624:web:f6e8b382c9bf74760e61a5",
-      databaseURL: "https://miyuki-b1c80.firebaseio.com",
-      measurementId: "G-70HQFNVTSB"
-    };
-    firebase.initializeApp(firebaseConfig);
-  </script>
-
-  <script>
-    window.flutterWebRenderer = 'canvaskit';
-  </script>
-
-  <!-- ✅ flutter.js 同步載入（不加 async/defer） -->
-  <script src="flutter.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      overscroll-behavior: none;
+      background: #ce75c5;
+    }
+    body {
+      position: fixed;
+      inset: 0;
+    }
+    #flutter-app {
+      width: min(100%, 700px);
+      height: 100%;
+      height: 100dvh;
+      margin: 0 auto;
+      overflow: hidden;
+      overscroll-behavior: none;
+    }
+    html.home-layout { background: #11131c; }
+    body.home-layout { background: transparent; }
+    #flutter-app.home-layout {
+      width: 100%;
+      background: linear-gradient(135deg, #242036, #11131c);
+    }
+    #home-snow { position: fixed; z-index: 10; inset: 0; overflow: hidden; pointer-events: none; }
+    #home-snow span {
+      position: absolute;
+      top: -12px;
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      background: #faf4ff;
+      opacity: .6;
+      animation: home-snowfall var(--duration) var(--delay) linear infinite;
+    }
+    @keyframes home-snowfall {
+      to { transform: translate3d(var(--drift), calc(100vh + 24px), 0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #home-snow span { animation-play-state: paused; }
+    }
+  </style>
+  <script src="flutter.js" defer></script>
 </head>
 <body>
+  <div id="flutter-app"></div>
+  <div id="home-snow" aria-hidden="true" hidden></div>
+  <script src="home-snow.js?v=20261127-home-3"></script>
   <script>
-    window.addEventListener('load', function(ev) {
-      // ✅ 相容新舊版 Flutter API
-      var loader = _flutter.loader;
-      var loaderFn = loader.load ? loader.load.bind(loader) : loader.loadEntrypoint.bind(loader);
+    window.addEventListener('load', () => {
+      const loader = _flutter.loader;
+      const config = { hostElement: document.getElementById('flutter-app') };
+      const onEntrypointLoaded = async (engineInitializer) => {
+        const appRunner = await engineInitializer.initializeEngine(config);
+        await appRunner.runApp();
+        document.getElementById('splash')?.remove();
+      };
 
-      loaderFn({
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            var splash = document.getElementById('splash');
-            if (splash) splash.remove();
-            appRunner.runApp();
-          });
-        }
-      });
+      // Older Flutter builds expose only loadEntrypoint.
+      if (loader.load && _flutter.buildConfig) {
+        loader.load({ config, onEntrypointLoaded });
+      } else {
+        loader.loadEntrypoint({
+          entrypointUrl: 'main.dart.js?v=20261127-home-4',
+          onEntrypointLoaded,
+        });
+      }
     });
   </script>
 </body>

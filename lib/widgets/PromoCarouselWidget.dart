@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../class/Announcement.dart';
+import 'ClubCachedImage.dart';
 
 class PromoCarouselWidget extends StatefulWidget {
   const PromoCarouselWidget({Key? key}) : super(key: key);
@@ -12,9 +14,16 @@ class PromoCarouselWidget extends StatefulWidget {
 }
 
 class _PromoCarouselWidgetState extends State<PromoCarouselWidget> {
-  //
-  final PageController _pageController =
-      PageController(initialPage: 25200, viewportFraction: 0.6);
+  late final Stream<QuerySnapshot<Map<String, dynamic>>> _announcements =
+      FirebaseFirestore.instance
+          .collection('announcements')
+          .orderBy('timestamp', descending: true)
+          .limit(10)
+          .snapshots();
+  final PageController _pageController = PageController(
+    initialPage: 25200,
+    viewportFraction: 0.6,
+  );
   Timer? _carouselTimer;
   int _currentPage = 25200;
 
@@ -25,16 +34,17 @@ class _PromoCarouselWidgetState extends State<PromoCarouselWidget> {
     super.dispose();
   }
 
-  // Auto Timer
-  void _setupCarouselTimer(int itemCount) {
-    _carouselTimer?.cancel();
-    if (itemCount <= 1) return;
-
-    _carouselTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      if (_pageController.hasClients) {
-        _currentPage++;
+  void _setupCarouselTimer(int itemCount, {bool visible = true}) {
+    if (!mounted || kIsWeb || !visible || itemCount <= 1) {
+      _carouselTimer?.cancel();
+      _carouselTimer = null;
+      return;
+    }
+    _carouselTimer ??= Timer.periodic(const Duration(seconds: 5), (_) {
+      if (_pageController.hasClients &&
+          !_pageController.position.isScrollingNotifier.value) {
         _pageController.animateToPage(
-          _currentPage,
+          _currentPage + 1,
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeIn,
         );
@@ -53,13 +63,9 @@ class _PromoCarouselWidgetState extends State<PromoCarouselWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      // Read the latest 10 announcements, ordered by timestamp
-      stream: FirebaseFirestore.instance
-          .collection('announcements')
-          .orderBy('timestamp', descending: true)
-          .limit(10)
-          .snapshots(),
+    final visible = TickerMode.of(context);
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: _announcements,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox(
@@ -71,18 +77,18 @@ class _PromoCarouselWidgetState extends State<PromoCarouselWidget> {
         if (snapshot.hasError ||
             !snapshot.hasData ||
             snapshot.data!.docs.isEmpty) {
+          _carouselTimer?.cancel();
+          _carouselTimer = null;
           return const SizedBox.shrink();
         }
 
         final docs = snapshot.data!.docs;
         final announcements = docs.map((doc) {
-          return Announcement.fromJson(
-              doc.data() as Map<String, dynamic>, doc.id);
+          return Announcement.fromJson(doc.data(), doc.id);
         }).toList();
 
-        // Start the auto carousel timer after the first frame is rendered to ensure PageController is ready
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _setupCarouselTimer(announcements.length);
+          _setupCarouselTimer(announcements.length, visible: visible);
         });
 
         return SizedBox(
@@ -101,33 +107,36 @@ class _PromoCarouselWidgetState extends State<PromoCarouselWidget> {
                   return AnimatedBuilder(
                     animation: _pageController,
                     builder: (context, child) {
-                      double pageOffset = 0;
-                      if (_pageController.position.haveDimensions) {
-                        pageOffset = _pageController.page! - index;
-                      } else {
-                        pageOffset =
-                            (_currentPage.toDouble() - index).toDouble();
-                      }
+                      final page =
+                          _pageController.hasClients &&
+                              _pageController.position.haveDimensions
+                          ? _pageController.page
+                          : null;
+                      final pageOffset =
+                          (page ?? _currentPage.toDouble()) - index;
 
                       // Calculate opacity and scale based on how far the page is from the center
-                      double opacity =
-                          (1 - (pageOffset.abs() * 0.5)).clamp(0.4, 1.0);
-                      double scale =
-                          (1 - (pageOffset.abs() * 0.1)).clamp(0.9, 1.0);
+                      double opacity = (1 - (pageOffset.abs() * 0.5)).clamp(
+                        0.4,
+                        1.0,
+                      );
+                      double scale = (1 - (pageOffset.abs() * 0.1)).clamp(
+                        0.9,
+                        1.0,
+                      );
 
                       return Opacity(
                         opacity: opacity,
-                        child: Transform.scale(
-                          scale: scale,
-                          child: child,
-                        ),
+                        child: Transform.scale(scale: scale, child: child),
                       );
                     },
                     child: GestureDetector(
                       onTap: () => _launchUrl(ad.clickUrl),
                       child: Container(
                         margin: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 10),
+                          horizontal: 5,
+                          vertical: 10,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.black87, // background color
                           borderRadius: BorderRadius.circular(12),
@@ -136,7 +145,7 @@ class _PromoCarouselWidgetState extends State<PromoCarouselWidget> {
                               color: Colors.black26,
                               blurRadius: 4,
                               offset: Offset(0, 2),
-                            )
+                            ),
                           ],
                         ),
                         child: ClipRRect(
@@ -145,14 +154,21 @@ class _PromoCarouselWidgetState extends State<PromoCarouselWidget> {
                             fit: StackFit.expand,
                             children: [
                               ad.imageUrl.isNotEmpty
-                                  ? Image.network(
-                                      ad.imageUrl,
-                                      fit: BoxFit.contain, // don't crop
-                                      errorBuilder: (context, error,
-                                              stackTrace) =>
-                                          Image.asset(
-                                              'assets/images/login_icon_cover.jpg',
-                                              fit: BoxFit.contain),
+                                  ? ClubCachedImage(
+                                      url: ad.imageUrl,
+                                      fit: BoxFit.contain,
+                                      placeholder: const ColoredBox(
+                                        color: Color(0xff201d30),
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                      ),
+                                      errorWidget: Image.asset(
+                                        'assets/images/login_icon_cover.jpg',
+                                        fit: BoxFit.contain,
+                                      ),
                                     )
                                   : Image.asset(
                                       'assets/images/login_icon_cover.jpg',
@@ -165,7 +181,9 @@ class _PromoCarouselWidgetState extends State<PromoCarouselWidget> {
                                   right: 0,
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 12),
+                                      vertical: 8,
+                                      horizontal: 12,
+                                    ),
                                     color: Colors.black.withOpacity(0.6),
                                     child: Text(
                                       ad.description,
@@ -200,14 +218,19 @@ class _PromoCarouselWidgetState extends State<PromoCarouselWidget> {
                       radius: 18,
                       child: IconButton(
                         padding: EdgeInsets.zero,
-                        icon: const Icon(Icons.arrow_back_ios_new,
-                            color: Colors.white, size: 16),
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
+                          size: 16,
+                        ),
                         onPressed: () {
                           if (_pageController.hasClients) {
                             _pageController.previousPage(
                               duration: const Duration(milliseconds: 400),
                               curve: Curves.easeInOut,
                             );
+                            _carouselTimer?.cancel();
+                            _carouselTimer = null;
                             _setupCarouselTimer(announcements.length);
                           }
                         },
@@ -228,14 +251,19 @@ class _PromoCarouselWidgetState extends State<PromoCarouselWidget> {
                       radius: 18,
                       child: IconButton(
                         padding: EdgeInsets.zero,
-                        icon: const Icon(Icons.arrow_forward_ios,
-                            color: Colors.white, size: 16),
+                        icon: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: 16,
+                        ),
                         onPressed: () {
                           if (_pageController.hasClients) {
                             _pageController.nextPage(
                               duration: const Duration(milliseconds: 400),
                               curve: Curves.easeInOut,
                             );
+                            _carouselTimer?.cancel();
+                            _carouselTimer = null;
                             _setupCarouselTimer(announcements.length);
                           }
                         },

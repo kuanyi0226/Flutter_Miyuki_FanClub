@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -84,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
             Image.asset(
               'assets/images/login_icon.jpg',
               height: 150,
+              cacheHeight: kIsWeb ? 300 : null,
             ),
             const SizedBox(height: 15),
             //welcome text

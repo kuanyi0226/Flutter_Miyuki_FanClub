@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:flutter/foundation.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/components/darkeffect.dart';
 import 'package:project5_miyuki/widgets/Yuki_Sekai/players/player.dart';
@@ -34,7 +35,12 @@ class Level_y2006 extends World {
       image,
     );
 
-    level = await TiledComponent.load('$levelName.tmx', Vector2.all(16));
+    level = await TiledComponent.load(
+      '$levelName.tmx',
+      Vector2.all(16),
+      // The legacy HTML renderer cannot draw a sprite atlas.
+      useAtlas: !kIsWeb || const bool.fromEnvironment('FLUTTER_WEB_USE_SKIA'),
+    );
 
     add(level);
     add(_background);
