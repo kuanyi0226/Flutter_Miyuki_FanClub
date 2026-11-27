@@ -8,6 +8,7 @@ import 'package:project5_miyuki/screens/ad_page.dart';
 import 'package:project5_miyuki/screens/yuki_store_page.dart';
 import 'package:project5_miyuki/services/firebase/yukicoin_service.dart';
 import 'package:project5_miyuki/widgets/SquareTile.dart';
+import 'package:project5_miyuki/widgets/ClubCachedImage.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -112,9 +113,10 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
                     image: AssetImage('assets/images/login_icon_cover.jpg'),
                     fit: BoxFit.fill)),
             currentAccountPicture: (InitData.miyukiUser.imgUrl != null)
-                ? CircleAvatar(
+                ? ClubCachedAvatar(
+                    url: InitData.miyukiUser.imgUrl,
                     radius: 64,
-                    backgroundImage: NetworkImage(InitData.miyukiUser.imgUrl!))
+                  )
                 : CircleAvatar(
                     radius: 64,
                     backgroundImage: AssetImage('assets/images/logo.png')),

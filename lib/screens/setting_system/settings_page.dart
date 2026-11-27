@@ -10,6 +10,7 @@ import '../../services/ad_mob_service.dart';
 import '../../services/firebase/official_service.dart';
 import './update_page.dart';
 import './profile_page.dart';
+import '../../widgets/web_page_shell.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({super.key});
@@ -49,9 +50,10 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: Text('Settings'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
+      body: WebPageShell(
+        maxWidth: 900,
+        child: SingleChildScrollView(
+          child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ListTile(
@@ -147,7 +149,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ]),
             )
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: (_bannerAd == null || !_bannerAdLoaded)

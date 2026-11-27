@@ -4,6 +4,7 @@ import 'package:project5_miyuki/services/firebase/remote_config_service.dart';
 import '../../materials/MyText.dart';
 import '../../services/firebase/official_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../widgets/web_page_shell.dart';
 
 class UpdatePage extends StatefulWidget {
   const UpdatePage({super.key});
@@ -53,9 +54,10 @@ class _UpdatePageState extends State<UpdatePage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.check_update),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
+      body: WebPageShell(
+        maxWidth: 900,
+        child: WebSurfaceCard(
+          child: Column(
           children: [
             Icon(
               Icons.update,
@@ -90,7 +92,8 @@ class _UpdatePageState extends State<UpdatePage> {
                 },
               ),
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );

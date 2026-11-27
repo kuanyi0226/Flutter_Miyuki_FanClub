@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/MyText.dart';
 import 'package:project5_miyuki/materials/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../widgets/web_page_shell.dart';
 
 class PrivacyPolicyPage extends StatelessWidget {
   const PrivacyPolicyPage({super.key});
@@ -10,9 +11,11 @@ class PrivacyPolicyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('プライバシーポリシー\nPrivacy Policy')),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView(
+        body: WebPageShell(
+          maxWidth: 960,
+          child: WebSurfaceCard(
+            padding: const EdgeInsets.all(28),
+            child: ListView(
             children: [
               //What is the Privacy Policy
               Text(
@@ -103,7 +106,8 @@ class PrivacyPolicyPage extends StatelessWidget {
                             '(3) (重要!!!) 我們無法從後台看到您設定的密碼，若要更改請前往"忘記密碼"\n\n',
                 style: TextStyle(fontSize: 15),
               ),
-            ],
+              ],
+            ),
           ),
         ));
   }

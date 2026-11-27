@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../widgets/web_page_shell.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:project5_miyuki/class/Garment.dart';
 import 'package:project5_miyuki/class/MiyukiUser.dart';
@@ -217,9 +218,11 @@ class _YukiStorePageState extends State<YukiStorePage>
         //   ],
         // ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      body: WebPageShell(
+        maxWidth: 1100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           //Garment
           Padding(
             padding: const EdgeInsets.only(left: 15.0, top: 10),
@@ -244,7 +247,8 @@ class _YukiStorePageState extends State<YukiStorePage>
                   _buildItem(context, index),
             ),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }

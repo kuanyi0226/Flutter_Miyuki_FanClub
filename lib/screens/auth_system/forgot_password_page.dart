@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../materials/colors.dart';
 import '../../widgets/MyTextField.dart';
+import '../../widgets/web_page_shell.dart';
 
 class ForGotPasswordPage extends StatefulWidget {
   ForGotPasswordPage({super.key});
@@ -48,9 +49,13 @@ class _ForGotPasswordPageState extends State<ForGotPasswordPage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.password_reset),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+      body: WebPageShell(
+        maxWidth: 620,
+        child: Center(
+          child: WebSurfaceCard(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
           Text(
             AppLocalizations.of(context)!.password_reset_info,
             style: TextStyle(
@@ -88,7 +93,10 @@ class _ForGotPasswordPageState extends State<ForGotPasswordPage> {
               ),
             ),
           ),
-        ],
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

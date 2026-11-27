@@ -12,6 +12,8 @@ import 'package:project5_miyuki/screens/song_page.dart';
 import 'package:project5_miyuki/services/firebase/chatroom_service.dart';
 import 'package:provider/provider.dart';
 import '../materials/colors.dart';
+import '../widgets/web_page_shell.dart';
+import '../widgets/ClubCachedImage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PublicChatRoomPage extends StatefulWidget {
@@ -237,11 +239,13 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
       appBar: AppBar(
         title: Text('パブリックチャット\nPublic Chat Room'),
       ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Container(
-          padding: EdgeInsets.all(10),
-          child: Column(
+      body: WebPageShell(
+        maxWidth: 1200,
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Column(
             //messages & textfield
             children: [
               SizedBox(height: 10),
@@ -360,6 +364,7 @@ class _PublicChatRoomPage extends State<PublicChatRoomPage>
                 ),
               ),
             ],
+            ),
           ),
         ),
       ),
@@ -446,9 +451,7 @@ Widget buildMessage(ChatMessage message, BuildContext context) {
           children: [
             if (!isMe)
               (message.senderImgUrl != '')
-                  ? CircleAvatar(
-                      radius: 20,
-                      backgroundImage: NetworkImage(message.senderImgUrl!))
+                  ? ClubCachedAvatar(url: message.senderImgUrl, radius: 20)
                   : CircleAvatar(
                       radius: 20,
                       backgroundImage: AssetImage('assets/images/logo.png')),

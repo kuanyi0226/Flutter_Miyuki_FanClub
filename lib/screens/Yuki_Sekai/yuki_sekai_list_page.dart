@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:project5_miyuki/screens/Yuki_Sekai/yuki_sekai_page.dart';
 import '../../materials/InitData.dart';
 import '../../materials/colors.dart';
+import '../../widgets/web_page_shell.dart';
 
 class YukiSekaiListPage extends StatefulWidget {
   const YukiSekaiListPage({super.key});
@@ -51,7 +52,11 @@ class _YukiSekaiListPageState extends State<YukiSekaiListPage>
           ],
         ),
       ),
-      body: (_currentTab == 1)
+      body: WebPageShell(
+        maxWidth: 1000,
+        child: WebSurfaceCard(
+          padding: EdgeInsets.zero,
+          child: (_currentTab == 1)
           ? ListView(children: [
               //2006 mirage hotel
               ListTile(
@@ -100,6 +105,8 @@ class _YukiSekaiListPageState extends State<YukiSekaiListPage>
                 },
               ),
             ]),
+        ),
+      ),
     );
   }
 }

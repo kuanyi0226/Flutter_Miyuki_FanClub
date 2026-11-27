@@ -19,6 +19,7 @@ import 'package:project5_miyuki/services/init_data_service.dart';
 import 'package:project5_miyuki/services/random_song_service.dart';
 import 'package:project5_miyuki/services/firebase/yukicoin_service.dart';
 import 'package:project5_miyuki/widgets/PromoCarouselWidget.dart';
+import 'package:project5_miyuki/widgets/ClubCachedImage.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -546,9 +547,7 @@ Widget buildMessage(Message message) {
         Padding(
           padding: EdgeInsets.all(5),
           child: (message.senderImgUrl != '')
-              ? CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage(message.senderImgUrl!))
+              ? ClubCachedAvatar(url: message.senderImgUrl, radius: 20)
               : CircleAvatar(
                   radius: 20,
                   backgroundImage: ResizeImage.resizeIfNeeded(

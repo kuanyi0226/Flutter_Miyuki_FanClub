@@ -1,4 +1,6 @@
 import 'package:project5_miyuki/widgets/ClubCachedImage.dart';
+import 'package:project5_miyuki/widgets/web_page_shell.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../services/string_service.dart';
 import '../../class/Concert.dart';
@@ -36,14 +38,16 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
             Text("夜会 Yakai"),
           ]),
         ),
-        body: Column(
-          children: [
+        body: WebPageShell(
+          maxWidth: 1100,
+          child: Column(
+            children: [
             Container(
-              height: 125,
+              height: kIsWeb ? 160 : 125,
               //Top display Card
               child: Card(
-                color: theme_dark_grey,
-                elevation: 15.0,
+                color: kIsWeb ? null : theme_dark_grey,
+                elevation: kIsWeb ? 0 : 15.0,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 child: Padding(
@@ -53,8 +57,8 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
                       children: [
                         //Image
                         Container(
-                          width: 85,
-                          height: 85,
+                          width: kIsWeb ? 126 : 85,
+                          height: kIsWeb ? 126 : 85,
                           child: ClubCachedImage(
                             url:
                                 'https://raw.githubusercontent.com//kuanyi0226/Yuki_DataBase/main/Image/Yakai/${yakai_year.substring(1)}_0/poster.jpg',
@@ -65,20 +69,22 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
                           ),
                         ),
                         //Text(Introductions)
-                        Padding(
+                        Expanded(
+                          child: Padding(
                           padding: const EdgeInsets.only(
                               left: 10, top: 5, bottom: 5),
-                          child: Center(
-                            child: SizedBox(
-                              width: 220,
-                              child: Text(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
                                 "${yakai_year.substring(1)}年\n${yakaiName}",
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
+                                style: kIsWeb
+                                    ? Theme.of(context).textTheme.titleLarge
+                                    : TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
                             ),
                           ),
-                        ),
+                        )),
                       ],
                     )),
               ),
@@ -98,7 +104,14 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
                               style: TextStyle(color: theme_purple),
                             ),
                           )
-                        : ListTile(
+                        : Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: kIsWeb ? 4 : 0,
+                            ),
+                            child: ListTile(
+                            tileColor: kIsWeb
+                                ? Theme.of(context).colorScheme.surface
+                                : null,
                             //leading: const Icon(Icons.music_note),
                             title: Text(
                               (songlist[index].contains('[song]'))
@@ -148,10 +161,11 @@ class _YakaiSonglistPageState extends State<YakaiSonglistPage> {
                                         ),
                                       )));
                             },
-                          );
+                          ));
                   }),
             ),
-          ],
+            ],
+          ),
         ),
       );
 }

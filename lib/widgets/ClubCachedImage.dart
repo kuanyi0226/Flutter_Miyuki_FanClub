@@ -55,3 +55,39 @@ class ClubCachedImage extends StatelessWidget {
     );
   }
 }
+
+class ClubCachedAvatar extends StatelessWidget {
+  const ClubCachedAvatar({
+    super.key,
+    required this.url,
+    required this.radius,
+    this.fallback = const AssetImage('assets/images/logo.png'),
+  });
+
+  final String? url;
+  final double radius;
+  final ImageProvider fallback;
+
+  @override
+  Widget build(BuildContext context) {
+    final imageUrl = url;
+    if (imageUrl == null || imageUrl.isEmpty) {
+      return CircleAvatar(radius: radius, backgroundImage: fallback);
+    }
+
+    return CircleAvatar(
+      radius: radius,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+      child: ClipOval(
+        child: SizedBox.square(
+          dimension: radius * 2,
+          child: ClubCachedImage(
+            url: imageUrl,
+            fit: BoxFit.cover,
+            errorWidget: Image(image: fallback, fit: BoxFit.cover),
+          ),
+        ),
+      ),
+    );
+  }
+}

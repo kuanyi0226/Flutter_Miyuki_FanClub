@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/MyText.dart';
+import '../../widgets/web_page_shell.dart';
 
 class CopyrightPage extends StatelessWidget {
   const CopyrightPage({super.key});
@@ -8,9 +9,11 @@ class CopyrightPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('著作権 Copyright')),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView(
+        body: WebPageShell(
+          maxWidth: 960,
+          child: WebSurfaceCard(
+            padding: const EdgeInsets.all(28),
+            child: ListView(
             children: [
               Text(
                 'About copyright of this app',
@@ -26,7 +29,8 @@ class CopyrightPage extends StatelessWidget {
                     'That is, the ads in this app is only to sustain this platform.)',
                 style: TextStyle(fontSize: 15),
               ),
-            ],
+              ],
+            ),
           ),
         ));
   }

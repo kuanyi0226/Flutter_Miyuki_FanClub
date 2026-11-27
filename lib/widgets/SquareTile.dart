@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class SquareTile extends StatelessWidget {
   double? imageSize;
@@ -18,11 +19,19 @@ class SquareTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all((squareSize == null) ? 20 : squareSize!),
+        padding: EdgeInsets.all(
+          (squareSize == null) ? (kIsWeb ? 14 : 20) : squareSize!,
+        ),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white),
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.grey[200],
+          border: Border.all(
+            color: kIsWeb
+                ? Theme.of(context).colorScheme.outline
+                : Colors.white,
+          ),
+          borderRadius: BorderRadius.circular(kIsWeb ? 14 : 16),
+          color: kIsWeb
+              ? Theme.of(context).colorScheme.surfaceContainerHigh
+              : Colors.grey[200],
         ),
         child: Image.asset(
           imagePath,

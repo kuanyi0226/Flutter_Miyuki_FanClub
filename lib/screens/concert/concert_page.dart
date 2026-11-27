@@ -1,4 +1,6 @@
 import 'package:project5_miyuki/widgets/ClubCachedImage.dart';
+import 'package:project5_miyuki/widgets/web_page_shell.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
@@ -71,23 +73,97 @@ class _ConcertPageState extends State<ConcertPage>
         ),
       ),
       body: (InitData.concertList.isNotEmpty)
-          ? Column(
-              children: [
-                Expanded(
-                  child: ListView(
-                    children: InitData.concertList
-                        .map((concert) =>
-                            buildConcert(concert, context, _currentTab))
-                        .toList(),
-                  ),
-                ),
-              ],
+          ? WebPageShell(
+              maxWidth: 1280,
+              child: kIsWeb
+                  ? LayoutBuilder(
+                      builder: (context, constraints) {
+                        final concerts = InitData.concertList
+                            .where((concert) =>
+                                yearDisplayCheck(concert.year, _currentTab))
+                            .toList();
+                        final columns = constraints.maxWidth >= 1100
+                            ? 4
+                            : constraints.maxWidth >= 760
+                                ? 3
+                                : constraints.maxWidth >= 480
+                                    ? 2
+                                    : 1;
+                        return GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: columns,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 1.18,
+                          ),
+                          itemCount: concerts.length,
+                          itemBuilder: (context, index) =>
+                              _buildWebConcertCard(concerts[index], context),
+                        );
+                      },
+                    )
+                  : ListView(
+                      children: InitData.concertList
+                          .map((concert) =>
+                              buildConcert(concert, context, _currentTab))
+                          .toList(),
+                    ),
             )
           : Center(
               child: CircularProgressIndicator(),
             ),
     );
   }
+}
+
+Widget _buildWebConcertCard(Concert concert, BuildContext context) {
+  return Card(
+    child: InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SonglistPage(
+            concert: concert,
+            concert_type: "Concert",
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ClubCachedImage(
+                    url:
+                        'https://raw.githubusercontent.com//kuanyi0226/Yuki_DataBase/main/Image/Concert/${concert.year}_${concert.year_index}/poster.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              concert.name,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 3),
+            Text(
+              concert.year,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 Future<List<Concert>> readConcerts() async {

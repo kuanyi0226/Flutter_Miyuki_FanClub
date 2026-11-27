@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project5_miyuki/materials/MyText.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../widgets/web_page_shell.dart';
 
 class AboutAppPage extends StatelessWidget {
   const AboutAppPage({super.key});
@@ -9,9 +10,11 @@ class AboutAppPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text(AppLocalizations.of(context)!.about_app)),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView(
+        body: WebPageShell(
+          maxWidth: 960,
+          child: WebSurfaceCard(
+            padding: const EdgeInsets.all(28),
+            child: ListView(
             children: [
               //What is the Privacy Policy
               Text(
@@ -79,7 +82,8 @@ class AboutAppPage extends StatelessWidget {
                 'リンゴ さん\n',
                 style: TextStyle(fontSize: 15),
               ),
-            ],
+              ],
+            ),
           ),
         ));
   }

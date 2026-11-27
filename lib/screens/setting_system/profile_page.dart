@@ -9,6 +9,8 @@ import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:project5_miyuki/services/firebase/yukicoin_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../widgets/web_page_shell.dart';
+import '../../widgets/ClubCachedImage.dart';
 import '../../materials/colors.dart';
 import '../../services/image_service.dart';
 
@@ -209,8 +211,8 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.profile),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(10),
+      body: WebPageShell(
+        maxWidth: 800,
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -224,10 +226,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           backgroundImage: MemoryImage(_image!),
                         )
                       : (InitData.miyukiUser.imgUrl != null)
-                          ? CircleAvatar(
+                          ? ClubCachedAvatar(
+                              url: InitData.miyukiUser.imgUrl,
                               radius: 64,
-                              backgroundImage:
-                                  NetworkImage(InitData.miyukiUser.imgUrl!))
+                            )
                           : CircleAvatar(
                               radius: 64,
                               backgroundImage:

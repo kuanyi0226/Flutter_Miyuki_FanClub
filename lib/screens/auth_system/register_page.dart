@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:project5_miyuki/materials/InitData.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../services/firebase/auth_service.dart';
@@ -11,6 +12,7 @@ import '../../class/MiyukiUser.dart';
 import '../../widgets/MyTextField.dart';
 import '../../widgets/MyButton.dart';
 import '../../widgets/SquareTile.dart';
+import '../../widgets/web_page_shell.dart';
 
 class RegisterPage extends StatefulWidget {
   Function()? onTap;
@@ -96,9 +98,8 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: theme_purple,
-      body: Center(
-        child: SingleChildScrollView(
+      backgroundColor: kIsWeb ? null : theme_purple,
+      body: WebAuthShell(
           child: Column(children: [
             //welcome text
             Text(
@@ -222,7 +223,6 @@ class _RegisterPageState extends State<RegisterPage> {
               ],
             )
           ]),
-        ),
       ),
     );
   }

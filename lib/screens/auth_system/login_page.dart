@@ -11,6 +11,7 @@ import '../../services/firebase/auth_service.dart';
 import '../../widgets/MyTextField.dart';
 import '../../widgets/MyButton.dart';
 import '../../widgets/SquareTile.dart';
+import '../../widgets/web_page_shell.dart';
 
 import './forgot_password_page.dart';
 
@@ -77,9 +78,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: theme_purple,
-      body: Center(
-        child: SingleChildScrollView(
+      backgroundColor: kIsWeb ? null : theme_purple,
+      body: WebAuthShell(
           child: Column(children: [
             //logo
             Image.asset(
@@ -216,7 +216,6 @@ class _LoginPageState extends State<LoginPage> {
               ],
             )
           ]),
-        ),
       ),
     );
   }

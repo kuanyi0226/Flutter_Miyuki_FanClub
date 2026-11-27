@@ -6,6 +6,7 @@ import 'package:project5_miyuki/screens/auth_system/auth_page.dart';
 import 'package:provider/provider.dart';
 
 import './l10n/l10n.dart';
+import './materials/web_theme.dart';
 import './screens/web_home_layout.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -25,13 +26,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: '雪クラブ Yuki Club',
-        theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-        ),
-        darkTheme: ThemeData(
-          brightness: Brightness.dark,
-        ),
+        theme: buildYukiDarkTheme(),
+        darkTheme: buildYukiDarkTheme(),
         themeMode: ThemeMode.dark,
+        scrollBehavior: const YukiScrollBehavior(),
         home: AuthPage(),
         navigatorObservers: [if (kIsWeb) webHomeRouteObserver],
         supportedLocales: L10n.all,

@@ -21,6 +21,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../class/MyDecoder.dart';
 import '../materials/colors.dart';
 import '../services/translate_service.dart';
+import '../widgets/web_page_shell.dart';
 
 class SongPage extends StatefulWidget {
   Song? song;
@@ -375,8 +376,13 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
               icon: const Icon(Icons.search))
         ],
       ),
-      body: Stack(
-        children: [
+      body: WebPageShell(
+        maxWidth: 1200,
+        padding: kIsWeb
+            ? const EdgeInsets.symmetric(horizontal: 28, vertical: 18)
+            : null,
+        child: Stack(
+          children: [
           //Background
           AnimatedBackground(
             behaviour: BubblesBehaviour(
@@ -559,7 +565,8 @@ class _SongPageState extends State<SongPage> with TickerProviderStateMixin {
                         ),
                       ),
           ]),
-        ],
+          ],
+        ),
       ),
 
       //Add Comment Button
