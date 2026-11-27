@@ -34,7 +34,7 @@ dependencies:
   google_mobile_ads: ^5.0.0
   flutter_localizations: 
     sdk: flutter
-  intl: ^0.18.1
+  intl: ^0.20.2
   
   provider: ^6.0.3
   get: ^4.6.5
